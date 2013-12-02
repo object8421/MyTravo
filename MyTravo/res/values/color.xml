@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="listwhite">#ffffffff</color>  
+	<color name="listunfocused">#ffffffff</color>  
+	<color name="listpressed">#26b5df</color>  
+	<color name="listselected">#26b5df</color>  
+	<color name="listfocused">#26b5df</color>  
+	<color name="btnblack">#000000</color>
+	<color name="imagedone">#808080</color>
+	<color name="btnviewgray">#adadad</color>
+	<color name="meizublue">#26b5df</color>
+	<color name="BewitchedTree">#1ec4ae</color>
+    <color name="MysticalGreen">#96c8bf</color>
+    <color name="ClassGail">#c3eaf1</color>
+    <color name="LightheartBlue">#a8efe9</color>
+    <color name="SillyFizz">#b8ebca</color>
+    <color name="BrainSand">#d9d4b7</color>
+    <color name="MastardAddicted">#d5bb80</color>
+    <color name="MagicPowder">#ebcdb1</color>
+    <color name="TrueBlush">#efa99f</color>
+    <color name="MerryCranesbill">#f65e6b</color>
+   
+    <color name="white">#ffffff</color>
+    <color name="background">#0f0f0f</color>
+    <color name="text_Grey">#c0c0c0</color>
+    <color name="black">#0f0f0f</color>
+    <color name="red">#FF0000</color>
+    <color name="dark_red">#DC143C</color>
+    <color name="dark_blue">#4169E1</color>
+    <color name="grey11">#1C1C1C</color>
+    <color name="grey21">#363636</color>
+    <color name="grey31">#4F4F4F</color>
+    <color name="grey41">#494949</color>
+    <color name="firebrick4">#8b1A1A</color>
+    <color name="myGrey">#eeeeee</color>
+    <color name="transparant_black">#b0000000</color>
+</resources>
