@@ -39,7 +39,7 @@ public class MainActivity extends FragmentActivity {
 		
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		leftDrawerLayout = findViewById(R.id.left_drawer);
-		//mDrawerList = 
+		mDrawerList =  (ListView) findViewById(R.id.left_listview);
 		mPullToRefreshAttacher = PullToRefreshAttacher.get(this);
 		drawerMenu = getResources().getStringArray(R.array.drawermenu);
        
