@@ -307,44 +307,52 @@ containing a value of this type.
         public static final int xlistview_arrow=0x7f02006a;
     }
     public static final class id {
-        public static final int action_settings=0x7f05001a;
+        public static final int RelativeLayout1=0x7f05000f;
+        public static final int action_add_note=0x7f05001e;
+        public static final int action_settings=0x7f05001d;
+        public static final int avatar_imgview=0x7f05000d;
         public static final int content_frame=0x7f05000a;
         public static final int drawer_layout=0x7f050009;
+        public static final int drawer_listview=0x7f05000e;
         public static final int hybrid=0x7f050008;
-        public static final int image=0x7f05000f;
-        public static final int layout_count=0x7f050011;
+        public static final int image=0x7f050012;
+        public static final int layout_count=0x7f050014;
         public static final int left_drawer=0x7f05000b;
-        public static final int left_listview=0x7f05000c;
-        public static final int listView=0x7f05000e;
+        public static final int listView=0x7f050011;
         public static final int none=0x7f050004;
         public static final int normal=0x7f050005;
-        public static final int progressBar=0x7f050018;
+        public static final int progressBar=0x7f05001b;
         public static final int ptr_content=0x7f050000;
         public static final int ptr_progress=0x7f050003;
         public static final int ptr_text=0x7f050002;
         public static final int ptr_text_opaque_bg=0x7f050001;
         public static final int satellite=0x7f050006;
         public static final int terrain=0x7f050007;
-        public static final int textView=0x7f050019;
-        public static final int text_comment_count=0x7f050013;
-        public static final int text_like_count=0x7f050014;
-        public static final int text_view_count=0x7f050012;
-        public static final int time=0x7f050017;
-        public static final int title=0x7f050015;
-        public static final int tv_title=0x7f05000d;
-        public static final int userName=0x7f050016;
-        public static final int userinfo_avatar=0x7f050010;
+        public static final int textView=0x7f05001c;
+        public static final int textView1=0x7f050010;
+        public static final int text_comment_count=0x7f050016;
+        public static final int text_like_count=0x7f050017;
+        public static final int text_view_count=0x7f050015;
+        public static final int time=0x7f05001a;
+        public static final int title=0x7f050018;
+        public static final int tv_title=0x7f05000c;
+        public static final int userName=0x7f050019;
+        public static final int userinfo_avatar=0x7f050013;
     }
     public static final class layout {
-        public static final int activity_main=0x7f030000;
-        public static final int default_header=0x7f030001;
-        public static final int drawer_list_item=0x7f030002;
-        public static final int fragment_shot=0x7f030003;
-        public static final int listitem_shot=0x7f030004;
-        public static final int loading_footer=0x7f030005;
+        public static final int activity_add_note=0x7f030000;
+        public static final int activity_main=0x7f030001;
+        public static final int default_header=0x7f030002;
+        public static final int drawer_list_item=0x7f030003;
+        public static final int fragment_drawer=0x7f030004;
+        public static final int fragment_fake=0x7f030005;
+        public static final int fragment_shot=0x7f030006;
+        public static final int listitem_shot=0x7f030007;
+        public static final int loading_footer=0x7f030008;
     }
     public static final class menu {
-        public static final int main=0x7f0b0000;
+        public static final int add_note=0x7f0b0000;
+        public static final int main=0x7f0b0001;
     }
     public static final class string {
         public static final int about=0x7f060039;
@@ -475,6 +483,7 @@ containing a value of this type.
         public static final int take_picture=0x7f060026;
         public static final int the_end=0x7f060050;
         public static final int theme=0x7f06003a;
+        public static final int title_activity_add_note=0x7f06005c;
         public static final int title_activity_change_user_info=0x7f060057;
         public static final int title_activity_guest=0x7f06004d;
         public static final int title_activity_login=0x7f060055;

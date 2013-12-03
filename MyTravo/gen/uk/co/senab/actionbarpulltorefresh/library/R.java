@@ -31,7 +31,7 @@ public final class R {
 		public static final int ptr_text_opaque_bg = 0x7f050001;
 	}
 	public static final class layout {
-		public static final int default_header = 0x7f030001;
+		public static final int default_header = 0x7f030002;
 	}
 	public static final class string {
 		public static final int pull_to_refresh_pull_label = 0x7f060000;

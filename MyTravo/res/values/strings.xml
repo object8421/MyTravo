@@ -60,7 +60,6 @@
         <item>附近在说</item>
         <item>我的游记</item>
         <item>设置</item>
-       
     </string-array>
 
     <string name="use_sina">新浪微博账号登陆</string>
@@ -86,5 +85,6 @@
     <string name="title_activity_travel">TravelActivity</string>
     <string name="title_activity_map">MapActivity</string>
     <string name="title_activity_notes">NotesActivity</string>
+    <string name="title_activity_add_note">AddNoteActivity</string>
 
 </resources>

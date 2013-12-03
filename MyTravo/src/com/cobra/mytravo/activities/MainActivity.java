@@ -1,66 +1,120 @@
 package com.cobra.mytravo.activities;
 
 import com.cobra.mytravo.R;
+import com.cobra.mytravo.fragments.BaseFragment;
+import com.cobra.mytravo.fragments.DrawerFragment;
+import com.cobra.mytravo.fragments.FakeFragment;
 import com.cobra.mytravo.fragments.ShotsFragment;
 
-import roboguice.activity.RoboActivity;
-import roboguice.inject.InjectView;
+
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
+import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
+import android.widget.Toast;
 /**
  * 
- * @author qiuky1 
+ * @author qiuky1 2013/12/2
  *
  */
 public class MainActivity extends FragmentActivity {
-//	@InjectView(R.id.drawer_layout) DrawerLayout mDrawerLayout;
-//	@InjectView(R.id.left_drawer) RelativeLayout leftDrawerLayout;
-//	@InjectView(R.id.left_listview) ListView mDrawerList;
+
 	private DrawerLayout mDrawerLayout;
-	private View leftDrawerLayout;
-	private ListView mDrawerList;
-	private String[] drawerMenu;
 	private PullToRefreshAttacher mPullToRefreshAttacher;
+	private ActionBar actionBar;
+	private ActionBarDrawerToggle mDrawerToggle;
+	private String[] listItems;
+	//store current position
+	private int current;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		leftDrawerLayout = findViewById(R.id.left_drawer);
-		mDrawerList =  (ListView) findViewById(R.id.left_listview);
 		mPullToRefreshAttacher = PullToRefreshAttacher.get(this);
-		drawerMenu = getResources().getStringArray(R.array.drawermenu);
+		listItems = getResources().getStringArray(R.array.drawermenu);
+        //get and set actionbar
+        actionBar = getActionBar();
        
-
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, R.id.tv_title,drawerMenu));
-        // Set the list's click listener
-        mDrawerList.setOnItemClickListener(new DrawerListViewClickListener());
-        Fragment fragment = new ShotsFragment();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setSplitBackgroundDrawable(getResources().getDrawable(R.color.black));
+        
+        //set drawer Listener
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, 
+        		R.string.drawer_open, R.string.drawer_close){
+        	@Override
+        	public void onDrawerOpened(View view) {
+        		 getActionBar().setTitle(getResources().getString(R.string.app_name));
+        		 invalidateOptionsMenu();
+			}
+        	@Override
+        	public void onDrawerClosed(View view){
+        		actionBar.setTitle(listItems[current]);
+        		invalidateOptionsMenu();
+        	}
+        };
+        
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        //set Hot_Travel fragment as default fragment
+        setSelectedItem(0);
+        //set our custom navigation drawer by using DrawerFragment
 		FragmentManager fragmentManager = getFragmentManager();  
 		fragmentManager.beginTransaction()  
-        .replace(R.id.content_frame, fragment)  
+        .replace(R.id.left_drawer, new DrawerFragment())  
         .commit();  
 	}
-	
+	@Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+	@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Pass the event to ActionBarDrawerToggle, if it returns
+        // true, then it has handled the app icon touch event
+        if (mDrawerToggle.onOptionsItemSelected(item)) {
+          return true;
+        }
+        // Handle your other action bar items...
+        else{
+        	switch(item.getItemId()){
+        	case R.id.action_add_note:
+        		Intent intent = new Intent();
+        		intent.setClass(MainActivity.this, AddNoteActivity.class);
+        		startActivity(intent);
+        	}
+        }
+        return super.onOptionsItemSelected(item);
+    }
 	/**
 	 * 
 	 * @return PullToRefreshAttacher
@@ -68,28 +122,29 @@ public class MainActivity extends FragmentActivity {
 	public PullToRefreshAttacher getPullToRefreshAttacher() {
         return mPullToRefreshAttacher;
     }
+	
 	/**
-	 * 
-	 * @author qiuky1
-	 *
+	 * Switch to selected category, like 0 for hot travel fragment, 1 for nearby fragment etc.
+	 * @param position
 	 */
-	private class DrawerListViewClickListener implements OnItemClickListener{
-
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
-			// TODO Auto-generated method stub
-			selectItem(position);
-		}
+	public void setSelectedItem(int position){
+		current = position;
+		actionBar.setTitle(listItems[current]);
+		mDrawerLayout.closeDrawer(GravityCompat.START);
+		mPullToRefreshAttacher.setRefreshing(false);
+		BaseFragment mContentFragment;
 		
-	}
-	private void selectItem(int position){
-		Fragment fragment = new ShotsFragment();
-		FragmentManager fragmentManager = getFragmentManager();  
-		fragmentManager.beginTransaction()  
-        .replace(R.id.content_frame, fragment)  
-        .commit();  
-		mDrawerList.setItemChecked(position, true);  
-		mDrawerLayout.closeDrawer(leftDrawerLayout);
+		switch (position) {
+		case 0:
+			
+			mContentFragment = new ShotsFragment();
+			break;
+
+		default:
+			mContentFragment = FakeFragment.newInstance(position);
+			break;
+		}
+		 FragmentManager fragmentManager = getFragmentManager();
+		 fragmentManager.beginTransaction().replace(R.id.content_frame, mContentFragment).commit();
 	}
 }

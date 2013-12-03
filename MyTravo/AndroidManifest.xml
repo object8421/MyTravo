@@ -7,7 +7,8 @@
     <uses-sdk
         android:minSdkVersion="15"
         android:targetSdkVersion="17" />
-	    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -25,12 +26,14 @@
     <!-- The following two permissions are not required to use Google Maps Android API v2, but are recommended. -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <application     
+
+    <application
         android:name="com.cobra.mytravo.data.AppData"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/travo_logo"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme"
+        android:uiOptions="splitActionBarWhenNarrow" >
         <provider
             android:name="com.cobra.mytravo.data.DataProvider"
             android:authorities="com.cobra.mytravo.data.DataProvider"
@@ -38,6 +41,7 @@
             android:multiprocess="true" >
             <grant-uri-permission android:pathPattern=".*" />
         </provider>
+
         <activity
             android:name="com.cobra.mytravo.activities.MainActivity"
             android:label="@string/app_name" >
@@ -46,6 +50,10 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.cobra.mytravo.activities.AddNoteActivity"
+            android:label="@string/title_activity_add_note" >
         </activity>
     </application>
 
