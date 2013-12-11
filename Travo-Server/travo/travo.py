@@ -47,7 +47,7 @@ def __init():
 
 def __start_server():
 	application = tornado.web.Application(URL_HANDLER_MAP)
-	application.listen(8000)
+	application.listen(9000)
 	tornado.ioloop.IOLoop.instance().start()
 
 if __name__ == '__main__':
