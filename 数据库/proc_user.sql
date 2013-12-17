@@ -7,8 +7,9 @@ CREATE PROCEDURE sp_register(IN _nickname varchar(16), IN _token char(32),
 		IN _email varchar(25), IN _password varchar(16),
 		IN _qq_user_id char(32), IN _sina_user_id varchar(20))
 BEGIN
-	INSERT INTO user(email, password, nickname, token, qq_user_id, sina_user_id)
-	VALUES(_email, _password, _nickname, _token, _qq_user_id, _sina_user_id);
+	INSERT INTO user(email, password, nickname, token, qq_user_id, sina_user_id,register_time)
+	VALUES(_email, _password, _nickname, _token, _qq_user_id, _sina_user_id,getdate());
+	
 	SELECT LAST_INSERT_ID();
 END;$$
 ##############################################
