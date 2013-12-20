@@ -38,7 +38,21 @@ public class GsonRequest<T> extends Request<T> {
         this.headers = headers;
         this.listener = listener;
     }
-
+    
+    /**
+     * Lenovo.Hery1 Add 
+     * Add a map params in order to use post method in volley
+     */
+    
+    public GsonRequest(String url, Class<T> clazz, Map<String, String> headers,
+            Listener<T> listener, ErrorListener errorListener, Map<String, String> map) {
+    	super(Method.POST, url, errorListener,map);
+    	this.clazz = clazz;
+    	this.headers = headers;
+    	this.listener = listener;
+	}
+	    
+    
     @Override
     public Map<String, String> getHeaders() throws AuthFailureError {
         return headers != null ? headers : super.getHeaders();
