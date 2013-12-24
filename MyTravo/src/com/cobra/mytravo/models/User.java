@@ -95,6 +95,44 @@ public class User extends BaseType{
 		this.achievement_qty = achievement_qty;
 	}
 	
+	public class UserRegisterResponse
+	{
+		private int rsp_code;
+		
+		private int user_id;
 
-    
+		public int getRsp_code() {
+			return rsp_code;
+		}
+
+		public void setRsp_code(int rsp_code) {
+			this.rsp_code = rsp_code;
+		}
+
+		public int getUser_id() {
+			return user_id;
+		}
+
+		public void setUser_id(int user_id) {
+			this.user_id = user_id;
+		}
+	}
+	
+	public class UserLoginResponse
+	{
+		private int rsp_code;
+		private User user;
+		public int getRsp_code() {
+			return rsp_code;
+		}
+		public void setRsp_code(int rsp_code) {
+			this.rsp_code = rsp_code;
+		}
+		public User getUser() {
+			return user;
+		}
+		public void setUser(User user) {
+			this.user = user;
+		}
+	}
 }
