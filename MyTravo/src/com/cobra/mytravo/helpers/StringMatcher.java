@@ -2,7 +2,11 @@ package com.cobra.mytravo.helpers;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+/**
+ * match the string for email format
+ * @author L!ar 2013/12/23
+ *
+ */
 public class StringMatcher {
 	public static boolean isEmail(String emailString){
 		final String pattern1 = "^([a-z0-9A-Z]+[-|//.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?//.)+[a-zA-Z]{2,}$"; 

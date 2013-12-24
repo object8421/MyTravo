@@ -28,7 +28,7 @@ public class FakeFragment extends BaseFragment{
             Bundle savedInstanceState) {
 		sectionNumber = getArguments().getInt(ARG_SECTION_NUMBER_STRING);
         View rootView = inflater.inflate(R.layout.fragment_fake, container, false);
-        TextView textView = (TextView) rootView.findViewById(R.id.textView1);
+        TextView textView = (TextView) rootView.findViewById(R.id.login_register);
         textView.setText("this is fragment "+Integer.toString(sectionNumber));
         return rootView;
     }
