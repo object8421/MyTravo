@@ -24,7 +24,9 @@ public class Travel extends BaseType{
 	private String end_date;
 	private String created_time;
 	private String cover_url;
+	private String description;
 	private double average_spend;
+	private int view_qty;
 	private int comment_qty;
 	private int vote_qty;
 	private int favorite_qty;
@@ -68,6 +70,14 @@ public class Travel extends BaseType{
 	public void setDestination(String destination) {
 		this.destination = destination;
 	}
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	public String getBegin_date() {
 		return begin_date;
 	}
@@ -97,6 +107,12 @@ public class Travel extends BaseType{
 	}
 	public void setAverage_spend(double average_spend) {
 		this.average_spend = average_spend;
+	}
+	public int getView_qty() {
+		return view_qty;
+	}
+	public void setView_qty(int view_qty) {
+		this.view_qty = view_qty;
 	}
 	public int getComment_qty() {
 		return comment_qty;
