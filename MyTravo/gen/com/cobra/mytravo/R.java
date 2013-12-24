@@ -523,6 +523,7 @@ containing a value of this type.
         public static final int the_end=0x7f060050;
         public static final int theme=0x7f06003a;
         public static final int title_activity_add_note=0x7f06005c;
+        public static final int title_activity_add_travel=0x7f06005d;
         public static final int title_activity_change_user_info=0x7f060057;
         public static final int title_activity_guest=0x7f06004d;
         public static final int title_activity_login=0x7f060055;

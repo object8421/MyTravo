@@ -86,5 +86,6 @@
     <string name="title_activity_map">MapActivity</string>
     <string name="title_activity_notes">NotesActivity</string>
     <string name="title_activity_add_note">AddNoteActivity</string>
+    <string name="title_activity_add_travel">AddTravelActivity</string>
 
 </resources>
