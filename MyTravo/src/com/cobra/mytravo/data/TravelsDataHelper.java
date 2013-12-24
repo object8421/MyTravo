@@ -13,12 +13,14 @@ import android.content.CursorLoader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import android.provider.Contacts.Intents.Insert;
+import android.util.Log;
 
 public class TravelsDataHelper extends BaseDataHelper{
-	private int user_id;
-	public TravelsDataHelper(Context context, int user_id) {
+	private int user_id = 0;
+	public TravelsDataHelper(Context context) {
 		super(context);
-		this.user_id = user_id;
+//		this.user_id = user_id;
 	}
 
 	@Override
@@ -58,6 +60,11 @@ public class TravelsDataHelper extends BaseDataHelper{
         cursor.close();
         return travel;
     }
+	
+	public void insert(Travel travel) {
+		this.insert(getContentValues(travel));
+	}
+	
 	public void bulkInsert(List<Travel> travels) {
         ArrayList<ContentValues> contentValues = new ArrayList<ContentValues>();
         for (Travel travel : travels) {
@@ -68,6 +75,7 @@ public class TravelsDataHelper extends BaseDataHelper{
         bulkInsert(contentValues.toArray(valueArray));
     }
 	public CursorLoader getCursorLoader() {
+		Log.i("CursorLoader", "JFJJJJJJJJJJJJJJJJJJJJJJJJJJJ");
         return new CursorLoader(getContext(), getContentUri(), null, TravelsDBInfo.USER_ID + "=?",
                 new String[] {
         	String.valueOf(this.user_id)
@@ -80,7 +88,7 @@ public class TravelsDataHelper extends BaseDataHelper{
         public static final String TABLE_NAME = "travels";
 
         public static final String ID = "travel_id";
-
+        
         public static final String USER_ID = "user_id";
         
         public static final String TIME = "created_time";
