@@ -1,17 +1,34 @@
 package com.cobra.mytravo.models;
 
+import java.io.Serializable;
+import java.util.HashMap;
+
+import com.cobra.mytravo.data.NotesDataHelper;
+import com.cobra.mytravo.data.TravelsDataHelper;
+import com.google.gson.Gson;
+
 import android.R.bool;
 import android.R.string;
+import android.database.Cursor;
 
-public class Note {
+public class Note extends BaseType implements Serializable{
 
 	/**
 	 * Created by L!ar on 9/4/13
 	 */
+	private static final HashMap<String, Note> CACHE = new HashMap<String, Note>();
 	private int note_id;
 	private int user_id;
 	private int travel_id;
+	private int is_deleted;
 	private String travel_created_time;
+	private static void addToCache(Note note) {
+        CACHE.put(note.getTime(), note);
+    }
+
+    private static Note getFromCache(String time) {
+        return CACHE.get(time);
+    }
 	public int getUser_id() {
 		return user_id;
 	}
@@ -35,8 +52,8 @@ public class Note {
 	private String time;
 	private int comment_qty;
 	private int vote_qty;
-	private boolean is_public;
-	private boolean is_deleted;
+	private int is_public;
+	
 	public int getNote_id() {
 		return note_id;
 	}
@@ -75,16 +92,34 @@ public class Note {
 	public void setVote_qty(int vote_qty) {
 		this.vote_qty = vote_qty;
 	}
-	public boolean isIs_public() {
-		return is_public;
-	}
-	public void setIs_public(boolean is_public) {
-		this.is_public = is_public;
-	}
-	public boolean isIs_deleted() {
+	public int getIs_deleted() {
 		return is_deleted;
 	}
-	public void setIs_deleted(boolean is_deleted) {
+	public void setIs_deleted(int is_deleted) {
 		this.is_deleted = is_deleted;
+	}
+	public int getIs_public() {
+		return is_public;
+	}
+	public void setIs_public(int is_public) {
+		this.is_public = is_public;
+	}
+	public static Note fromJson(String json) {
+        return new Gson().fromJson(json, Note.class);
+    }
+	public static Note fromCursor(Cursor cursor) {
+        String time = cursor.getString(cursor.getColumnIndex(NotesDataHelper.NotesDBInfo.TIME));
+        Note note = getFromCache(time);
+        if (note != null) {
+            return note;
+        }
+        note = new Gson().fromJson(
+                cursor.getString(cursor.getColumnIndex(NotesDataHelper.NotesDBInfo.JSON)),
+                Note.class);
+        addToCache(note);
+        return note;
+    }
+	public static void clearCache(){
+		CACHE.clear();
 	}
 }

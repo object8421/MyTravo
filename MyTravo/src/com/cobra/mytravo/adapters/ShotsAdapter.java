@@ -83,7 +83,7 @@ public class ShotsAdapter extends CursorAdapter {
         holder.text_view_count.setText(String.valueOf(shot.getViews_count()));
         holder.text_like_count.setText(String.valueOf(shot.getLikes_count()));
         holder.text_comment_count.setText(String.valueOf(shot.getComments_count()));
-        holder.time.setText(TimeUtils.getListTime(shot.getCreated_at()));
+        holder.time.setText(shot.getCreated_at());
     }
 
     private Holder getHolder(final View view) {

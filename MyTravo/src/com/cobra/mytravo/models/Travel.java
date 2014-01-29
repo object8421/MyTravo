@@ -1,5 +1,6 @@
 package com.cobra.mytravo.models;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 
@@ -9,7 +10,7 @@ import com.google.gson.Gson;
 import android.R.integer;
 import android.database.Cursor;
 
-public class Travel extends BaseType{
+public class Travel extends BaseType implements Serializable{
 
 	/**
 	 * @param args
@@ -30,8 +31,8 @@ public class Travel extends BaseType{
 	private int comment_qty;
 	private int vote_qty;
 	private int favorite_qty;
-	private boolean is_public;
-	private boolean is_deleted;
+	private int is_public;
+	private int is_deleted;
 	private User user;
 	private static void addToCache(Travel travel) {
         CACHE.put(travel.getCreated_time(), travel);
@@ -132,18 +133,23 @@ public class Travel extends BaseType{
 	public void setFavorite_qty(int favorite_qty) {
 		this.favorite_qty = favorite_qty;
 	}
-	public boolean isIs_public() {
+	
+	public int getIs_public() {
 		return is_public;
 	}
-	public void setIs_public(boolean is_public) {
+
+	public void setIs_public(int is_public) {
 		this.is_public = is_public;
 	}
-	public boolean isIs_deleted() {
+
+	public int getIs_deleted() {
 		return is_deleted;
 	}
-	public void setIs_deleted(boolean is_deleted) {
+
+	public void setIs_deleted(int is_deleted) {
 		this.is_deleted = is_deleted;
 	}
+
 	public static Travel fromJson(String json) {
         return new Gson().fromJson(json, Travel.class);
     }
@@ -159,4 +165,7 @@ public class Travel extends BaseType{
         addToCache(travel);
         return travel;
     }
+	public static void clearCache(){
+		CACHE.clear();
+	}
 }

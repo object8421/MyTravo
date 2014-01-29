@@ -87,5 +87,7 @@
     <string name="title_activity_notes">NotesActivity</string>
     <string name="title_activity_add_note">AddNoteActivity</string>
     <string name="title_activity_add_travel">AddTravelActivity</string>
+    <string name="action_ok">确认</string>
+    <string name="title_activity_my_travel_detail">MyTravelDetailActivity</string>
 
 </resources>

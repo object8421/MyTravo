@@ -4,6 +4,7 @@ import com.cobra.mytravo.R;
 import com.cobra.mytravo.fragments.BaseFragment;
 import com.cobra.mytravo.fragments.DrawerFragment;
 import com.cobra.mytravo.fragments.FakeFragment;
+import com.cobra.mytravo.fragments.MeFragment;
 import com.cobra.mytravo.fragments.ShotsFragment;
 
 
@@ -150,7 +151,9 @@ public class MainActivity extends FragmentActivity {
 			
 			mContentFragment = new ShotsFragment();
 			break;
-
+		case 3:
+			mContentFragment = new MeFragment();
+			break;
 		default:
 			mContentFragment = FakeFragment.newInstance(position);
 			break;

@@ -50,4 +50,7 @@ public final class MyHandlerMessage {
 	
 	public final static int GET_LOCATION_SUCCESS = 110;
 	public final static int GET_LOCATION_NAME_SUCCESS = 111;
+	
+	public final static int SET_START_TIME_FINISH = 120;
+	public final static int SET_END_TIME_FINISH = 130;
 }

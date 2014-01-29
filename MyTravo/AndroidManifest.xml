@@ -65,11 +65,16 @@
         </activity>
         <activity
             android:name="com.cobra.mytravo.activities.AddTravelActivity"
+            android:windowSoftInputMode="adjustPan"
             android:label="@string/title_activity_add_travel" >
         </activity>
         <activity
             android:name="com.cobra.mytravo.activities.TravelActivity"
             android:label="@string/title_activity_travel" >
+        </activity>
+        <activity
+            android:name="com.cobra.mytravo.activities.MyTravelEditActivity"
+            android:label="@string/title_activity_my_travel_detail" >
         </activity>
     </application>
 
