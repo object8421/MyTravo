@@ -4,6 +4,6 @@
         android:id="@+id/action_add"
         android:orderInCategory="100"
         android:showAsAction="always"
-        android:title="@string/action_ok"/>
+        android:title="@string/action_ok" android:icon="@drawable/action_accept"/>
 
 </menu>

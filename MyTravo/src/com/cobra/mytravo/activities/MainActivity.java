@@ -1,11 +1,13 @@
 package com.cobra.mytravo.activities;
 
 import com.cobra.mytravo.R;
+import com.cobra.mytravo.data.AppData;
 import com.cobra.mytravo.fragments.BaseFragment;
 import com.cobra.mytravo.fragments.DrawerFragment;
 import com.cobra.mytravo.fragments.FakeFragment;
 import com.cobra.mytravo.fragments.MeFragment;
 import com.cobra.mytravo.fragments.ShotsFragment;
+import com.cobra.mytravo.helpers.ActionBarUtils;
 
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
@@ -49,12 +51,8 @@ public class MainActivity extends FragmentActivity {
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mPullToRefreshAttacher = PullToRefreshAttacher.get(this);
 		listItems = getResources().getStringArray(R.array.drawermenu);
-        //get and set actionbar
-        actionBar = getActionBar();
-       
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
-        actionBar.setSplitBackgroundDrawable(getResources().getDrawable(R.color.black));
+		actionBar = getActionBar();
+        ActionBarUtils.InitialDarkActionBar(this, actionBar);
         
         //set drawer Listener
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, 
@@ -109,19 +107,25 @@ public class MainActivity extends FragmentActivity {
         else{
         	switch(item.getItemId()){
         	case R.id.main_register:
-        		Intent intent = new Intent();
-        		intent.setClass(MainActivity.this, RegisterActivity.class);
-        		startActivity(intent);
+        		Intent registerIntent = new Intent(MainActivity.this, RegisterActivity.class);
+        		startActivity(registerIntent);
         		break;
-        	case R.id.show_travels:
-        		Intent intent1 = new Intent();
-        		intent1.setClass(MainActivity.this, TravelActivity.class);
-        		startActivity(intent1);
+        	case R.id.add_note:
+        		//if last travel time is not null, enter the AddNoteActivity directly, 
+        		//otherwise we enter AddTravelActivity first to create a new travel.
+        		//L!ar 2014/2/2
+        		if(AppData.getTravelTime() != null){
+        			Intent noteIntent = new Intent(MainActivity.this, AddNoteActivity.class);
+        			startActivity(noteIntent);
+        		}
+        		else{
+        			Intent travelIntent = new Intent(MainActivity.this, AddTravelActivity.class);
+            		startActivity(travelIntent);
+        		}
         		break;
         	case R.id.add_travel:
-        		Intent intent2 = new Intent();
-        		intent2.setClass(MainActivity.this, AddTravelActivity.class);
-        		startActivity(intent2);
+        		Intent travelIntent = new Intent(MainActivity.this, AddTravelActivity.class);
+        		startActivity(travelIntent);
         		break;
         	}
         }
@@ -148,7 +152,6 @@ public class MainActivity extends FragmentActivity {
 		
 		switch (position) {
 		case 0:
-			
 			mContentFragment = new ShotsFragment();
 			break;
 		case 3:

@@ -53,20 +53,23 @@
         </activity>
         <activity
             android:name="com.cobra.mytravo.activities.AddNoteActivity"
-            android:label="@string/title_activity_add_note" >
+            android:label="@string/title_activity_add_note"
+            android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
             android:name="com.cobra.mytravo.activities.RegisterActivity"
-            android:label="@string/title_activity_register" >
+            android:label="@string/title_activity_register" 
+            android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
             android:name="com.cobra.mytravo.activities.LoginActivity"
-            android:label="@string/title_activity_login" >
+            android:label="@string/title_activity_login"
+            android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
             android:name="com.cobra.mytravo.activities.AddTravelActivity"
-            android:windowSoftInputMode="adjustPan"
-            android:label="@string/title_activity_add_travel" >
+            android:label="@string/title_activity_add_travel"
+            android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
             android:name="com.cobra.mytravo.activities.TravelActivity"
@@ -74,7 +77,8 @@
         </activity>
         <activity
             android:name="com.cobra.mytravo.activities.MyTravelEditActivity"
-            android:label="@string/title_activity_my_travel_detail" >
+            android:label="@string/title_activity_my_travel_detail"
+            android:windowSoftInputMode="adjustResize" >
         </activity>
     </application>
 

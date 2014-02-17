@@ -3,7 +3,6 @@ package com.cobra.mytravo.fragments;
 
 import com.cobra.mytravo.R;
 import com.cobra.mytravo.activities.MyTravelEditActivity;
-import com.cobra.mytravo.activities.TravelActivity;
 import com.cobra.mytravo.adapters.MeTravelAdapter;
 import com.cobra.mytravo.data.AppData;
 import com.cobra.mytravo.data.TravelsDataHelper;

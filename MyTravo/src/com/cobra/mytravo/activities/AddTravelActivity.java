@@ -6,6 +6,7 @@ import java.util.Date;
 import com.cobra.mytravo.R;
 import com.cobra.mytravo.data.AppData;
 import com.cobra.mytravo.data.TravelsDataHelper;
+import com.cobra.mytravo.helpers.ActionBarUtils;
 import com.cobra.mytravo.helpers.TimeUtils;
 import com.cobra.mytravo.models.MyHandlerMessage;
 import com.cobra.mytravo.models.Travel;
@@ -83,6 +84,7 @@ public class AddTravelActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_travel);
+		ActionBarUtils.InitialDarkActionBar(this, getActionBar());
 		
 //		initalize the travelDataHelper
 		/*
@@ -131,6 +133,7 @@ public class AddTravelActivity extends Activity {
 		
 		
 	}
+	//show the time pick dialog, 0 for starting time and 1 for end time
 	 protected void showTimeDialog(final int value) {
          // TODO Auto-generated method stub
          
@@ -174,7 +177,7 @@ public class AddTravelActivity extends Activity {
 
          date.show();
  }
-	
+	//check the entered info is correct
 	private boolean checkInfo() {
 		// TODO Auto-generated method stub
 		if(edtTitle.getText().toString().isEmpty())

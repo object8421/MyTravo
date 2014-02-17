@@ -5,6 +5,7 @@ import com.cobra.mytravo.R.layout;
 import com.cobra.mytravo.R.menu;
 import com.cobra.mytravo.data.AppData;
 import com.cobra.mytravo.data.TravelsDataHelper;
+import com.cobra.mytravo.helpers.ActionBarUtils;
 import com.cobra.mytravo.helpers.TimeUtils;
 import com.cobra.mytravo.models.MyHandlerMessage;
 import com.cobra.mytravo.models.Travel;
@@ -56,6 +57,9 @@ public class MyTravelEditActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_travel);
+		//Initial the actionBar especially the split actionBar,
+		//2014/1/30 by L!ar@Fuzhou , I hope this year I can make a girl friend!
+		ActionBarUtils.InitialDarkActionBar(this, getActionBar());
 		titleEditText = (EditText) findViewById(R.id.travel_title);
 		expensEditText = (EditText) findViewById(R.id.travel_expense);
 		descriptionEditText = (EditText) findViewById(R.id.travel_description);
@@ -119,7 +123,7 @@ public class MyTravelEditActivity extends Activity {
 				editedTravel.setBegin_date(editedStart);
 			if((editedEnd = endButton.getText().toString().trim()) != null)
 				editedTravel.setEnd_date(editedEnd);
-			System.out.println(editedTravel.toJson());
+			//clear the cache
 			Travel.clearCache();
 			int result = mDataHelper.update(editedTravel);
 			Log.i("result", String.valueOf(result));

@@ -3,17 +3,18 @@
     <item
         android:id="@+id/main_register"
         android:orderInCategory="100"
-        android:showAsAction="always"
+        android:showAsAction="never"
         android:title="@string/register"/>
-
-    <item
-        android:id="@+id/show_travels"
-        android:orderInCategory="100"
-        android:showAsAction="always"
-        android:title="游记"/>
     
-    <item android:id="@+id/add_travel"
+    <item 
+        android:id="@+id/add_travel"
         android:orderInCategory="100"
-        android:showAsAction="always"
+        android:showAsAction="never"
         android:title="添加游记"/>
+    <item 
+        android:id="@+id/add_note" 
+        android:icon="@drawable/action_new" 
+        android:orderInCategory="300" 
+        android:title="记录足迹" 
+        android:showAsAction="always"></item>
 </menu>

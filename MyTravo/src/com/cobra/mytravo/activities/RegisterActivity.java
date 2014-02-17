@@ -10,6 +10,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.cobra.mytravo.R;
 import com.cobra.mytravo.data.GsonRequest;
+import com.cobra.mytravo.helpers.ActionBarUtils;
 import com.cobra.mytravo.models.MyHandlerMessage;
 import com.cobra.mytravo.models.MyServerMessage;
 import com.cobra.mytravo.models.User;
@@ -76,7 +77,7 @@ public class RegisterActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_register);
-		
+		ActionBarUtils.InitialDarkActionBar(this, getActionBar());
 		nickname = (EditText)findViewById(R.id.register_nickname);
 		email = (EditText)findViewById(R.id.register_email);
 		password = (EditText)findViewById(R.id.register_password);
