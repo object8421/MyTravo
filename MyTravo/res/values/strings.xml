@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="action_settings">设置</string>
+    
     <string name="app_name">TraVo</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">设置</string>
@@ -41,6 +41,7 @@
     <string name="shadowDy_filter">0.5</string>
     <string name="shadowRadius_filter">2.0</string>
     <string name="travel_title">旅行标题</string>
+    <string name="action_settings">设置</string>
     <string name="action_add_note">添加游记</string>
     <string name="add_time">添加时间</string>
     <string name="add_date">添加日期</string>
@@ -48,6 +49,7 @@
     <string name="action_save">保存</string>
     <string name="action_delete">删除</string>
     <string name="action_refresh">刷新</string>
+    <string name="action_edit">编辑</string>
     <string name="picture_description">写下你的游记或者图片描述</string>
 
     <string-array name="actionbar_spinner_sort">
@@ -67,11 +69,9 @@
     <string name="title_activity_welcome">WelcomeActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string name="action_settings">Settings</string>
+    
     <string name="title_activity_guest">GuestActivity</string>
-    <string name="action_settings">Settings</string>
-    <string name="action_refresh">Refresh</string>
-    <string name="action_share">Share</string>
+    
     <string name="image_not_downloaded">Image not downloaded</string>
     <string name="the_end">The End</string>
     <string name="drawer_open">Open navigation drawer</string>
@@ -89,5 +89,6 @@
     <string name="title_activity_add_travel">AddTravelActivity</string>
     <string name="action_ok">确认</string>
     <string name="title_activity_my_travel_detail">MyTravelDetailActivity</string>
+    <string name="title_activity_personal_notes">PersonalNotesActivity</string>
 
 </resources>

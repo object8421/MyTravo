@@ -5,7 +5,7 @@ import com.cobra.mytravo.data.AppData;
 import com.cobra.mytravo.fragments.BaseFragment;
 import com.cobra.mytravo.fragments.DrawerFragment;
 import com.cobra.mytravo.fragments.FakeFragment;
-import com.cobra.mytravo.fragments.MeFragment;
+import com.cobra.mytravo.fragments.PersonalFragment;
 import com.cobra.mytravo.fragments.ShotsFragment;
 import com.cobra.mytravo.helpers.ActionBarUtils;
 
@@ -155,7 +155,7 @@ public class MainActivity extends FragmentActivity {
 			mContentFragment = new ShotsFragment();
 			break;
 		case 3:
-			mContentFragment = new MeFragment();
+			mContentFragment = new PersonalFragment();
 			break;
 		default:
 			mContentFragment = FakeFragment.newInstance(position);

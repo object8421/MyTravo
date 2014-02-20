@@ -9,8 +9,8 @@ import com.cobra.mytravo.R;
 import com.cobra.mytravo.R.layout;
 import com.cobra.mytravo.R.menu;
 import com.cobra.mytravo.data.GsonRequest;
-import com.cobra.mytravo.models.MyHandlerMessage;
-import com.cobra.mytravo.models.MyServerMessage;
+import com.cobra.mytravo.data.MyHandlerMessage;
+import com.cobra.mytravo.data.MyServerMessage;
 import com.cobra.mytravo.models.User.UserLoginResponse;
 
 import android.os.Bundle;

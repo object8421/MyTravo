@@ -76,9 +76,13 @@
             android:label="@string/title_activity_travel" >
         </activity>
         <activity
-            android:name="com.cobra.mytravo.activities.MyTravelEditActivity"
+            android:name="com.cobra.mytravo.activities.PersonalTravelEditActivity"
             android:label="@string/title_activity_my_travel_detail"
             android:windowSoftInputMode="adjustResize" >
+        </activity>
+        <activity
+            android:name="com.cobra.mytravo.activities.PersonalTravelDetailActivity"
+            android:label="@string/title_activity_personal_notes" >
         </activity>
     </application>
 

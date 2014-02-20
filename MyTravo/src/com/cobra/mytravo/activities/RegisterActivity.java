@@ -10,9 +10,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.cobra.mytravo.R;
 import com.cobra.mytravo.data.GsonRequest;
+import com.cobra.mytravo.data.MyHandlerMessage;
+import com.cobra.mytravo.data.MyServerMessage;
 import com.cobra.mytravo.helpers.ActionBarUtils;
-import com.cobra.mytravo.models.MyHandlerMessage;
-import com.cobra.mytravo.models.MyServerMessage;
 import com.cobra.mytravo.models.User;
 import com.cobra.mytravo.models.User.UserRegisterResponse;
 

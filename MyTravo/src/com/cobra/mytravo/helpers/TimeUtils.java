@@ -23,6 +23,18 @@ public class TimeUtils {
         }
         return dstDateFormat.format(date);
     }
+    public static CharSequence getPhotoTime(long  created_at) {
+        
+    	Date date = null;
+        SimpleDateFormat srcDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss 格林尼治标准时间+0800 yyyy",Locale.ENGLISH);
+        SimpleDateFormat dstDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+        try {
+        	date = srcDateFormat.parse(new Date(created_at).toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return dstDateFormat.format(date);
+    }
     public static String getCalendarTime(Calendar c){
     	SimpleDateFormat df = new SimpleDateFormat("yyyy.MM.dd");
     	String formattedDate = df.format(c.getTime());

@@ -5,10 +5,10 @@ import java.util.Date;
 
 import com.cobra.mytravo.R;
 import com.cobra.mytravo.data.AppData;
+import com.cobra.mytravo.data.MyHandlerMessage;
 import com.cobra.mytravo.data.TravelsDataHelper;
 import com.cobra.mytravo.helpers.ActionBarUtils;
 import com.cobra.mytravo.helpers.TimeUtils;
-import com.cobra.mytravo.models.MyHandlerMessage;
 import com.cobra.mytravo.models.Travel;
 
 import android.os.Bundle;
@@ -251,6 +251,10 @@ public class AddTravelActivity extends Activity {
 				travel.setUser_id(0);
 				
 				mDataHelper.insert(travel);
+				//only for testing, later we will move user_id to the moment 
+				//we successfully login
+				AppData.setUserId(0);
+				AppData.setTravel_time(travel.getCreated_time());
 				Message msg = new Message();
 				msg.what = MyHandlerMessage.ADD_NEW_TRAVEL_SUCCESS;
 				handler.sendMessage(msg);

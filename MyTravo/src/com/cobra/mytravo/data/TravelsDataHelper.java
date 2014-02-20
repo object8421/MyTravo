@@ -92,7 +92,7 @@ public class TravelsDataHelper extends BaseDataHelper{
         		+ " AND " + TravelsDBInfo.IS_DELETED + "=?",
                 new String[] {
         	String.valueOf(this.user_id), String.valueOf(0)
-                }, TravelsDBInfo._ID + " ASC");
+                }, TravelsDBInfo.TIME + " DESC");
     }
 	public static final class TravelsDBInfo implements BaseColumns {
         private TravelsDBInfo() {

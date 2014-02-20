@@ -48,7 +48,7 @@ public class Note extends BaseType implements Serializable{
 		this.travel_created_time = travel_created_time;
 	}
 	private String image_url;
-	private String content;
+	private String description;
 	private String time;
 	private int comment_qty;
 	private int vote_qty;
@@ -68,11 +68,11 @@ public class Note extends BaseType implements Serializable{
 		this.travel_id = travel_id;
 	}
 	
-	public String getContent() {
-		return content;
+	public String getDescription() {
+		return description;
 	}
-	public void setContent(String content) {
-		this.content = content;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	public String getTime() {
 		return time;

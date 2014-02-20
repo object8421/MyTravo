@@ -1,6 +1,7 @@
 package com.cobra.mytravo.fragments;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+
 import com.cobra.mytravo.R;
 import com.cobra.mytravo.activities.MainActivity;
 import com.cobra.mytravo.adapters.ShotsAdapter;
@@ -69,7 +70,7 @@ public class ShotsFragment extends BaseFragment implements LoaderManager.LoaderC
 	        
 	        //inflater the layout 
 	        View view = inflater.inflate(R.layout.fragment_shot, null);
-	        getActivity().getActionBar().hide();
+	        
 	        mListView = (ListView) view.findViewById(R.id.listView);
 			//初始化数据库
 	       Log.i("mycontext", getActivity().getApplicationContext().toString());
