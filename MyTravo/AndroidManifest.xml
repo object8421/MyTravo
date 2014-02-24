@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -21,7 +22,6 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <!-- The following two permissions are not required to use Google Maps Android API v2, but are recommended. -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -33,7 +33,8 @@
         android:icon="@drawable/travo_logo"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
-        android:uiOptions="splitActionBarWhenNarrow" >
+        android:uiOptions="splitActionBarWhenNarrow"
+         >
         <provider
             android:name="com.cobra.mytravo.data.DataProvider"
             android:authorities="com.cobra.mytravo.data.DataProvider"
@@ -44,7 +45,8 @@
 
         <activity
             android:name="com.cobra.mytravo.activities.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -54,35 +56,47 @@
         <activity
             android:name="com.cobra.mytravo.activities.AddNoteActivity"
             android:label="@string/title_activity_add_note"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.cobra.mytravo.activities.RegisterActivity"
-            android:label="@string/title_activity_register" 
-            android:windowSoftInputMode="adjustResize" >
+            android:label="@string/title_activity_register"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.cobra.mytravo.activities.LoginActivity"
             android:label="@string/title_activity_login"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.cobra.mytravo.activities.AddTravelActivity"
             android:label="@string/title_activity_add_travel"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.cobra.mytravo.activities.TravelActivity"
-            android:label="@string/title_activity_travel" >
+            android:label="@string/title_activity_travel"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.cobra.mytravo.activities.PersonalTravelEditActivity"
             android:label="@string/title_activity_my_travel_detail"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait" >
         </activity>
         <activity
             android:name="com.cobra.mytravo.activities.PersonalTravelDetailActivity"
-            android:label="@string/title_activity_personal_notes" >
+            android:label="@string/title_activity_personal_notes"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.cobra.mytravo.activities.NoteDetailActivity"
+            android:label="@string/title_activity_note_detail"
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 

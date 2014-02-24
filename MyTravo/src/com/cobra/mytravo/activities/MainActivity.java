@@ -6,6 +6,7 @@ import com.cobra.mytravo.fragments.BaseFragment;
 import com.cobra.mytravo.fragments.DrawerFragment;
 import com.cobra.mytravo.fragments.FakeFragment;
 import com.cobra.mytravo.fragments.PersonalFragment;
+import com.cobra.mytravo.fragments.SettingFragment;
 import com.cobra.mytravo.fragments.ShotsFragment;
 import com.cobra.mytravo.helpers.ActionBarUtils;
 
@@ -41,6 +42,10 @@ public class MainActivity extends FragmentActivity {
 	private ActionBar actionBar;
 	private ActionBarDrawerToggle mDrawerToggle;
 	private String[] listItems;
+	private ShotsFragment shotsFragment;
+	private FakeFragment guideFragment, nearbyFakeFragment;
+	private PersonalFragment personalFragment;
+	private SettingFragment settingFragment;
 	//store current position
 	private int current;
 	@Override
@@ -152,10 +157,14 @@ public class MainActivity extends FragmentActivity {
 		
 		switch (position) {
 		case 0:
-			mContentFragment = new ShotsFragment();
+			if(shotsFragment == null)
+				shotsFragment = new ShotsFragment();
+			mContentFragment = shotsFragment;
 			break;
 		case 3:
-			mContentFragment = new PersonalFragment();
+			if(personalFragment == null)
+				personalFragment = new PersonalFragment();
+			mContentFragment = personalFragment;
 			break;
 		default:
 			mContentFragment = FakeFragment.newInstance(position);

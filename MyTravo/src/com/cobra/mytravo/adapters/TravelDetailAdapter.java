@@ -10,6 +10,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
 import android.support.v4.widget.CursorAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class TravelDetailAdapter extends CursorAdapter{
+	private final static String TAG = "TravelDetailAdapter";
 	private LayoutInflater mLayoutInflater;
 	private ListView mListView;
 	private BitmapManager1 bitmapManager;
@@ -25,7 +27,7 @@ public class TravelDetailAdapter extends CursorAdapter{
 		super(context, null, false);
 		mLayoutInflater = ((Activity) context).getLayoutInflater();
         mListView = listView;
-        bitmapManager = new BitmapManager1();
+        bitmapManager = new BitmapManager1(context);
 	}
 	@Override
 	public Note getItem(int position){
@@ -43,7 +45,12 @@ public class TravelDetailAdapter extends CursorAdapter{
 		holder.timeTextView.setText(TimeUtils.getListTime(note.getTime()));
 		holder.imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.me_default_image));
 		if(note.getImage_url()!= null){
+			
 			bitmapManager.fetchBitmapOnThread(note.getImage_url(), holder.imageView);
+		}
+		else{
+			holder.imageView.setVisibility(View.GONE);
+			Log.v(TAG, "url is null");
 		}
 		//holder.locationTextView.setText(note.get)
 	}

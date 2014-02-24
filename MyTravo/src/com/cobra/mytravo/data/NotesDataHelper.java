@@ -64,7 +64,7 @@ public class NotesDataHelper extends BaseDataHelper {
     }
 	public int update(Note newNote){
 		return this.update(getContentValues(newNote), NotesDBInfo.USER_ID + "=? AND "
-	+ NotesDBInfo.TRAVEL_CREATED_TIME + "=?" + NotesDBInfo.TIME + "=?", new String[]{String.valueOf(newNote.getUser_id()),
+	+ NotesDBInfo.TRAVEL_CREATED_TIME + "=? AND " + NotesDBInfo.TIME + "=?", new String[]{String.valueOf(newNote.getUser_id()),
 			newNote.getTravel_created_time(), newNote.getTime()});
 	}
 	//notice that we only set the is_deleted value from 0 to 1 for deletion

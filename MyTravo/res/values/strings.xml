@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    
     <string name="app_name">TraVo</string>
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">设置</string>
@@ -69,9 +68,7 @@
     <string name="title_activity_welcome">WelcomeActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
-    
     <string name="title_activity_guest">GuestActivity</string>
-    
     <string name="image_not_downloaded">Image not downloaded</string>
     <string name="the_end">The End</string>
     <string name="drawer_open">Open navigation drawer</string>
@@ -90,5 +87,6 @@
     <string name="action_ok">确认</string>
     <string name="title_activity_my_travel_detail">MyTravelDetailActivity</string>
     <string name="title_activity_personal_notes">PersonalNotesActivity</string>
+    <string name="title_activity_note_detail">NoteDetailActivity</string>
 
 </resources>

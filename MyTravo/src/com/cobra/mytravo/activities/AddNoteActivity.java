@@ -11,13 +11,16 @@ import com.cobra.mytravo.data.AppData;
 import com.cobra.mytravo.data.MyHandlerMessage;
 import com.cobra.mytravo.data.NotesDataHelper;
 import com.cobra.mytravo.helpers.ActionBarUtils;
+import com.cobra.mytravo.helpers.MyImageUtil;
 import com.cobra.mytravo.helpers.PhotoUtils;
 import com.cobra.mytravo.helpers.TimeUtils;
 import com.cobra.mytravo.models.Note;
+import com.cobra.mytravo.models.Travel;
 import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -29,6 +32,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -45,33 +49,49 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class AddNoteActivity extends Activity implements OnMenuItemClickListener{
-	
+	private final static String TAG = "AddNoteAtivity";
+	private static final String NOTE_STRING = "note";
 	private EditText descriptionEditText;
 	private TextView locationTextView;
 	private ProgressBar locationProgressBar;
-	private ImageView imageView;
-	
-	private Bitmap noteImage;
+	private ImageView addImageView;
+	private ImageView coverImageView;
+	private Bitmap coverBitmap;
 	private String photoTimeString;
 	private String descriptionString;
 	private String locationString;
 	private Location location;
-	private String noteImagePath;
+	private String coverPathString;
+	//mark if is edit
+	private boolean isEdit = false;
+	//
 	private boolean imageExist = false;
 	private NotesDataHelper mDataHelper;
 	private Note note;
+	private Note editNote;
 	private ProgressDialog progressDialog;
 	private Handler mHandler = new Handler(){
 		@Override
 		public void handleMessage(Message msg){
 			switch (msg.what) {
 			case MyHandlerMessage.ADD_NEW_NOTE_SUCCESS:
+				if(isEdit){
+					Intent resultIntent = new Intent();
+					Bundle resultBundle = new Bundle();
+					resultBundle.putSerializable(NOTE_STRING, editNote);
+					resultIntent.putExtras(resultBundle);
+					setResult(1, resultIntent);
+					Toast.makeText(AddNoteActivity.this, "修改足迹成功", Toast.LENGTH_SHORT).show();
+				}
 				if(progressDialog != null && progressDialog.isShowing())
 					progressDialog.dismiss();
 				AddNoteActivity.this.finish();
 				break;
 
 			default:
+				Toast.makeText(AddNoteActivity.this, "修改足迹失败!", Toast.LENGTH_SHORT).show();
+				if(progressDialog != null && progressDialog.isShowing())
+					progressDialog.dismiss();
 				break;
 			}
 		}
@@ -80,7 +100,8 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_note);
-		ActionBarUtils.InitialDarkActionBar(this, getActionBar());
+		ActionBarUtils.InitialDarkActionBar(this, getActionBar(),"添加足迹");
+		InitialData();
 		InitialView();
 		mDataHelper = new NotesDataHelper(this, AppData.getUserId(), AppData.getTravelTime());
 		
@@ -109,11 +130,22 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	private void InitialData(){
+		if((getIntent() )!= null){
+			 editNote = (Note) getIntent().getSerializableExtra(NOTE_STRING);
+			 if(editNote != null){
+				 isEdit = true;
+				 //get the edditedtravel's coverpathstring if exists
+				 photoTimeString = editNote.getImage_url();
+			 }
+		 }
+	}
 	private void InitialView(){
 		descriptionEditText = (EditText) findViewById(R.id.edt_add_note);
 		locationTextView = (TextView) findViewById(R.id.tv_add_note);
-		imageView = (ImageView) findViewById(R.id.img_add_note);
-		imageView.setOnClickListener(new OnClickListener() {
+		addImageView = (ImageView) findViewById(R.id.img_add_note);
+		coverImageView = (ImageView) findViewById(R.id.img_cover_add_note);
+		addImageView.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View view) {
@@ -126,6 +158,16 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
                 popupMenu.show();
 			}
 		});
+		if(isEdit){
+			if(editNote.getImage_url() != null){
+				imageExist = true;
+				MyImageUtil.setBitmap(coverImageView, editNote.getImage_url());
+				coverImageView.setVisibility(View.VISIBLE);
+				if(editNote.getDescription() != null)
+					descriptionEditText.setText(editNote.getDescription());
+				
+			}
+		}
 	}
 	private class AddNoteThread implements Runnable{
 
@@ -136,109 +178,103 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 			if(saveData()){
 					msg.what = MyHandlerMessage.ADD_NEW_NOTE_SUCCESS;
 				}
+			else{
+				msg.what = MyHandlerMessage.ADD_NEW_NOTE_FAIL;
+			}
 			mHandler.sendMessage(msg);
 		}
 		
 	}
-	private boolean getData(){
-		descriptionString = descriptionEditText.getText().toString().trim();
-		note = new Note();
-		note.setUser_id(AppData.getUserId());
-		note.setTravel_created_time(AppData.getTravelTime());
-		note.setTime(new Date().toString());
-		note.setDescription(descriptionString);
-		if(imageExist){
-			if(photoTimeString != null){
-				saveImage();
-				note.setImage_url(noteImagePath);
+	
+	private boolean saveData(){
+		try{
+			if(!isEdit){
+				descriptionString = descriptionEditText.getText().toString().trim();
+				note = new Note();
+				note.setUser_id(AppData.getUserId());
+				note.setTravel_created_time(AppData.getTravelTime());
+				note.setTime(new Date().toString());
+				note.setDescription(descriptionString);
+				if(imageExist){
+					if(coverPathString == null){
+						if(photoTimeString != null){
+							coverPathString = PhotoUtils.saveImage(photoTimeString, coverBitmap);
+							if(coverPathString != null)
+								note.setImage_url(photoTimeString);
+						}
+					}
+					else{
+						if(photoTimeString != null)
+						note.setImage_url(photoTimeString);
+						
+					}
+					
+				}
+				
+				mDataHelper.insert(note);
+				return true;
 			}
+			else{
+				descriptionString = descriptionEditText.getText().toString().trim();
+				if(descriptionString != null){
+					editNote.setDescription(descriptionString);
+				}
+				if(imageExist){
+					if(coverPathString == null){
+						if(photoTimeString  != null){
+							coverPathString = PhotoUtils.saveImage(photoTimeString, coverBitmap);
+							if(coverPathString != null)
+								Log.v("coverPath is:", coverPathString);
+								editNote.setImage_url(photoTimeString);
+						}
+					}
+					else{
+						editNote.setImage_url(photoTimeString);
+					}
+				}
+				else{
+					editNote.setImage_url(null);
+				}
+				Note.clearCache();
+				mDataHelper.update(editNote);
+				return true;
+			}
+			
+		}
+		catch(Exception e){
+			e.printStackTrace();
+			return false;
 		}
 		
-		return true;
 	}
-	private boolean saveData(){
-		getData();
-		mDataHelper.insert(note);
-		return true;
-	}
-	private void saveImage(){
-		FileOutputStream fileOutputStream = null;
-	    try {
-	        // 获取 SD 卡根目录
-	        String saveDir = Environment.getExternalStorageDirectory().toString();
-	        		
-	        // 新建目录
-	        File dir = new File(saveDir + "/Travo/" + String.valueOf(AppData.getUserId()));
-	        if (! dir.exists()) 
-	        	dir.mkdir();
-	        
-	        // 生成文件名
-	       
-	        String filename = TimeUtils.getPhotoTime(Long.parseLong(photoTimeString)) + ".jpg";
-	        // 新建文件
-	        File file = new File(dir.getAbsolutePath(), filename);
-	        // 打开文件输出流
-	        fileOutputStream = new FileOutputStream(file);
-	        // 生成图片文件
-	        noteImage.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
-	        // 相片的完整路径
-	        noteImagePath = file.getPath();	  
-	        fileOutputStream.flush();
-	        
-	        fileOutputStream.close();
-	        
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        
-	    } finally {
-	        if (fileOutputStream != null) {
-	            try {
-	                fileOutputStream.close();
-	            } catch (Exception e) {
-	                e.printStackTrace();
-	            }
-	        }
-	    }
-	}
+	
 	 @Override  
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {  
 		 	if(resultCode != RESULT_OK)
 		 		return;
 	        switch (requestCode) {  
 	        case 1:  
-	            if (data != null) {  
-	            	imageExist = true;
-	            	photoTimeString = new Date().toString();
-	            	Toast.makeText(this, "拿到图片!", Toast.LENGTH_SHORT).show();
-	                //取得返回的Uri,基本上选择照片的时候返回的是以Uri形式，但是在拍照中有得机子呢Uri是空的，所以要特别注意  
-	                Uri mImageCaptureUri = data.getData();  
-	                //返回的Uri不为空时，那么图片信息数据都会在Uri中获得。如果为空，那么我们就进行下面的方式获取  
-	                if (mImageCaptureUri != null) {  
-	                    
-	                    try {  
-	                        //这个方法是根据Uri获取Bitmap图片的静态方法  
-	                    	noteImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), mImageCaptureUri);  
-	                        if (noteImage != null) {  
-	                        	imageView.setImageBitmap(noteImage);
-	                        }  
-	                    } catch (Exception e) {  
-	                        e.printStackTrace();  
-	                    }  
-	                } else {  
-	                    Bundle extras = data.getExtras();  
-	                    if (extras != null) {  
-	                        //这里是有些拍照后的图片是直接存放到Bundle中的所以我们可以从这里面获取Bitmap图片  
-	                    	noteImage = extras.getParcelable("data");  
-	                        if (noteImage != null) {  
-	                        	imageView.setImageBitmap(noteImage);  
-	                        }  
-	                    }  
-	                }  
-	  
-	            }  
+	        	if(coverBitmap != null)
+            		coverBitmap.recycle();
+	        	Log.v(TAG, coverPathString);
+	        	coverPathString = AppData.TRAVO_PATH + "/"+ coverPathString;
+	        	coverBitmap = BitmapFactory.decodeFile(coverPathString);
+	            if(coverBitmap != null){
+	            	Log.v(TAG, "camera data is not null");
+	            	
+	 	            imageExist = true;
+	 	            coverImageView.setVisibility(View.VISIBLE);
+	 	            coverImageView.setImageBitmap(coverBitmap); 
+	            }
+	            else{
+	            	 Log.v(TAG, "coverBitmap is null");
+	            }
+
 	            break;
 	        case 2:
+	        	Log.v("gallery", "gallery data is not null");
 	        	imageExist = true;
+	        	coverPathString = null;
 	        	Uri selectedImage = data.getData();  
 	            String[] filePathColumn = { MediaStore.Images.Media.DATA, MediaStore.Images.Media.DATE_TAKEN};  
 	            
@@ -247,15 +283,16 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 	            cursor.moveToFirst();  
 	   
 	            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);  
-	            String imagePathString = cursor.getString(columnIndex);
-	            photoTimeString = cursor.getString(cursor.getColumnIndex(filePathColumn[1]));
+	            String temp = cursor.getString(columnIndex);
+	            photoTimeString = (String) TimeUtils.getPhotoTime(Long.parseLong(cursor.getString(cursor.getColumnIndex(filePathColumn[1]))));
 	            Toast.makeText(this, photoTimeString, Toast.LENGTH_LONG).show();
 	            cursor.close();  
 	            
-//	            BitmapFactory.Options options = new BitmapFactory.Options();
-//	            options.inSampleSize = 2;
-	            noteImage = BitmapFactory.decodeFile(imagePathString);
-	            imageView.setImageBitmap(noteImage); 
+	            BitmapFactory.Options options = new BitmapFactory.Options();
+	            options.inSampleSize = 2;
+	            coverBitmap = BitmapFactory.decodeFile(temp,options);
+	            coverImageView.setImageBitmap(coverBitmap);
+	            coverImageView.setVisibility(View.VISIBLE);
 	        	break;
 	        default:  
 	        	Toast.makeText(this, "!", Toast.LENGTH_SHORT).show();
@@ -263,13 +300,21 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 	  
 	        }  
 	    }
-
+	
 	@Override
 	public boolean onMenuItemClick(MenuItem item) {
 		// TODO Auto-generated method stub
 		switch(item.getItemId()){
 		case R.id.camera:
-			PhotoUtils.takePicture(AddNoteActivity.this);
+			photoTimeString = (String) TimeUtils.getPhotoTime(System.currentTimeMillis());
+			coverPathString = PhotoUtils.getPhotoPath(photoTimeString);
+			if(coverPathString != null){
+				Uri imageUri = PhotoUtils.getPhotoUri(coverPathString);
+				Intent it = new Intent("android.media.action.IMAGE_CAPTURE");//跳转到相机Activity
+				//it.setAction(MediaStore.ACTION_IMAGE_CAPTURE);  
+				it.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, imageUri);//告诉相机拍摄完毕输出图片到指定的Uri
+				  startActivityForResult(it, 1);
+			}
 			return true;
 		case R.id.gallery:
 			PhotoUtils.selectPicture(AddNoteActivity.this);

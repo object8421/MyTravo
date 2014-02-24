@@ -4,7 +4,7 @@
     android:layout_height="match_parent" >
 
     <RelativeLayout
-        android:id="@+id/RelativeLayout1"
+        android:id="@+id/layout_travel_add"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -19,44 +19,59 @@
             android:layout_marginTop="20dp"
             android:background="@drawable/bg_listitem_shot"
             android:ems="10"
+            android:focusable="true"
             android:hint="@string/travel_title"
-            android:padding="8dp" />
+            android:padding="8dp" >
+
+            <requestFocus />
+        </EditText>
 
         <RelativeLayout
-            android:id="@+id/relativeLayout3"
+            android:id="@+id/RelativeLayout1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/travel_title"
             android:layout_marginTop="20dp" >
 
             <Button
-                android:id="@+id/btn_travel_end"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:background="@drawable/bg_listitem_shot"
-                android:padding="8dp"
-                android:text="结束日期" />
-
-            <Button
                 android:id="@+id/btn_travel_start"
-                android:layout_width="150dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
+                android:layout_weight="1"
                 android:background="@drawable/bg_listitem_shot"
                 android:padding="8dp"
-                android:text="开始日期" />
+                android:text="2014-02-12" />
+
+            <Button
+                android:id="@+id/btn_travel_end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/btn_travel_start"
+                android:layout_weight="1"
+                android:background="@drawable/bg_listitem_shot"
+                android:padding="8dp"
+                android:text="2014-02-22" />
+
+            <ImageButton
+                android:id="@+id/btn_cover_travel"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/my_avatar" />
 
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/relativeLayout2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/relativeLayout3"
-            android:layout_below="@+id/relativeLayout3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignLeft="@+id/RelativeLayout1"
+            android:layout_below="@+id/RelativeLayout1"
             android:layout_marginTop="10dp" >
 
             <TextView
@@ -71,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignLeft="@id/label_travel_expense"
                 android:layout_below="@+id/travel_expense"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="4dp"
                 android:text="游记描述" />
 
             <EditText
@@ -87,15 +102,13 @@
             <EditText
                 android:id="@+id/travel_description"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_below="@id/label_travel_description"
                 android:background="@drawable/bg_listitem_shot"
                 android:ems="10"
+                android:gravity="top|left"
                 android:inputType="textMultiLine"
-                android:lines="5"
                 android:padding="8dp" >
-
-                <requestFocus />
             </EditText>
         </RelativeLayout>
     </RelativeLayout>

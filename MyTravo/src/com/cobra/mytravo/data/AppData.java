@@ -18,7 +18,8 @@ import android.os.Environment;
  */
 public class AppData extends Application {
 	public static final String TRAVO_PATH    //SD卡TRAVO项目路径
-		    = Environment.getExternalStorageDirectory() + "/Travo";  
+		    = Environment.getExternalStorageDirectory() + "/Travo"; 
+	
 	public static final String TRAVO_AVATAR_PATH = TRAVO_PATH + "/avatar.jpg";
 	public static final String QQ_KEY = "100520860";
 	public static final String WEIBO_KEY = "3656582238";

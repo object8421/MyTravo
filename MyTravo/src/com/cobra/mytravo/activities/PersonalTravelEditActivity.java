@@ -42,6 +42,12 @@ public class PersonalTravelEditActivity extends Activity {
 			switch (msg.what) {
 			case SAVE_SUCCESS:
 				Toast.makeText(PersonalTravelEditActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
+				Intent resultIntent = new Intent();
+				Bundle resultBundle = new Bundle();
+				resultBundle.putSerializable(TRAVEL_STRING, editedTravel);
+				resultIntent.putExtras(resultBundle);
+				setResult(1, resultIntent);
+				
 				PersonalTravelEditActivity.this.finish();
 				break;
 			case DELETE_SUCCESS:

@@ -1,6 +1,7 @@
 package com.cobra.mytravo.adapters;
 
 import com.cobra.mytravo.R;
+import com.cobra.mytravo.helpers.BitmapManager1;
 import com.cobra.mytravo.helpers.TimeUtils;
 import com.cobra.mytravo.models.Travel;
 import android.app.Activity;
@@ -19,11 +20,13 @@ public class MeTravelAdapter extends CursorAdapter{
 	private LayoutInflater mLayoutInflater;
 	private ListView mListView;
 	private Drawable mDefaultImageDrawable;
+	private BitmapManager1 bitmapManager;
 	public MeTravelAdapter(Context context, ListView listView) {
 		super(context, null, false);
 		mLayoutInflater = ((Activity) context).getLayoutInflater();
         mListView = listView;
 		mDefaultImageDrawable = context.getResources().getDrawable(R.drawable.me_default_image);
+		bitmapManager = new BitmapManager1(context);
 	}
 	@Override
 	public Travel getItem(int position) {
@@ -38,6 +41,8 @@ public class MeTravelAdapter extends CursorAdapter{
 		Travel travel = Travel.fromCursor(cursor);
 		holder.titleTextView.setText(travel.getTitle());
 		holder.timeTextView.setText(TimeUtils.getListTime(travel.getCreated_time()));
+		if(travel.getCover_url() != null)
+			bitmapManager.fetchBitmapOnThread(travel.getCover_url(), holder.imageView);
 	}
 
 	@Override

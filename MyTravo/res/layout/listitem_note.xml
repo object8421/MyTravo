@@ -1,57 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="80dp" >
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_listitem_shot"
+    android:paddingTop="6dp" >
 
     <ImageView
         android:id="@+id/img_cover_note"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:padding="6dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/my_avatar" />
-
-    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="@dimen/me_listview_image_height"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/img_cover_note"
-        android:background="@drawable/bg_listitem_shot"
-        android:padding="6dp" >
+        android:layout_centerHorizontal="true"
+        android:adjustViewBounds="true"
+        android:padding="6dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/me_default_image" />
 
-        <TextView
-            android:id="@+id/tv_description_note"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="6dp"
-            android:maxLength="144"
-            android:maxLines="3"
-            android:text="TextView"
-            android:textSize="16sp" />
+    <TextView
+        android:id="@+id/tv_description_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/img_cover_note"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="4dp"
+        android:maxLength="144"
+        android:maxLines="3"
+        android:text="TextView"
+        android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/tv_location_note"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:text="TextView"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="12sp" />
+    <TextView
+        android:id="@+id/tv_location_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_description_note"
+        android:layout_marginLeft="10dp"
+        android:text="TextView"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="12sp" />
 
-        <TextView
-            android:id="@+id/tv_time_note"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/tv_location_note"
-            android:layout_alignBottom="@+id/tv_location_note"
-            android:layout_alignParentRight="true"
-            android:text="TextView"
-            android:textColor="@android:color/darker_gray"
-            android:textSize="12sp" />
-
-    </RelativeLayout>
+    <TextView
+        android:id="@+id/tv_time_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/tv_description_note"
+        android:layout_marginRight="10dp"
+        android:text="TextView"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="12sp" />
 
 </RelativeLayout>
