@@ -14,8 +14,10 @@ import com.cobra.mytravo.helpers.ActionBarUtils;
 import com.cobra.mytravo.helpers.MyImageUtil;
 import com.cobra.mytravo.helpers.PhotoUtils;
 import com.cobra.mytravo.helpers.TimeUtils;
+import com.cobra.mytravo.models.MyLocation;
 import com.cobra.mytravo.models.Note;
 import com.cobra.mytravo.models.Travel;
+import com.cobra.mytravo.util.AroundPlaceActivity;
 import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
 
 import android.graphics.Bitmap;
@@ -87,7 +89,6 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 					progressDialog.dismiss();
 				AddNoteActivity.this.finish();
 				break;
-
 			default:
 				Toast.makeText(AddNoteActivity.this, "修改足迹失败!", Toast.LENGTH_SHORT).show();
 				if(progressDialog != null && progressDialog.isShowing())
@@ -143,6 +144,15 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 	private void InitialView(){
 		descriptionEditText = (EditText) findViewById(R.id.edt_add_note);
 		locationTextView = (TextView) findViewById(R.id.tv_add_note);
+		locationTextView.setOnClickListener(new OnClickListener()
+		{
+			@Override
+			public void onClick(View arg0)
+			{
+				Intent intent = new Intent(AddNoteActivity.this, AroundPlaceActivity.class);
+				startActivityForResult(intent, 4);
+			}
+		});
 		addImageView = (ImageView) findViewById(R.id.img_add_note);
 		coverImageView = (ImageView) findViewById(R.id.img_cover_add_note);
 		addImageView.setOnClickListener(new OnClickListener() {
@@ -294,7 +304,12 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 	            coverImageView.setImageBitmap(coverBitmap);
 	            coverImageView.setVisibility(View.VISIBLE);
 	        	break;
-	        default:  
+	        case 4:
+	        	MyLocation mylocation = (MyLocation) data.getSerializableExtra("location");
+	        	Log.i("mylocation", "jkljkl");
+	        	locationTextView.setText(mylocation.getNameString());
+	        	break;
+	        default:    
 	        	Toast.makeText(this, "!", Toast.LENGTH_SHORT).show();
 	            break;  
 	  
@@ -322,8 +337,5 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 		default:
 			return false;
 		}
-		
 	}  
-	  
-	
 }
