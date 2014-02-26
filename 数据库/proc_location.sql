@@ -13,6 +13,6 @@ BEGIN
 	IF begin_time IS NULL THEN
 		SET begin_time = '0000-00-00 00:00:00';
 	END IF;
-	SELECT time, longitude, latitude FROM location
+	SELECT time, longitude, latitude, address FROM location
 	WHERE user_id = _user_id AND time > begin_time LIMIT max_qty;
 END;$$
