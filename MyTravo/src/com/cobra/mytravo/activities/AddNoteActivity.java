@@ -2,7 +2,10 @@ package com.cobra.mytravo.activities;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import com.cobra.mytravo.R;
 import com.cobra.mytravo.R.layout;
@@ -18,13 +21,17 @@ import com.cobra.mytravo.models.MyLocation;
 import com.cobra.mytravo.models.Note;
 import com.cobra.mytravo.models.Travel;
 import com.cobra.mytravo.util.AroundPlaceActivity;
+import com.cobra.mytravo.util.Tools;
 import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -32,6 +39,7 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.util.Log;
@@ -106,6 +114,14 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 		InitialView();
 		mDataHelper = new NotesDataHelper(this, AppData.getUserId(), AppData.getTravelTime());
 		
+		getLocation();
+		
+	}
+	
+	/** 得到地理位置*/
+	private void getLocation()
+	{
+		new GetAddressTask(this).execute(Tools.getMyLocation(this));
 	}
 
 	@Override
@@ -338,4 +354,61 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 			return false;
 		}
 	}  
+	
+	/** 通过location获得对应的地理位置信息的异步线程 */
+	private class GetAddressTask extends AsyncTask<Location, Void, String>
+	{
+		Context mContext;
+
+		public GetAddressTask(Context context)
+		{
+			super();
+			mContext = context;
+		}
+
+		@Override
+		protected String doInBackground(Location... params)
+		{
+			Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
+			Location loc = params[0];
+			List<Address> addresses = null;
+
+			try
+			{
+				addresses = geocoder.getFromLocation(loc.getLatitude(),
+						loc.getLongitude(), 1);
+			} catch (IOException e)
+			{
+				Log.e("MainActivity", "IO Exception in getFromLocation()");
+				e.printStackTrace();
+				return ("IO Exception trying to get address");
+			} catch (IllegalArgumentException e2)
+			{
+				// Error message to post in the log
+				String errorString = "Illegal arguments "
+						+ Double.toString(loc.getLatitude()) + " , "
+						+ Double.toString(loc.getLongitude())
+						+ " passed to address service";
+				Log.e("LocationSampleActivity", errorString);
+				e2.printStackTrace();
+				return errorString;
+			}
+			if (addresses != null && addresses.size() > 0)
+			{
+				Address address = addresses.get(0);
+				String addressText = String.format(
+						"%s", address.getLocality() + address.getSubLocality() + address.getThoroughfare());
+				return addressText;
+			} else
+			{
+				return "No address founded";
+			}
+		}
+
+		@Override
+		protected void onPostExecute(String address)
+		{
+			locationTextView.setText(address);
+		}
+	}
 }
