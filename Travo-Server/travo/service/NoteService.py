@@ -6,10 +6,11 @@ import utils
 import traceback
 
 from datetime import datetime
+from default import ServerError
 from config import *
 from service import * 
 
-def upload_note(user_id, notes):
+def upload(user_id, notes):
 	conn = _get_connect()
 	if len(notes) == 1:
 		note = notes[0]
@@ -35,20 +36,18 @@ def upload_note(user_id, notes):
 				#insert into db
 				rsp = dict(rsp, **_new_note(conn, user_id, note))
 				rsps.append(rsp)
-				conn.commit()
+				#conn.commit()
 			except KeyError:
 				#'tag'不存在
 				continue
 		result['rsps'] = rsps
 		return result
-	except Exception:
-		print('============caught exception===========')
-		print(traceback.format_exc())
-		return {rsp_code : RC['server_error']}
+	except Exception, e:
+		raise ServerError(e)
 	finally:
 		conn.close()
 
-def sync_note(user_id, begin_time, max_qty):
+def sync(user_id, begin_time, max_qty):
 	if begin_time is None:
 		begin_time = datetime.min
 
@@ -71,20 +70,18 @@ def sync_note(user_id, begin_time, max_qty):
 			result['notes'].append(_note_to_map(note))
 
 		return result
-	except:
-		print('============caught exception===========')
-		print(traceback.format_exc())
-		return {rsp_code : RC['server_error']}
+	except Exception, e:
+		raise ServerError(e)
 	finally:
 		cur.close()
 		conn.close()
 
-def get_note(travel_id, user_id):
+def get_by_travel(user_id, travel_id):
 	conn = _get_connect()
 	cur = conn.cursor()
 
 	try:
-		code = cur.callproc('sp_get_note', (travel_id, user_id, 0))[2]
+		code = cur.callproc('sp_get_note', (user_id, travel_id, 0))[2]
 		if code == -1:
 			return {rsp_code : RC['no_such_travel']}
 		if code == -2:
@@ -96,10 +93,61 @@ def get_note(travel_id, user_id):
 			result['notes'].append(_note_to_map(note))
 
 		return result
-	except:
-		print('============caught exception===========')
-		print(traceback.format_exc())
-		return {rsp_code : RC['server_error']}
+	except Exception, e:
+		raise ServerError(e)
+	finally:
+		cur.close()
+		conn.close()
+
+def delete(user_id, note_id):
+	conn = _get_connect()
+	cur = conn.cursor()
+	try:
+		code = cur.callproc('sp_delete_note', (
+					user_id,
+					note_id,
+					0	
+					)
+				)[2]
+		conn.commit()
+		return {rsp_code : {
+							0  : RC['sucess'],
+							-1 : RC['no_such_note'],
+							-2 : RC['permission_denied']
+							}[code]
+			}
+	except Exception, e:
+		raise ServerError(e)
+	finally:
+		cur.close()
+		conn.close()
+
+def update(user_id, note_id, new_note):
+	if len(new_note) < 1:
+		raise ValueError('new_note')
+
+	image_path = None 
+	if new_note.has_key('image'):
+		image_path = _build_image_path()
+		utils.save_image(IMAGE_ROOT + image_path,
+				new_note['image'])
+
+	content = new_note.get('content')
+
+	conn = _get_connect()
+	cur = conn.cursor()
+	try:
+		code = cur.callproc('sp_update_note', (
+				user_id, note_id, content, image_path, 0))[4]
+		conn.commit()
+		return {rsp_code : {
+							0  : RC['sucess'],
+							-1 : RC['no_such_note'],
+							-2 : RC['permission_denied']
+							}[code]
+			}
+	except Exception, e:
+		raise ServerError(e)
 	finally:
 		cur.close()
 		conn.close()
@@ -143,7 +191,7 @@ def _new_note(conn, user_id, note):
 			conn.commit()
 		else:
 			result = {rsp_code : {
-						-1 : RC['no_travel'],
+						-1 : RC['no_such_travel'],
 						-2 : RC['permission_denied'],
 						-3 : RC['dup_data']
 						}[note_id]

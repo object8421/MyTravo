@@ -15,6 +15,7 @@ import travel
 import location
 import note
 import default
+import sync
 
 from config import *
 
@@ -26,15 +27,20 @@ URL_HANDLER_MAP = [
 
 		(r'/travel/upload', travel.UploadHandler),
 		(r'/travel/sync', travel.SyncHandler),
+		(r'/travel/(\d+)/delete', travel.DeleteHandler),
+		(r'/travel/(\d+)/update', travel.UpdateHandler),
 		(r'/travel/(\d+)/cover', travel.GetCoverHandler),
 
 		(r'/note/upload', note.UploadHandler),
 		(r'/note/sync', note.SyncHandler),
-		(r'/travel/(\d+)/note', note.GetHandler),
+		(r'/travel/(\d+)/note', note.GetByTravelHandler),
+		(r'/note/(\d+)/delete', note.DeleteHandler),
+		(r'/note/(\d+)/update', note.UpdateHandler),
 
 		(r'/location/upload', location.UploadHandler),
 		(r'/location/sync', location.SyncHandler),
-		(r'/sync', default.SyncHandler)
+
+		(r'/sync', sync.SyncHandler)
 		]
 
 def __init():
@@ -47,7 +53,7 @@ def __init():
 
 def __start_server():
 	application = tornado.web.Application(URL_HANDLER_MAP)
-	application.listen(9000)
+	application.listen(8000)
 	tornado.ioloop.IOLoop.instance().start()
 
 if __name__ == '__main__':

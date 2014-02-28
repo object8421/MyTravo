@@ -11,9 +11,13 @@ class UploadHandler(BaseHandler):
 		self.handle()
 
 	def do(self):
-		return TravelService.upload_travel(
+		travels = self.get_required_data('travels')
+		if not isinstance(travels, list):
+			raise ValueError('travels')
+		
+		return TravelService.upload(
 				self.get_user_id_by_token(),
-				self.get_required_data('travels')
+				travels
 				)
 
 class SyncHandler(BaseHandler):
@@ -23,9 +27,36 @@ class SyncHandler(BaseHandler):
 	def do(self):
 		begin_time = self.get_nullable_argument('begin_time')
 
-		return TravelService.sync_travel(
+		return TravelService.sync(
 				self.get_user_id_by_token(),
 				begin_time
+				)
+
+class DeleteHandler(BaseHandler):
+	def delete(self, travel_id):
+		self.travel_id = travel_id
+		self.handle()
+
+	def do(self):
+		return TravelService.delete(
+				self.get_user_id_by_token(),
+				self.travel_id
+				)
+
+class UpdateHandler(BaseHandler):
+	def put(self, travel_id):
+		self.travel_id = travel_id
+		self.handle()
+
+	def do(self):
+		travel = self.get_required_data('travel')
+		if not isinstance(travel, dict):
+			raise ValueError('travel')
+
+		return TravelService.update(
+				self.get_user_id_by_token(),
+				self.travel_id,
+				travel
 				)
 
 class GetCoverHandler(BaseHandler):

@@ -5,6 +5,12 @@ import base64
 from datetime import datetime
 from threading import Thread
 
+def sNone_to_None(s):
+	'''Alter 'None' to None'''
+	if s == 'None':
+		return  None
+	return None
+
 def strpdate(s):
 	if s is not None:
 		return datetime.strptime(s, '%Y-%m-%d').date()

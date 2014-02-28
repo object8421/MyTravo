@@ -7,19 +7,22 @@ import service
 
 from tornado.web import RequestHandler
 from tornado.web import MissingArgumentError
-from service import SyncService
 from config import *
 
 __all__ = [
 		'TokenError',
 		'BaseHandler',
-		'MissingDataError'
+		'MissingDataError',
+		'ServerError'
 		]
 
 class TokenError(BaseException):
 	pass
 
 class MissingDataError(BaseException):
+	pass
+
+class ServerError(BaseException):
 	pass
 
 class BaseHandler(RequestHandler):
@@ -40,6 +43,10 @@ class BaseHandler(RequestHandler):
 			print('======caught exception======')
 			print(traceback.format_exc())
 			self.write({rsp_code : RC['wrong_arg']})
+		except MissingDataError:
+			print('======caught exception======')
+			print(traceback.format_exc())
+			self.write({rsp_code : RC['illegal_data']})
 		except ValueError:
 			print('======caught exception======')
 			print(traceback.format_exc())
@@ -48,6 +55,14 @@ class BaseHandler(RequestHandler):
 			print('======caught exception======')
 			print(traceback.format_exc())
 			self.write({rsp_code : RC[e.args[0]]})
+		except ServerError:
+			print('======caught exception======')
+			print(traceback.format_exc())
+			self.write({rsp_code : RC['server_error']})
+		except Exception:
+			print('======unhandled exception===')
+			print(traceback.format_exc())
+			self.write({rsp_code : RC['server_error']})
 		finally:
 			self.flush()
 			self.finish()
@@ -80,11 +95,3 @@ class BaseHandler(RequestHandler):
 			raise TokenError('token_overdate')
 		return user_id
 
-class SyncHandler(BaseHandler):
-	def get(self):
-		self.handle()
-	
-	def do(self):
-		return SyncService.get_sync_status(
-				self.get_user_id_by_token()
-				)

@@ -42,7 +42,7 @@ BEGIN
 END;$$
 ##############################################
 DROP PROCEDURE IF EXISTS sp_get_note; $$
-CREATE PROCEDURE sp_get_note(IN _travel_id INT, IN _user_id INT,
+CREATE PROCEDURE sp_get_note(IN _user_id INT, IN _travel_id INT,
 		OUT code INT)
 BEGIN
 	DECLARE user_id INT DEFAULT 0;
@@ -68,4 +68,67 @@ BEGIN
 		END IF;
 	END IF;
 END;$$
+##############################################
+DROP PROCEDURE IF EXISTS sp_delete_note;$$
+CREATE PROCEDURE sp_delete_note(IN _user_id INT, IN _note_id INT, OUT code INT)
+BEGIN
+	DECLARE user_id INT DEFAULT 0;
+	SET code = 0;
+	SELECT n.user_id INTO user_id
+	FROM note n
+	WHERE _note_id = note_id;
 	
+	IF user_id = 0 THEN
+		#找不到该Note
+		SET code = -1;
+	ELSE IF user_id != _user_id THEN
+			#不是该用户
+			SET code = -2;
+		 ELSE
+			#删除动作
+			UPDATE note
+			SET is_deleted = TRUE
+			WHERE note_id = _note_id;
+		 END IF;
+	END IF;
+END;$$
+##############################################
+DROP PROCEDURE IF EXISTS sp_update_note;$$
+CREATE PROCEDURE sp_update_note(IN _user_id INT, IN _note_id INT,
+		IN _content VARCHAR(2048), IN _image_path CHAR(24), OUT code INT)
+BEGIN
+	DECLARE user_id INT DEFAULT 0;
+	SET code = 0;
+	SELECT n.user_id INTO user_id
+	FROM note n
+	WHERE note_id = _note_id;
+
+	IF user_id = 0 THEN
+		#找不到该Note
+		SET code = -1;
+	ELSE IF user_id != _user_id THEN
+			#不是该用户
+			SET code = -2;
+		 ELSE
+			#更新动作（之所以用这么多判断是为了少一次更新操作）
+			IF _content IS NOT NULL AND _image_path IS NOT NULL THEN
+				#两项数据都被修改
+				UPDATE note
+				SET content = _content, image_path = _image_path
+				WHERE note_id = _note_id;
+			ELSE IF _content IS NOT NULL THEN
+				#之修改了其中的一项
+				UPDATE note
+				SET content = _content
+				WHERE note_id = _note_id;
+				ELSE IF _image_path IS NOT NULL THEN
+					UPDATE note
+					SET image_path = _image_path
+					WHERE note_id = _note_id;
+					END IF;
+			    END IF;
+			END IF;
+		 END IF;
+	END IF;
+END
+		

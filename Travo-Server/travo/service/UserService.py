@@ -8,6 +8,7 @@ import urllib2
 
 from mysql.connector import IntegrityError
 from threading import Thread
+from default import ServerError
 from service import *
 from config import *
 
@@ -83,6 +84,13 @@ def register(args):
 		cur.callproc('sp_register', arg_list)	
 		user_id = cur.stored_results().next().fetchone()[0]
 		conn.commit()
+
+		#register sucess
+		_record_login(args['remote_ip'], user_id)
+		result = {rsp_code : RC['sucess']}
+		result['user_id'] = user_id
+		result['token'] = token 
+		return result
 	except IntegrityError, e:
 		if 'email_UNIQUE' in str(e):
 			#email duplicate
@@ -92,13 +100,6 @@ def register(args):
 			return {rsp_code : RC['dup_nickname']}
 		elif 'qq_user_id_UNIQUE' in str(e) or 'sina_user_id_UNIQUE' in str(e):
 			return {rsp_code : RC['dup_bind']}
-	else:
-		#register sucess
-		_record_login(args['remote_ip'], user_id)
-		result = {rsp_code : RC['sucess']}
-		result['user_id'] = user_id
-		result['token'] = token 
-		return result
 	finally:
 		cur.close()
 		conn.close()
@@ -128,7 +129,8 @@ def login(args):
 		conn.commit()
 	except AuthError, e:
 		return {rsp_code : RC['auth_fail']}
-	except:
+	except Exception, e:
+		raise ServerError(e)
 		print('===============caught exception=============')
 		print(traceback.format_exc())
 		return {rsp_code : RC['server_error']}
@@ -159,8 +161,6 @@ def login(args):
 	return result
 
 def bind_open_user(user_id, user):
-	print(user_id)
-	print(user)
 	open_user_id = None
 	try:
 		open_user_id = {
@@ -178,10 +178,8 @@ def bind_open_user(user_id, user):
 			return {rsp_code : RC['dup_bind']}
 		conn.commit()
 		return {rsp_code : RC['sucess']}
-	except:
-		print('===========caught exception==========')
-		print(traceback.format_exc())
-		return {rsp_code : RC['server_error']}
+	except Exception, e:
+		raise ServerError(e)
 	finally:
 		cur.close()
 		conn.close()
@@ -249,10 +247,8 @@ def get_user(user_id):
 		result['scenic_point_qty'] = datas[7]
 		result['favorite_travel_qty'] = datas[8]
 		return result
-	except Exception:
-		print('===============caught exception=============')
-		print(traceback.format_exc())
-		return {rsp_code : RC['server_error']}
+	except Exception, e:
+		raise ServerError(e)
 	finally:
 		cur.close()
 		conn.close()
@@ -270,10 +266,8 @@ def update_password(remote_ip, email, old_pass, new_pass):
 		conn.commit()
 		_record_login(remote_ip, user_id)
 		return {rsp_code : RC['sucess']}
-	except Exception:
-		print('===============caught exception=============')
-		print(traceback.format_exc())
-		return {rsp_code : RC['server_error']}
+	except Exception, e:
+		raise ServerError(e)
 	finally:
 		cur.close()
 		conn.close()
@@ -299,9 +293,8 @@ def _record_login(remote_ip, user_id):
 				cur.callproc('sp_record_login', (
 					self._user_id, self._remote_ip))
 				conn.commit()
-			except Exception:
-				print('==========caught exception==========')
-				print(traceback.format_exc())
+			except Exception, e:
+				raise ServerError(e)
 			finally:
 				cur.close()
 				conn.close()

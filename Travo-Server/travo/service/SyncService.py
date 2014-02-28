@@ -3,6 +3,7 @@
 
 from config import * 
 from service import *
+from default import ServerError
 
 def get_sync_status(user_id):
 	time_list = []	
@@ -25,10 +26,8 @@ def get_sync_status(user_id):
 		result['travel'] = time_list[4]
 		result['travel_plan'] = time_list[5]
 		return result
-	except Exception: 
-		print('===============caught exception=============')
-		print(traceback.format_exc())
-		return {rsp_code : RC['server_error']}
+	except Exception, e: 
+		raise ServerError(e)
 	finally:
 		cur.close()
 		conn.close()

@@ -14,7 +14,7 @@ class UploadHandler(BaseHandler):
 
 	def do(self):
 		try:
-			return LocationService.upload_location(
+			return LocationService.upload(
 						self.get_user_id_by_token(),
 						self.get_required_data('locations')
 						)
@@ -30,7 +30,7 @@ class SyncHandler(BaseHandler):
 		max_qty = self.get_nullable_argument('max_qty')
 
 		try:
-			return LocationService.sync_location(
+			return LocationService.sync(
 						self.get_user_id_by_token(),
 						utils.strpdatetime(begin_time),
 						max_qty

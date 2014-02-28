@@ -44,5 +44,5 @@ def _build_insert_sql(table, columns):
 
 #init db connection pool
 _pool = PooledDB(connector, mincached=1, maxusage=5,
-	host='localhost', user='root',
-	passwd='',db='travo')
+	host='localhost', user='travo',
+	passwd='travo',db='travo')

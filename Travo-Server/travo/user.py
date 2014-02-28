@@ -13,12 +13,8 @@ class RegisterHandler(BaseHandler):
 		self.args = {}
 		self.args['remote_ip'] = self.request.remote_ip
 		self.args['user_type'] = self.get_argument('user_type')
-                self.args['nickname'] = self.get_argument('nickname')
-                self.args['email'] = self.get_argument('email')
-                self.args['password'] = self.get_argument('password')
 		try:
-                        self.args['nickname'] = self.get_argument('nickname')
-            
+			self.args['nickname'] = self.get_required_data('nickname')
 			try:
 				{
 					'travo' : self.get_travo_arg, 
@@ -29,22 +25,22 @@ class RegisterHandler(BaseHandler):
 				return {rsp_code : RC['wrong_arg']}
 		except MissingDataError, e:
 			return {
-				'email'		: lambda : {rsp_code : RC['miss_email']},
-				'password'	: lambda : {rsp_code : RC['miss_password']},
-				'nickname'	: lambda : {rsp_code : RC['miss_nickname']},
-				'qq_token'	: lambda : {rsp_code : RC['miss_token']},
-				'sina_token': lambda : {rsp_code : RC['miss_token']}
-			}[str(e)]()
+				'email'		: {rsp_code : RC['miss_email']},
+				'password'	: {rsp_code : RC['miss_password']},
+				'nickname'	: {rsp_code : RC['miss_nickname']},
+				'qq_token'	: {rsp_code : RC['miss_token']},
+				'sina_token': {rsp_code : RC['miss_token']}
+			}[str(e)]
 		
 		return UserService.register(self.args)
 
 	def get_travo_arg(self):
-		self.args['email'] = self.get_argument('email')
-		self.args['password'] = self.get_argument('password')
+		self.args['email'] = self.get_required_data('email')
+		self.args['password'] = self.get_required_data('password')
 	def get_qq_arg(self):
-		self.args['qq_token'] = self.get_argument('qq_token')
+		self.args['qq_token'] = self.get_required_data('qq_token')
 	def get_sina_arg(self):
-		self.args['sina_token'] = self.get_argument('sina_token')
+		self.args['sina_token'] = self.get_required_data('sina_token')
 
 class LoginHandler(BaseHandler):
 	def get(self):

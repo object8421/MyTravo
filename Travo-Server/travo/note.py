@@ -13,7 +13,7 @@ class UploadHandler(BaseHandler):
 	
 	def do(self):
 		try:
-			return NoteService.upload_note(
+			return NoteService.upload(
 					self.get_user_id_by_token(),
 					self.get_required_data('notes')
 					)
@@ -29,7 +29,7 @@ class SyncHandler(BaseHandler):
 		max_qty = self.get_nullable_argument('max_qty')
 
 		try:
-			return NoteService.sync_note(
+			return NoteService.sync(
 					self.get_user_id_by_token(),
 					utils.strpdatetime(begin_time),
 					max_qty
@@ -37,7 +37,7 @@ class SyncHandler(BaseHandler):
 		except ValueError:
 			return {rsp_code : RC['wrong_arg']}
 
-class GetHandler(BaseHandler):
+class GetByTravelHandler(BaseHandler):
 	def get(self, travel_id):
 		self.travel_id = travel_id
 		self.handle()
@@ -47,4 +47,31 @@ class GetHandler(BaseHandler):
 		if self.get_nullable_argument('token') is not None:
 			self.user_id = self.get_user_id_by_token()
 
-		return NoteService.get_note(self.travel_id, self.user_id)
+		return NoteService.get_by_travel(self.user_id, self.travel_id)
+
+class DeleteHandler(BaseHandler):
+	def delete(self, note_id):
+		self.note_id = note_id
+		self.handle()
+	
+	def do(self):
+		return NoteService.delete(
+				self.get_user_id_by_token(),
+				self.note_id
+				)
+
+class UpdateHandler(BaseHandler):
+	def put(self, note_id):
+		self.note_id = note_id
+		self.handle()
+		
+	def do(self):
+		note = self.get_required_data('note')
+		if not isinstance(note, dict):
+			raise ValueError(note)
+
+		return NoteService.update(
+				self.get_user_id_by_token(),
+				self.note_id,
+				note
+				)

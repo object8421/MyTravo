@@ -6,10 +6,11 @@ import utils
 
 from mysql.connector import IntegrityError
 from datetime import datetime
+from default import ServerError
 from service import *
 from config import *
 
-def upload_location(user_id, locations):
+def upload(user_id, locations):
 	location_list = None 
 	try:
 		location_list = _format_location(user_id, locations)
@@ -17,13 +18,11 @@ def upload_location(user_id, locations):
 		return {rsp_code : RC['data_incomplete']}
 	except ValueError:
 		return {rsp_code : RC['illegal_data']}
-	except Exception:
-		print('============caught exception===========')
-		print(traceback.format_exc())
-		
+	except Exception, e:
+		raise ServerError(e)
 
-	sql = 'INSERT INTO location(user_id, time, longitude,\
-			latitude) VALUES(%s, %s, %s, %s)'
+	sql = 'INSERT INTO location(user_id, address, time, longitude,\
+			latitude) VALUES(%s, %s, %s, %s, %s)'
 	conn = _get_connect()
 	cur = conn.cursor()
 	try:
@@ -32,14 +31,13 @@ def upload_location(user_id, locations):
 		return {rsp_code : RC['sucess']}
 	except IntegrityError, e:
 		return {rsp_code : RC['dup_data']}
-	except Exception:
-		print('============caught exception===========')
-		print(traceback.format_exc())
+	except Exception, e:
+		raise ServerError(e)
 	finally:
 		cur.close()
 		conn.close()
 
-def sync_location(user_id, begin_time, max_qty):
+def sync(user_id, begin_time, max_qty):
 	conn = _get_connect()
 	cur = conn.cursor()
 	try:
@@ -55,14 +53,13 @@ def sync_location(user_id, begin_time, max_qty):
 				loc['time'] = str(l[0])
 				loc['longtiude'] = l[1]
 				loc['latitude'] = l[2]
+				loc['address'] = l[3]
 				locs.append(loc)
 		result = {rsp_code : RC['sucess']}
 		result['locations'] = locs
 		return result
-	except Exception:
-		print('============caught exception===========')
-		print(traceback.format_exc())
-		return {rsp_code : RC['server_error']}
+	except Exception, e:
+		raise ServerError(e)
 	finally:
 		cur.close()
 		conn.close()
@@ -78,6 +75,7 @@ def _format_location(user_id, locations):
 	return [
 		(
 		user_id,
+		l.get('address'),
 		utils.strpdatetime(l['time']),
 		_check_coord(l['longitude']),
 		_check_coord(l['latitude'])

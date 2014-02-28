@@ -37,20 +37,62 @@ BEGIN
 	IF begin_time IS NULL THEN
 		SET begin_time = '1970-00-00 00:00:00';
 	END IF;
-	SELECT travel_id, title, destination, begin_date, end_date, average_spend,
+	SELECT user_id, travel_id, title, destination, begin_date, end_date, average_spend,
 			create_time, comment_qty, vote_qty, favorite_qty, read_times, is_public,
 			is_deleted, description, cover_path FROM travel
 	WHERE user_id = _user_id AND lm_time > begin_time;
 END;$$
+##############################################
+DROP PROCEDURE IF EXISTS sp_delete_travel; $$
+CREATE PROCEDURE sp_delete_travel(IN _user_id INT, IN _travel_id INT, OUT code INT)
+BEGIN
+	DECLARE user_id INT DEFAULT 0;
 
+	SET code = 0;
+
+	SELECT t.user_id INTO user_id
+	FROM travel t
+	WHERE t.travel_id = _travel_id;
+
+	IF user_id = 0 THEN
+		#游记不存在
+		SET code = -1;
+	ELSE IF user_id != _user_id THEN
+			#游记不属于该用户
+			SET code = -2;
+		ELSE
+			UPDATE travel
+			SET is_deleted = TRUE
+			WHERE travel_id = _travel_id;
+		END IF;
+	END IF;
+END; $$
+##############################################
+DROP PROCEDURE IF EXISTS sp_update_travel; $$
+CREATE PROCEDURE sp_update_travel(IN _travel_id INT, IN _title VARCHAR(45),
+		IN _destination VARCHAR(45), IN _begin_date DATE, IN _end_date DATE,
+		IN _average_spend VARCHAR(20), IN _description VARCHAR(4096),
+		IN _is_public BOOL, IN _cover_path VARCHAR(24))
+BEGIN
+	UPDATE travel
+	SET title = _title,
+		destination = _destination,
+		begin_date = _begin_date,
+		end_date = _end_date,
+		average_spend = _average_spend,
+		description = _description,
+		is_public = _is_public,
+		cover_path = _cover_path
+	WHERE travel_id = _travel_id;
+END; $$
 ##############################################
 DROP PROCEDURE IF EXISTS sp_get_travel; $$
 CREATE PROCEDURE sp_get_travel(IN _travel_id INT)
 BEGIN
-	SELECT travel_id, title, destination, begin_date, end_date, average_spend,
+	SELECT user_id, travel_id, title, destination, begin_date, end_date, average_spend,
 			create_time, comment_qty, vote_qty, favorite_qty, read_times, is_public,
-			is_deleted, description FROM travel
-	WHERE travel_id = _travel_id AND is_public = TRUE AND is_deleted = FALSE;
+			is_deleted, description, cover_path FROM travel
+	WHERE travel_id = _travel_id AND is_deleted = FALSE;
 END;$$
 
 ##############################################
