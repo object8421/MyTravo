@@ -48,4 +48,23 @@
         android:text="@string/register"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
+    <Button
+        android:id="@+id/login_by_qq"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/login_logo"
+        android:layout_below="@+id/login_password"
+        android:layout_marginRight="18dp"
+        android:layout_marginTop="71dp"
+        android:text="使用qq登录" />
+
+    <Button
+        android:id="@+id/login_by_sina"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/login_logo"
+        android:layout_below="@+id/login_by_qq"
+        android:layout_marginTop="14dp"
+        android:text="使用sina微博登录" />
+
 </RelativeLayout>
