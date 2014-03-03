@@ -491,6 +491,27 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
+CREATE  TABLE IF NOT EXISTS `travo`.`travel_read_log` (
+  `travel_id` INT(11) NOT NULL,
+  `reader`  INT(11) NOT NULL,
+  `time`  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY(`travel_id`, `time`),
+  INDEX `fk_travel_idx` (`travel_id` ASC),
+  INDEX `fk_reader_idx` (`voter` ASC),
+  CONSTRAINT `fk_trl_travel`
+    FOREIGN KEY (`travel_id` )
+    REFERENCES `travo`.`travel` (`travel_id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_trl_reader`
+    FOREIGN KEY (`reader` )
+    REFERENCES `travo`.`user` (`user_id` )
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8
+COLLATE = utf8_general_ci;
+
 CREATE  TABLE IF NOT EXISTS `travo`.`travel_vote` (
   `travel_id` INT(11) NOT NULL ,
   `time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
