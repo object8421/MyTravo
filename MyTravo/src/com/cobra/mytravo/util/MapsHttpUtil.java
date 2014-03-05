@@ -3,6 +3,8 @@ package com.cobra.mytravo.util;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -17,29 +19,25 @@ public class MapsHttpUtil
 
 	public static String getAroundPlace(String location, String radius) throws ClientProtocolException, IOException
 	{
-		String url = "https://maps.googleapis.com/maps/api/place/search/json?location="
+		String urlstr = "https://maps.googleapis.com/maps/api/place/search/json?location="
 				+ location
 				+ "&radius="
 				+ radius
 				+ "&language=zh-CN" + "&sensor=false&key=" + KEY;
-		Log.i("aroundUrl", url);
-		HttpPost httpRequest = new HttpPost(url);
-		HttpResponse httpResponse = new DefaultHttpClient()
-				.execute(httpRequest);
-		int res = httpResponse.getStatusLine().getStatusCode();
-		if (res == 200)
+		Log.i("aroundUrl", urlstr);
+		HttpURLConnection connection = null; 
+		URL url = new URL(urlstr);
+		InputStreamReader in = null;
+		connection = (HttpURLConnection) url.openConnection();
+		in = new InputStreamReader(connection.getInputStream());
+		BufferedReader buf = new BufferedReader(in);
+		StringBuffer strbuf = new StringBuffer();
+		String line;
+		while((line = buf.readLine()) != null)
 		{
-			StringBuilder builder = new StringBuilder();
-			BufferedReader bufferedReader2 = new BufferedReader(
-					new InputStreamReader(httpResponse.getEntity().getContent()));
-			for (String s = bufferedReader2.readLine(); s != null; s = bufferedReader2
-					.readLine())
-			{
-				builder.append(s);
-			}
-			return builder.toString();
+			strbuf.append(line);
 		}
-		return null;
+		return strbuf.toString();
 	}
 
 	public static String getTextSearchPlaces(String location, String radius,String text) throws ClientProtocolException, IOException
@@ -52,6 +50,7 @@ public class MapsHttpUtil
 				formattext + "&sensor=true&key=" + KEY;
 		Log.i("textsearch", url);
 		HttpPost httpRequest = new HttpPost(url);
+		
 		HttpResponse httpResponse = new DefaultHttpClient()
 				.execute(httpRequest);
 		int res = httpResponse.getStatusLine().getStatusCode();
