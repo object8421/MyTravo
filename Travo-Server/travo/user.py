@@ -88,6 +88,6 @@ class UpdateEmailHandler(BaseHandler):
 	def do(self):
 		return UserService.update_email(
 				self.get_user_id_by_token(),
-				self.get_argument('email'),
-				self.get_argument('password')
+				self.get_required_data('email'),
+				self.get_required_data('password')
 				)

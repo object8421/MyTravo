@@ -2,7 +2,9 @@
 #Date:2013-9-24
 
 import utils
+import sys
 
+from datetime import datetime
 from tornado.web import MissingArgumentError
 from service import LocationService
 from default import * 
@@ -26,8 +28,8 @@ class SyncHandler(BaseHandler):
 		self.handle()
 	
 	def do(self):
-		begin_time = self.get_nullable_argument('begin_time')
-		max_qty = self.get_nullable_argument('max_qty')
+		begin_time = self.get_nullable_argument('begin_time', datetime.min)
+		max_qty = self.get_nullable_argument('max_qty', sys.maxint)
 
 		try:
 			return LocationService.sync(

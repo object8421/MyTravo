@@ -2,7 +2,9 @@
 #Date:2013-09-26
 
 import utils
+import sys
 
+from datetime import datetime
 from config import *
 from default import *
 from service import NoteService
@@ -25,8 +27,8 @@ class SyncHandler(BaseHandler):
 		self.handle()
 	
 	def do(self):
-		begin_time = self.get_nullable_argument('begin_time')
-		max_qty = self.get_nullable_argument('max_qty')
+		begin_time = self.get_nullable_argument('begin_time', datetime.min)
+		max_qty = self.get_nullable_argument('max_qty', sys.maxint)
 
 		try:
 			return NoteService.sync(
@@ -44,7 +46,7 @@ class GetByTravelHandler(BaseHandler):
 
 	def do(self):
 		self.user_id = 0
-		if self.get_nullable_argument('token') is not None:
+		if self.get_nullable_argument('token', None) is not None:
 			self.user_id = self.get_user_id_by_token()
 
 		return NoteService.get_by_travel(self.user_id, self.travel_id)

@@ -3,6 +3,7 @@
 
 import base64
 from datetime import datetime
+from datetime import date
 from threading import Thread
 
 def sNone_to_None(s):
@@ -33,3 +34,18 @@ def save_image(path, content):
 			f.write(binary)
 	Thread(target = __save_image, kwargs = {'_path' : path,
 		'_content' : content}).start()
+
+def list_to_dict(list_data, idx_key_map):
+	'''fetch data from a list and fill in a dict accroding 'idx_key_map'''
+	m = idx_key_map #redefine a simple name
+	d = {}
+	for idx in m.keys():
+		d[m[idx]] = list_data[idx]
+	return d
+
+def datepstr_indict(d):
+	'''parse all date in dict to str'''
+	for key in d:
+		if isinstance(d[key], date):
+			d[key] = str(d[key])
+

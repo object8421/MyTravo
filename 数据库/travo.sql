@@ -497,7 +497,7 @@ CREATE  TABLE IF NOT EXISTS `travo`.`travel_read_log` (
   `time`  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY(`travel_id`, `time`),
   INDEX `fk_travel_idx` (`travel_id` ASC),
-  INDEX `fk_reader_idx` (`voter` ASC),
+  INDEX `fk_reader_idx` (`reader` ASC),
   CONSTRAINT `fk_trl_travel`
     FOREIGN KEY (`travel_id` )
     REFERENCES `travo`.`travel` (`travel_id` )

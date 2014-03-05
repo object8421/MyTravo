@@ -1,10 +1,8 @@
 # -*- coding:UTF-8 -*-
 
-#RequestHandler.py
+#travo.py
 #Author:Boozer
 #Date:2013/08/11
-#This is the main request handler of travo server which handle
-#every request from Android app.
 
 import os
 import sys
@@ -30,6 +28,10 @@ URL_HANDLER_MAP = [
 		(r'/travel/(\d+)/delete', travel.DeleteHandler),
 		(r'/travel/(\d+)/update', travel.UpdateHandler),
 		(r'/travel/(\d+)/cover', travel.GetCoverHandler),
+		(r'/travel/search', travel.SearchHandler),
+		(r'/travel/(\d+)/favorit', travel.FavoritHandler),
+		(r'/travel/favorit', travel.GetFavoritHandler),
+		(r'/travel/(\d+)/read', travel.ReadHandler),
 
 		(r'/note/upload', note.UploadHandler),
 		(r'/note/sync', note.SyncHandler),

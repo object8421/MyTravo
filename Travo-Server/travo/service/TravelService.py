@@ -89,7 +89,8 @@ def sync(user_id, begin_time):
 		travels = []
 		for r in cur.stored_results():
 			for t in r.fetchall():
-				travel = _fill_travel(t)
+				travel = utils.list_to_dict(t, LIST_INDEX.SYNC['TRAVEL'])
+				utils.datepstr_indict(travel)
 				if travel['cover_path'] is None:
 					travel['has_cover'] = 0
 				else:
@@ -196,7 +197,7 @@ def _get_travel(travel_id):
 		cur.close()
 		conn.close()
 
-def get_cover(travel_id, user_id):
+def get_cover(user_id, travel_id):
 	conn = _get_connect()
 	cur = conn.cursor()
 	try:
@@ -214,25 +215,163 @@ def get_cover(travel_id, user_id):
 		cur.close()
 		conn.close()
 
-def _fill_travel(values):
-	travel = {}
-	travel['user_id']		= values[0]
-	travel['travel_id']		= values[1]
-	travel['title']			= values[2]
-	travel['destination']	= values[3]
-	travel['begin_date']	= str(values[4])
-	travel['end_date']		= str(values[5])
-	travel['average_spend']	= values[6]
-	travel['create_time']	= str(values[7])
-	travel['comment_qty']	= values[8]
-	travel['vote_qty']		= values[9]
-	travel['favorite_qty']	= values[10]
-	travel['read_times']	= values[11]
-	travel['is_public']		= values[12]
-	travel['is_deleted']	= values[13]
-	travel['description']	= values[14]
-	travel['cover_path']	= values[15]
-	return travel
+def favorit(user_id, travel_id):
+	conn = _get_connect()
+	cur = conn.cursor()
+
+	try:
+		code = cur.callproc('sp_favorit_travel', (user_id, travel_id, 0))[2]
+		if code == -1:
+			return {rsp_code : RC['no_such_travel']}
+		if code == -2:
+			return {rsp_code : RC['permission_denied']}
+		conn.commit()
+		return {rsp_code : RC['sucess']}
+	except Exception, e:
+		raise ServerError(e)
+	finally:
+		cur.close()
+		conn.close()
+
+SEARCH_ORDER = (
+		'default',
+		'read_times',
+		'vote_qty',
+		'comment_qty',
+		'newest'
+		)
+
+def search(order, first_idx, max_qty):
+	conn = _get_connect()
+	cur = conn.cursor()
+
+	travels = []
+
+	try:
+		cur.callproc('sp_default_search', (first_idx, max_qty))
+		for line in cur.stored_results().next():
+			travel = utils.list_to_dict(line, LIST_INDEX.SEARCH['TRAVEL'])
+			travel['user'] = utils.list_to_dict(line, LIST_INDEX.SEARCH['USER'])
+			utils.datepstr_indict(travel)
+			if travel['cover_path'] is None:
+				travel['has_cover'] = 0
+			else:
+				travel['has_cover'] = 1
+			travel.pop('cover_path')
+			travels.append(travel)
+
+		result = {rsp_code : RC['sucess']}
+		result['travels'] = travels
+		return result
+	except Exception, e:
+		raise ServerError(e)
+	finally:
+		cur.close()
+		conn.close()
+
+def get_favorit(user_id, first_idx, max_qty):
+	conn = _get_connect()
+	cur = conn.cursor()
+	try:
+		cur.callproc('sp_get_favorit', (user_id, first_idx, max_qty))
+		travels = []
+		for line in cur.stored_results().next():
+			travel = utils.list_to_dict(line, LIST_INDEX.FAVORIT['TRAVEL'])
+			travel['user'] = utils.list_to_dict(line, LIST_INDEX.FAVORIT['USER'])
+			utils.datepstr_indict(travel)
+			if travel['cover_path'] is None:
+				travel['has_cover'] = 0
+			else:
+				travel['has_cover'] = 1
+			travel.pop('cover_path')
+			travels.append(travel)
+		result = {rsp_code : RC['sucess']}
+		result['travels'] = travels
+		return result
+	except Exception, e:
+		raise ServerError(e)
+	finally:
+		cur.close()
+		conn.close()
+
+def read(user_id, travel_id):
+	conn = _get_connect()
+	cur = conn.cursor()
+
+	try:
+		code = cur.callproc('sp_read_travel', (user_id, travel_id, 0))[2]
+		if code == -1:
+			return {rsp_code : RC['no_such_travel']}
+		if code == -2:
+			return {rsp_code : RC['permission_denied']}
+		conn.commit()
+		return {rsp_code : RC['sucess']}
+	except Exception, e:
+		print(traceback.format_exc())
+		raise ServerError(e)
+	finally:
+		cur.close()
+		conn.close()
 
 def _build_cover_path():
 	return uuid.uuid4().hex[0:16] 
+
+class LIST_INDEX:
+	'''datas fetch from database is a list,
+	this class define some map which can assign a key for every item in the list
+	'''
+	SEARCH = {
+		#useful map in 'search' function
+		'TRAVEL' : {
+				7 : 'travel_id',
+				8 : 'title',
+				9 : 'average_spend',
+				10: 'begin_date',
+				11: 'end_date',
+				12: 'create_time',
+				13: 'description',
+				14: 'destination',
+				15: 'favorite_qty',
+				16: 'comment_qty',
+				17: 'read_times',
+				18: 'vote_qty',
+				19: 'cover_path'
+			},
+		'USER' : {
+				0 : 'user_id',
+				1 : 'nickname',
+				2 : 'signature',
+				3 : 'travel_qty',
+				4 : 'scenic_point_qty',
+				5 : 'achievement_qty',
+				6 : 'follower_qty'
+			}
+		}
+
+	FAVORIT = {
+		#useful map in 'get_favorit' function
+			'TRAVEL' : SEARCH['TRAVEL'],
+			'USER'	: SEARCH['USER']
+			}
+
+	SYNC = {
+		#useful map in 'sync' function
+			'TRAVEL' : { 
+				0 : 'user_id',
+				1 : 'travel_id',
+				2 : 'title',
+				3 : 'destination',
+				4 : 'begin_date',
+				5 : 'end_date',
+				6 : 'average_spend',
+				7 : 'create_time',
+				8 : 'comment_qty',
+				9 : 'vote_qty',
+				10: 'favorite_qty',
+				11: 'read_times',
+				12: 'is_public',
+				13: 'is_delete',
+				14: 'description',
+				15: 'cover_path'
+			}
+		}

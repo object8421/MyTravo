@@ -25,7 +25,7 @@ class SyncHandler(BaseHandler):
 		self.handle()
 
 	def do(self):
-		begin_time = self.get_nullable_argument('begin_time')
+		begin_time = self.get_argument('begin_time', None)
 
 		return TravelService.sync(
 				self.get_user_id_by_token(),
@@ -66,13 +66,61 @@ class GetCoverHandler(BaseHandler):
 
 	def do(self):
 		self.user_id = 0
-		if self.get_nullable_argument('token') is not None:
+		if self.get_nullable_argument('token', None) is not None:
 			self.user_id = self.get_user_id_by_token()
 		
-		result = TravelService.get_cover(self.travel_id, self.user_id)
+		result = TravelService.get_cover(self.user_id, self.travel_id)
 		if result[rsp_code] == RC['sucess']:
 			self.set_header('Content-Type', 'image/jpeg; charsete=utf-8')
 			self.write(open(result['cover_path']).read())
 			return {rsp_code : RC['sucess']}
 		else:
 			return result
+
+class SearchHandler(BaseHandler):
+	def get(self):
+		self.handle()
+
+	def do(self):
+		order = self.get_nullable_argument('order', 'default')
+		if not order in TravelService.SEARCH_ORDER:
+			return RC['wrong_arg']
+
+		first_idx = self.get_nullable_argument('first_idx', 1)
+		max_qty = self.get_nullable_argument('max_qty', 20)
+
+		return TravelService.search(order, first_idx, max_qty)
+
+class FavoritHandler(BaseHandler):
+	def post(self, travel_id):
+		self.travel_id = travel_id
+		self.handle()
+	
+	def do(self):
+		return TravelService.favorit(
+				self.get_user_id_by_token(),
+				self.travel_id
+				)
+
+class GetFavoritHandler(BaseHandler):
+	def get(self):
+		self.handle()
+	
+	def do(self):
+		return TravelService.get_favorit(
+				self.get_user_id_by_token(),
+				self.get_nullable_argument('first_idx', 1),
+				self.get_nullable_argument('max_qty', 20)
+				)
+
+class ReadHandler(BaseHandler):
+	def post(self, travel_id):
+		self.travel_id = travel_id
+		self.handle()
+
+	def do(self):
+		TravelService.read(
+				self.get_user_id_by_token(),
+				self.travel_id
+				)
+

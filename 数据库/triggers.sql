@@ -400,18 +400,18 @@ BEGIN
 	SET favorite_travel_qty = favorite_travel_qty - 1
 	WHERE user_id = old.user_id;
 end
-$$
+$$l
 ##################################
 ### trigger in travel_read_log
 ##################################
-DROPO TRIIGER IF EXISTS ains_travel_read_log;
+DROP TRIGGER IF EXISTS ains_travel_read_log;
 $$
 CREATE TRIGGER ains_travel_read_log
-AFTER INSERT ON travel_read_log
+AFTER INSERT ON travel_read_log FOR EACH ROW
 BEGIN
 	UPDATE travel
 	SET read_times = read_times + 1
-	WHERE travel_id = new_travel_id;
+	WHERE travel_id = new.travel_id;
 END
 $$
 

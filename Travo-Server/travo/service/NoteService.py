@@ -48,13 +48,16 @@ def upload(user_id, notes):
 		conn.close()
 
 def sync(user_id, begin_time, max_qty):
-	if begin_time is None:
-		begin_time = datetime.min
-
-	if max_qty is None:
-		import sys
-		max_qty = sys.maxint
-
+	NOTE_LIST_INDEX = {
+			0 : 'note_id',
+			1 : 'user_id',
+			2 : 'travel_id',
+			3 : 'create_time',
+			4 : 'content',
+			5 : 'comment_qty',
+			6 : 'vote_qty',
+			7 : 'image_path'
+			}
 	conn = _get_connect()
 	cur = conn.cursor()
 	try:
@@ -64,10 +67,19 @@ def sync(user_id, begin_time, max_qty):
 				max_qty
 				)
 			)
+		notes = []
+		for line in cur.stored_results().next().fetchall():	
+			note = utils.list_to_dict(line, NOTE_LIST_INDEX)
+			note['create_time'] = str(note['create_time'])
+			if note['image_path'] is None:
+				note['has_image'] = 1
+			else:
+				note['has_image'] = 0
+			note.pop('image_path')
+			notes.append(note)
+
 		result = {rsp_code : RC['sucess']}
-		result['notes'] = []
-		for note in cur.stored_results().next().fetchall():	
-			result['notes'].append(_note_to_map(note))
+		result['notes'] = notes
 
 		return result
 	except Exception, e:
@@ -151,21 +163,6 @@ def update(user_id, note_id, new_note):
 	finally:
 		cur.close()
 		conn.close()
-
-def _note_to_map(n):
-	note = {}
-	note['note_id']		= n[0]
-	note['user_id']		= n[1]
-	note['travel_id']	= n[2]
-	note['create_time'] = str(n[3])
-	note['content']		= n[4]
-	note['comment_qty']	= n[5]
-	note['vote_qty']	= n[6]
-	if n[7] is None:
-		note['has_image'] = 0
-	else:
-		note['has_image'] = 1
-	return note
 
 def _new_note(conn, user_id, note):
 	cur = conn.cursor()

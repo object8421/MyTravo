@@ -70,22 +70,23 @@ class BaseHandler(RequestHandler):
 	def do(self):
 		pass
 
-	def get_data(self, key):
+	def get_data(self, key, default):
 		if self._data is None:
 			self._data = json.loads(self.request.body)
-		return self._data.get(key)
+		return self._data.get(key, default)
 
 	def get_required_data(self, key):
-		d = self.get_data(key)
+		d = self.get_data(key, None)
 		if d is None:
 			raise MissingDataError(key)
 		return d
-	
-	def get_nullable_argument(self, key):
+
+
+	def get_nullable_argument(self, key, default = None):
 		try:
-			return self.get_argument(key)
+			return RequestHandler.get_argument(self, key)
 		except MissingArgumentError:
-			return None
+			return default 
 
 	def get_user_id_by_token(self):
 		user_id = service.verify_token(self.get_argument('token'))
