@@ -23,7 +23,7 @@ public class AppData extends Application {
 	public static final String TRAVO_AVATAR_PATH = TRAVO_PATH + "/avatar.jpg";
 	public static final String QQ_KEY = "100520860";
 	public static final String WEIBO_KEY = "3656582238";
-	public static final String WEIBO_REDIRECT_URL = "http://www.cobra.travo.com";
+	public static final String WEIBO_REDIRECT_URL = "https://api.weibo.com/oauth2/default.html ";
 	public static final String WEIBO_SCOPE = 
             "email,direct_messages_read,direct_messages_write,"
             
@@ -92,6 +92,14 @@ public class AppData extends Application {
     public static int getUserId(){
     	return sharedPreferences.getInt("user_id", -1);
     }
+    
+    /*
+     * get email
+     */
+    public static String getEmail()
+    {
+    	return sharedPreferences.getString("email", "");
+    }
     /*
      * get last time of a travel
      */
@@ -158,6 +166,12 @@ public class AppData extends Application {
 
     public static void setNickname(String nickname){
     	editor.putString("nickname", nickname);
+    	editor.commit();
+    }
+    
+    public static void setEmail(String email)
+    {
+    	editor.putString("email", email);
     	editor.commit();
     }
 

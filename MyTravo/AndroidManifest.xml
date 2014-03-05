@@ -134,6 +134,10 @@
             android:name="com.cobra.mytravo.activities.UserInfoActivity"
             android:label="@string/title_activity_user_info" >
         </activity>
+<activity
+            android:name="com.cobra.mytravo.activities.EditEmailActivity"
+            android:label="@string/title_activity_edit_email" >
+        </activity>
     </application>
 
 </manifest>
