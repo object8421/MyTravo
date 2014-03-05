@@ -9,6 +9,7 @@ import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.cobra.mytravo.R;
+import com.cobra.mytravo.data.AppData;
 import com.cobra.mytravo.data.GsonRequest;
 import com.cobra.mytravo.data.MyHandlerMessage;
 import com.cobra.mytravo.data.MyServerMessage;
@@ -24,11 +25,13 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class RegisterActivity extends Activity {
+public class RegisterActivity extends Activity 
+{
 
 	private EditText nickname;
 	private EditText email;
@@ -38,9 +41,10 @@ public class RegisterActivity extends Activity {
 	private RequestQueue mRequestQueue;
 	private RegisterThread registerThread;
 	public User user;
+	private String user_type;
+	private String qq_token;
 	private Map<String, String> map;
 	private Handler handler = new Handler(){
-		
 		@Override
 		public void handleMessage(Message msg) 
 		{
@@ -77,15 +81,31 @@ public class RegisterActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_register);
+		
 		ActionBarUtils.InitialDarkActionBar(this, getActionBar());
 		nickname = (EditText)findViewById(R.id.register_nickname);
 		email = (EditText)findViewById(R.id.register_email);
 		password = (EditText)findViewById(R.id.register_password);
 		repassword = (EditText)findViewById(R.id.register_pwdconfirm);
+		
+		Intent intent = this.getIntent();
+		user_type = intent.getStringExtra("user_type");
+		qq_token = intent.getStringExtra("access_token");
+		Log.i("user_type", user_type);
+		if(!"travo".equals(user_type))
+		{
+			email.setVisibility(View.INVISIBLE);
+			password.setVisibility(View.INVISIBLE);
+			repassword.setVisibility(View.INVISIBLE);
+		}
 	}
 	
 	private boolean check()
 	{
+		if(!"travo".equals(user_type) && !nickname.getText().toString().equals(""))
+		{
+			return true;
+		}
 		
 		if(email.getText().toString().equals("") || email.getText().toString()== null)
 		{
@@ -120,6 +140,8 @@ public class RegisterActivity extends Activity {
 		map.put("nickname", user.getNickname());
 		map.put("password", user.getPassword());
 		map.put("email", user.getEmail());
+		if(qq_token != null)
+			map.put("qq_token", qq_token);
 		mRequestQueue = Volley.newRequestQueue(this);
 		registerThread = new RegisterThread();
 		registerThread.start();
@@ -127,7 +149,6 @@ public class RegisterActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.register, menu);
 		return true;
 	}
@@ -153,7 +174,7 @@ public class RegisterActivity extends Activity {
 	private class RegisterThread extends Thread {
 		@Override
 		public void run() {
-			String uri = "http://192.168.1.104:9000/" + "user/register?user_type=travo";
+			String uri = AppData.HOST_IP + "user/register?user_type=" + user_type;
 			mRequestQueue.add(new GsonRequest<UserRegisterResponse>(uri,
 					UserRegisterResponse.class, null,
 					new Listener<UserRegisterResponse>() {
