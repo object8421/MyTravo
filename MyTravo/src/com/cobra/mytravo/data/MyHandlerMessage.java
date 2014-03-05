@@ -20,6 +20,7 @@ public final class MyHandlerMessage {
 	public final static int LOGIN_FAIL_SERVER = 31;
 	public final static int LOGIN_FAIL_EMAIL = 32;
 	public final static int LOGIN_FAIL_PASSWORD = 33;
+	public final static int LOGIN_NO_SUCH_USRE = 34;
 
 	public final static int UPDATE_USER_INFO_SUCCESS = 40;
 	public final static int UPDATE_USER_INFO_FAIL_SERVER = 41;
