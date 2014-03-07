@@ -9,7 +9,7 @@
     tools:context=".EditEmailActivity" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/tv_nickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
@@ -21,8 +21,8 @@
         android:id="@+id/edit_email_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView1"
-        android:layout_alignBottom="@+id/textView1"
+        android:layout_alignBaseline="@+id/tv_nickname"
+        android:layout_alignBottom="@+id/tv_nickname"
         android:layout_alignParentRight="true"
         android:layout_marginRight="14dp"
         android:ems="10" >
@@ -31,10 +31,10 @@
     </EditText>
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/tv_gender"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/textView1"
+        android:layout_alignLeft="@+id/tv_nickname"
         android:layout_below="@+id/edit_email_email"
         android:layout_marginTop="34dp"
         android:text="密码:" />
@@ -43,7 +43,7 @@
         android:id="@+id/edit_email_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textView2"
+        android:layout_alignBottom="@+id/tv_gender"
         android:layout_alignLeft="@+id/edit_email_email"
         android:ems="10" />
 
@@ -51,7 +51,7 @@
         android:id="@+id/edit_email_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/textView2"
+        android:layout_below="@+id/tv_gender"
         android:layout_marginTop="79dp"
         android:layout_toLeftOf="@+id/edit_email_password"
         android:text="保存" />

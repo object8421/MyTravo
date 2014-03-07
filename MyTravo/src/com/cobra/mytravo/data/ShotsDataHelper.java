@@ -1,6 +1,7 @@
 
 package com.cobra.mytravo.data;
 
+import android.R.integer;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -43,7 +44,7 @@ public class ShotsDataHelper extends BaseDataHelper {
         values.put(ShotsDBInfo.JSON, shot.toJson());
         return values;
     }
-
+    
     public Shot query(long id) {
         Shot shot = null;
         Cursor cursor = query(null, ShotsDBInfo.CATEGORY + "=?" + " AND " + ShotsDBInfo.ID + "= ?",

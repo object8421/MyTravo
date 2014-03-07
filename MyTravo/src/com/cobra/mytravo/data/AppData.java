@@ -100,6 +100,9 @@ public class AppData extends Application {
     {
     	return sharedPreferences.getString("email", "");
     }
+    public static String getSignature(){
+    	return sharedPreferences.getString("signature", "");
+    }
     /*
      * get last time of a travel
      */
@@ -174,7 +177,12 @@ public class AppData extends Application {
     	editor.putString("email", email);
     	editor.commit();
     }
-
+    
+    public static void setSignature(String signature){
+    	editor.putString("signature", signature);
+    	editor.commit();
+    }
+    
     public static void setAvatarUri(String avatarUri){
     	editor.putString("avatar", avatarUri);
     	editor.commit();

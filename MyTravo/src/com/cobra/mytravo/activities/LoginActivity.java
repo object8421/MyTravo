@@ -49,6 +49,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class LoginActivity extends Activity {
@@ -58,6 +59,7 @@ public class LoginActivity extends Activity {
 	private RequestQueue mRequestQueue;
 	private LoginThread mLoginThread;
 	
+	private TextView registerTextView;
 	private EditText email;
 	private EditText password;
 	private Button loginbyqq;
@@ -78,7 +80,7 @@ public class LoginActivity extends Activity {
 			{
 			case MyHandlerMessage.LOGIN_SUCCESS:
 				Toast.makeText(LoginActivity.this, "您已成功登陆", Toast.LENGTH_SHORT).show();
-				Intent intent1 = new Intent(LoginActivity.this, UserInfoActivity.class);
+				Intent intent1 = new Intent(LoginActivity.this, MainActivity.class);
 				startActivity(intent1);
 				break;
 			case MyHandlerMessage.LOGIN_FAIL_EMAIL:
@@ -108,7 +110,17 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		
+		registerTextView = (TextView) findViewById(R.id.login_register);
+		registerTextView.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Intent registerIntent = new Intent(LoginActivity.this, RegisterActivity.class);
+				registerIntent.putExtra("user_type", "travo");
+				startActivity(registerIntent);
+			}
+		});
 		email = (EditText)findViewById(R.id.login_email);
 		password = (EditText)findViewById(R.id.login_password);
 		loginbyqq = (Button)findViewById(R.id.login_by_qq);
@@ -190,9 +202,7 @@ public class LoginActivity extends Activity {
 			if(check())
 			{
 				login();
-				Intent intent = new Intent();
-	    		intent.setClass(LoginActivity.this, MainActivity.class);
-	    		startActivity(intent);
+				
 			}
 			
 		}
@@ -311,13 +321,7 @@ public class LoginActivity extends Activity {
 			Toast.makeText(LoginActivity.this, "cancel", Toast.LENGTH_LONG).show();
 		}
 
-		@Override
-		public void onComplete(Object response)
-		{
-			Toast.makeText(LoginActivity.this, "complete", Toast.LENGTH_LONG).show();
-			
-			doComplete((JSONObject)response);
-		}
+
 		
 		protected void doComplete(JSONObject values) {
 			try
@@ -336,6 +340,16 @@ public class LoginActivity extends Activity {
 		public void onError(UiError arg0)
 		{
 			Toast.makeText(LoginActivity.this, "error", Toast.LENGTH_LONG).show();
+		}
+
+
+
+		@Override
+		public void onComplete(JSONObject arg0) {
+			// TODO Auto-generated method stub
+Toast.makeText(LoginActivity.this, "complete", Toast.LENGTH_LONG).show();
+			
+			doComplete((JSONObject)arg0);
 		}
 	}
 }

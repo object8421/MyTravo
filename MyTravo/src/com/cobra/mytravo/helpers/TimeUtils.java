@@ -10,11 +10,21 @@ import java.util.Locale;
  * Created by L!ar 2013/12/23
  */
 public class TimeUtils {
-
+	public static CharSequence getTime(){
+		Date date = null;
+        SimpleDateFormat srcDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss 格林尼治标准时间+0800 yyyy",Locale.ENGLISH);
+        SimpleDateFormat dstDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+        	date = srcDateFormat.parse(new Date().toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return dstDateFormat.format(date);
+	}
     public static CharSequence getListTime(String created_at) {
         
         Date date = null;
-        SimpleDateFormat srcDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss 格林尼治标准时间+0800 yyyy",Locale.ENGLISH);
+        SimpleDateFormat srcDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SimpleDateFormat dstDateFormat = new SimpleDateFormat("yyyy.MM.dd");
         try {
             date = srcDateFormat.parse(created_at);
@@ -36,8 +46,18 @@ public class TimeUtils {
         return dstDateFormat.format(date);
     }
     public static String getCalendarTime(Calendar c){
-    	SimpleDateFormat df = new SimpleDateFormat("yyyy.MM.dd");
+    	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     	String formattedDate = df.format(c.getTime());
     	return formattedDate;
+    }
+    public static Date CalendarStringToDate(String s){
+    	Date date = null;
+    	SimpleDateFormat df = new SimpleDateFormat("yyyy.MM.dd");
+    	try {
+        	date = df.parse(s);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    	return date;
     }
 }

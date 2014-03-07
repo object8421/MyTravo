@@ -135,4 +135,13 @@ public class User extends BaseType{
 			this.user = user;
 		}
 	}
+	public class UserInfoResponse{
+		private int rsp_code;
+		public int getRsp_code() {
+			return rsp_code;
+		}
+		public void setRsp_code(int rsp_code) {
+			this.rsp_code = rsp_code;
+		}
+	}
 }

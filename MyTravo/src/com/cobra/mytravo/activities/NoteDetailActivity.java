@@ -4,7 +4,9 @@ import com.cobra.mytravo.R;
 import com.cobra.mytravo.R.layout;
 import com.cobra.mytravo.R.menu;
 import com.cobra.mytravo.data.AppData;
+import com.cobra.mytravo.data.NotesDataHelper;
 import com.cobra.mytravo.helpers.ActionBarUtils;
+import com.cobra.mytravo.helpers.BitmapManager;
 import com.cobra.mytravo.helpers.MyImageUtil;
 import com.cobra.mytravo.helpers.TimeUtils;
 import com.cobra.mytravo.models.Note;
@@ -12,10 +14,15 @@ import com.cobra.mytravo.models.Travel;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,8 +30,9 @@ public class NoteDetailActivity extends Activity {
 	private final static String TAG = "NoteDetailActivity";
 	private final static int EDIT_NOTE_REQUEST_CODE = 1;
 	private static final String NOTE_STRING = "note";
+	private BitmapManager bitmapManager;
 	private Note note;
-	
+	private NotesDataHelper mDataHelper;
 	private ImageView imageView;
 	private TextView descriptionTextView;
 	private TextView timeTextView;
@@ -32,6 +40,7 @@ public class NoteDetailActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		//requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
 		setContentView(R.layout.activity_note_detail);
 		InitialData();
 		InitialViews();
@@ -47,10 +56,11 @@ public class NoteDetailActivity extends Activity {
 		if(getIntent() != null){
 			note = (Note) getIntent().getSerializableExtra(NOTE_STRING);
 		}
-		
+		mDataHelper = new NotesDataHelper(this, AppData.getUserId(), AppData.getTravelTime());
+		bitmapManager = new BitmapManager(this);
 	}
 	private void InitialViews(){
-		ActionBarUtils.InitialDarkActionBar(this, getActionBar(), "足迹详情");
+		ActionBarUtils.InitialActionBarWithBackAndTitle(this, getActionBar(), "足迹详情");
 		imageView = (ImageView) findViewById(R.id.img_cover_note);
 		descriptionTextView = (TextView) findViewById(R.id.tv_description_note);
 		timeTextView = (TextView) findViewById(R.id.tv_time_note);
@@ -59,9 +69,13 @@ public class NoteDetailActivity extends Activity {
 			BitmapFactory.Options options = new BitmapFactory.Options();
 	        options.inSampleSize = 2;
 			MyImageUtil.setBitmapResize(this, imageView, note.getImage_url());
+			//bitmapManager.fetchBitmapOnThread(note.getImage_url(), imageView);
 		}
 		if(note.getDescription() != null){
 			descriptionTextView.setText(note.getDescription());
+		}
+		if(note.getLocation() != null){
+			locationTextView.setText(note.getLocation().getNameString());
 		}
 		timeTextView.setText(TimeUtils.getListTime(note.getTime()));
 		
@@ -70,7 +84,9 @@ public class NoteDetailActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
 		switch(item.getItemId()){
-		
+		case android.R.id.home:
+			this.onBackPressed();
+			break;
 		case R.id.action_edit:
 			Intent intent = new Intent();
 			intent.setClass(this, AddNoteActivity.class);		
@@ -79,11 +95,34 @@ public class NoteDetailActivity extends Activity {
 			intent.putExtras(bundle);
 			startActivityForResult(intent, EDIT_NOTE_REQUEST_CODE);
 			break;
+		case R.id.action_delete:
+			AlertDialog.Builder builder = new Builder(this);
+			builder.setMessage("确认删除吗?");
+			builder.setPositiveButton("删除", new OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					note.setIs_deleted(1);
+					mDataHelper.update(note);
+					NoteDetailActivity.this.finish();
+				}
+			});
+			builder.setNegativeButton("取消", new OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int arg1) {
+					// TODO Auto-generated method stub
+					dialog.dismiss();
+				}
+			});
+			builder.create().show();
 		default:
 			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub

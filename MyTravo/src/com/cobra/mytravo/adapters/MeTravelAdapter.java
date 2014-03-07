@@ -1,7 +1,7 @@
 package com.cobra.mytravo.adapters;
 
 import com.cobra.mytravo.R;
-import com.cobra.mytravo.helpers.BitmapManager1;
+import com.cobra.mytravo.helpers.BitmapManager;
 import com.cobra.mytravo.helpers.TimeUtils;
 import com.cobra.mytravo.models.Travel;
 import android.app.Activity;
@@ -20,13 +20,13 @@ public class MeTravelAdapter extends CursorAdapter{
 	private LayoutInflater mLayoutInflater;
 	private ListView mListView;
 	private Drawable mDefaultImageDrawable;
-	private BitmapManager1 bitmapManager;
+	private BitmapManager bitmapManager;
 	public MeTravelAdapter(Context context, ListView listView) {
 		super(context, null, false);
 		mLayoutInflater = ((Activity) context).getLayoutInflater();
         mListView = listView;
 		mDefaultImageDrawable = context.getResources().getDrawable(R.drawable.me_default_image);
-		bitmapManager = new BitmapManager1(context);
+		bitmapManager = new BitmapManager(context);
 	}
 	@Override
 	public Travel getItem(int position) {

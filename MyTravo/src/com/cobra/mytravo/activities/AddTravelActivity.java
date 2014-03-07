@@ -11,8 +11,10 @@ import com.cobra.mytravo.data.AppData;
 import com.cobra.mytravo.data.MyHandlerMessage;
 import com.cobra.mytravo.data.TravelsDataHelper;
 import com.cobra.mytravo.helpers.ActionBarUtils;
+import com.cobra.mytravo.helpers.BitmapUtil;
 import com.cobra.mytravo.helpers.MyImageUtil;
 import com.cobra.mytravo.helpers.PhotoUtils;
+import com.cobra.mytravo.helpers.ScreenUtil;
 import com.cobra.mytravo.helpers.TimeUtils;
 import com.cobra.mytravo.models.Travel;
 
@@ -44,11 +46,18 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.Toast;
-
-@SuppressLint("NewApi") public class AddTravelActivity extends Activity implements OnMenuItemClickListener{
+/**
+ * 
+ * @author L!ar
+ * Activity for adding or editing a travel
+ *
+ */
+@SuppressLint("NewApi") 
+public class AddTravelActivity extends Activity implements OnMenuItemClickListener{
 	private static final String TRAVEL_STRING = "travel";
 	private static final String TAG = "AddTravelActivity";
 	private Travel travel;
@@ -59,7 +68,9 @@ import android.widget.Toast;
 	private EditText edtDescription;
 	private Button startButton;
 	private Button endButton;
-	private ImageButton coverButton;
+	private ImageView coverImageView;
+	private ImageView addImageView;
+	private Button deleteButton;
 	private ProgressDialog progressDialog;
 	private AddTravelThread addTravelThread;
 	
@@ -127,7 +138,6 @@ import android.widget.Toast;
 		ActionBarUtils.InitialDarkActionBar(this, getActionBar(), "添加游记");
 		InitialData();
 		InitialView();
-
 		
 		/*
 		 * end
@@ -189,32 +199,37 @@ import android.widget.Toast;
 			 }
 		 }
 			 
-		 mDataHelper = new TravelsDataHelper(this, 0);
+		 mDataHelper = new TravelsDataHelper(this, AppData.getUserId());
 	 }
 	 private void InitialView(){
 		 	backView = findViewById(R.id.layout_travel_add);
 			edtTitle = (EditText) findViewById(R.id.travel_title);
 			edtExpense = (EditText) findViewById(R.id.travel_expense);
+			edtDestination = (EditText) findViewById(R.id.travel_destination);
 			startButton = (Button) findViewById(R.id.btn_travel_start);
 			endButton = (Button) findViewById(R.id.btn_travel_end);
-			coverButton = (ImageButton) findViewById(R.id.btn_cover_travel);
+			addImageView = (ImageView) findViewById(R.id.img_add_cover_travel);
+			coverImageView = (ImageView) findViewById(R.id.img_cover_travel);
+			deleteButton = (Button) findViewById(R.id.btn_delete_cover_travel);
 			edtDescription = (EditText) findViewById(R.id.travel_description);
 			progressDialog = new ProgressDialog(AddTravelActivity.this);
 			if(isEdit){
 				if(editTravel.getCover_url() != null){
-					imageExist = true;
-					MyImageUtil.setBitmap(coverButton, editTravel.getCover_url());
+					
+					coverImageView.setImageBitmap(BitmapUtil.getRoundBitmap(BitmapUtil.createScaleBitmap
+		        			(AppData.TRAVO_PATH+"/"+editTravel.getCover_url()+".jpg", ScreenUtil.dip2px(this, coverImageView.getWidth()), 
+		        					ScreenUtil.dip2px(this, coverImageView.getHeight())), 10));
+					deleteButton.setVisibility(View.VISIBLE);
+					coverImageView.setVisibility(View.VISIBLE);
 				}
 					
 				edtTitle.setText(editTravel.getTitle());
-				if(String.valueOf(editTravel.getAverage_spend()) != null)
-					edtExpense.setText(String.valueOf(editTravel.getAverage_spend()));
-				if(editTravel.getBegin_date() != null)
-					startButton.setText(editTravel.getBegin_date());
-				if(editTravel.getEnd_date() != null)
-					endButton.setText(editTravel.getEnd_date());
-				if(editTravel.getDescription() != null)
+				edtExpense.setText(String.valueOf(editTravel.getAverage_spend()));
+				startButton.setText(editTravel.getBegin_date());
+				endButton.setText(editTravel.getEnd_date());				
 				edtDescription.setText(editTravel.getDescription());
+				edtDestination.setText(editTravel.getDestination());
+				
 			}
 			startButton.setOnClickListener(new OnClickListener() {
 				
@@ -234,7 +249,7 @@ import android.widget.Toast;
 				}
 			});
 			
-			coverButton.setOnClickListener(new OnClickListener() {
+			addImageView.setOnClickListener(new OnClickListener() {
 				
 				@Override
 				public void onClick(View view) {
@@ -247,7 +262,16 @@ import android.widget.Toast;
 	                popupMenu.show();
 				}
 			});
-			
+			deleteButton.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View view) {
+					// TODO Auto-generated method stub
+					imageExist = false;
+					view.setVisibility(View.INVISIBLE);
+					coverImageView.setVisibility(View.INVISIBLE);
+				}
+			});
 			progressDialog.setOnDismissListener(new OnDismissListener() {
 				@Override
 				public void onDismiss(DialogInterface dialog) {
@@ -263,25 +287,36 @@ import android.widget.Toast;
 	//check the entered info is correct
 	private boolean checkInfo() {
 		// TODO Auto-generated method stub
-		if(edtTitle.getText().toString().isEmpty())
+		if((title = edtTitle.getText().toString()) == null){
+			Toast.makeText(this, "标题不能为空!", Toast.LENGTH_SHORT).show();
 			return false;
-//		if(edtExpense.getText().toString().isEmpty())
-//			return false;
-//		else
-//		{
-//			try
-//			{
-//				Double.parseDouble(edtExpense.getText().toString());
-//			}
-//			catch(NumberFormatException e)
-//			{
-//				return false;
-//			}
-//		}
-		//if(edtDestination.getText().toString().isEmpty())
-		//	return false;
-		//if(edtDescription.getText().toString().isEmpty())
-		//	return false;
+		}
+		if(startString == null || endString == null){
+			Toast.makeText(this, "请填写起止时间!", Toast.LENGTH_SHORT).show();
+			return false;
+		}
+			
+		if(startString != null && endString != null){
+			begindate = TimeUtils.CalendarStringToDate(startString);
+			enddate = TimeUtils.CalendarStringToDate(endString);
+			if(begindate != null && enddate != null && begindate.after(enddate)){
+				Toast.makeText(this, "结束日期不能早于开始日期!", Toast.LENGTH_SHORT).show();
+				return false;
+			}
+				
+		}
+		if((destination = edtDestination.getText().toString()) == null){
+			return false;
+		}
+		try
+		{
+			if(edtExpense.getText() != null)
+				expense = Double.parseDouble(edtExpense.getText().toString());
+		}
+		catch(Exception e)
+		{
+			return false;
+		}
 		return true;
 	}
 	 @SuppressLint("NewApi") @Override  
@@ -305,10 +340,13 @@ import android.widget.Toast;
 	        	coverBitmap = BitmapFactory.decodeFile(coverPathString, options);
 	            if(coverBitmap != null){
 	            	 Log.v(TAG, "camera data is not null");
-	            	isFromCamera = true;
+	            	
 	 	            imageExist = true;
-	 	            coverButton.setImageBitmap(coverBitmap);
-	 	            
+	 	            coverImageView.setImageBitmap(BitmapUtil.getRoundBitmap(BitmapUtil.createScaleBitmap
+		        			(coverPathString, ScreenUtil.dip2px(this, coverImageView.getWidth()), 
+		        					ScreenUtil.dip2px(this, coverImageView.getHeight())), 10)); 
+	 	            coverImageView.setVisibility(View.VISIBLE);
+	 	            deleteButton.setVisibility(View.VISIBLE);
 	            }
 	            else{
 	            	 Log.v(TAG, "coverBitmap is null");
@@ -320,8 +358,8 @@ import android.widget.Toast;
 	            break;
 	        case 2:
 	        	Log.v(TAG, "gallery data is not null");
-	        	isFromCamera = false;
-	        	imageExist = true;
+	        	
+	        	
 	        	coverPathString = null;
 	        	Uri selectedImage = data.getData();  
 	            String[] filePathColumn = { MediaStore.Images.Media.DATA, MediaStore.Images.Media.DATE_TAKEN};  
@@ -334,17 +372,19 @@ import android.widget.Toast;
 	            String temp = cursor.getString(columnIndex);
 	            photoTimeString = (String) TimeUtils.getPhotoTime(Long.parseLong(cursor.getString(cursor.getColumnIndex(filePathColumn[1]))));
 	            Toast.makeText(this, photoTimeString, Toast.LENGTH_LONG).show();
-	            cursor.close();  
-	            
-//	            BitmapFactory.Options options = new BitmapFactory.Options();
-//	            options.inSampleSize = 2;
+	            cursor.close(); 
 	            if(coverBitmap != null)
             		coverBitmap.recycle();
 	            BitmapFactory.Options opt = new BitmapFactory.Options();
 	            opt.inSampleSize = 2;
 	            coverBitmap = BitmapFactory.decodeFile(temp, opt);
-	            coverButton.setImageBitmap(coverBitmap);
-	        	break;
+	            imageExist = true;
+	            coverImageView.setImageBitmap(BitmapUtil.getRoundBitmap(BitmapUtil.createScaleBitmap
+	        			(temp, ScreenUtil.dip2px(this, coverImageView.getWidth()), 
+	        					ScreenUtil.dip2px(this, coverImageView.getHeight())), 10)); 
+	            coverImageView.setVisibility(View.VISIBLE);
+	            deleteButton.setVisibility(View.VISIBLE);
+	            break;
 	        default:  
 	        	Toast.makeText(this, "!!!!!!", Toast.LENGTH_SHORT).show();
 	            break;  
@@ -361,8 +401,11 @@ import android.widget.Toast;
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
-		if(item.getItemId() == R.id.action_add)
-		{
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			this.onBackPressed();
+			break;
+		case R.id.action_add:
 			if(checkInfo())
 			{
 				progressDialog = ProgressDialog.show(AddTravelActivity.this, "请等待", "添加游记中。。。", true, true);
@@ -373,7 +416,10 @@ import android.widget.Toast;
 			{
 				Toast.makeText(AddTravelActivity.this, "输入不正确", Toast.LENGTH_SHORT).show();
 			}
+		default:
+			break;
 		}
+		
 		return super.onOptionsItemSelected(item);
 	}
 	
@@ -396,18 +442,20 @@ import android.widget.Toast;
 			if(!isEdit){
 				travel = new Travel();
 				travel.setTitle(edtTitle.getText().toString());
-				travel.setAverage_spend(Double.parseDouble(edtExpense.getText().toString()));
-				
+				travel.setAverage_spend(expense);
+				travel.setDestination(destination);
 				if(startString != null)
 					travel.setBegin_date(startString);
 				if(endString != null)
 					travel.setEnd_date(endString);
 				
 				travel.setDescription(edtDescription.getText().toString());
-				travel.setCreated_time(new Date().toString());
-				travel.setUser_id(0);
+				travel.setCreated_time(TimeUtils.getTime().toString());
+				travel.setUser_id(AppData.getUserId());
+				//if imageExist means we add the photo or change the photo
 				if(imageExist){
 					Log.v("image", "image exist!");
+					//if coverPathString == null, the photo is picked from gallery
 					if(coverPathString == null){
 						if(photoTimeString != null){
 							
@@ -432,13 +480,14 @@ import android.widget.Toast;
 				mDataHelper.insert(travel);
 				//only for testing, later we will move user_id to the moment 
 				//we successfully login
-				AppData.setUserId(0);
+				
 				AppData.setTravel_time(travel.getCreated_time());
 			}
 			else{
 				editTravel.setTitle(edtTitle.getText().toString());
-				editTravel.setAverage_spend(Double.parseDouble(edtExpense.getText().toString()));
 				
+				editTravel.setAverage_spend(expense);
+				editTravel.setDestination(destination);
 				if(startString != null)
 					editTravel.setBegin_date(startString);
 				if(endString != null)
@@ -456,7 +505,7 @@ import android.widget.Toast;
 						}
 					}
 					else{
-						travel.setCover_url(photoTimeString);
+						editTravel.setCover_url(photoTimeString);
 					}
 				}
 				Travel.clearCache();

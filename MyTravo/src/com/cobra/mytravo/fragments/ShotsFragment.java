@@ -13,9 +13,12 @@ import com.cobra.mytravo.models.Category;
 import com.cobra.mytravo.models.DribbbleApi;
 import com.cobra.mytravo.models.Shot;
 import com.cobra.mytravo.ui.LoadingFooter;
+import com.cobra.mytravo.util.ComposeBtnUtil;
 
 
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Hashtable;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher.OnRefreshListener;
@@ -44,8 +47,11 @@ import android.widget.Toast;
 
 
 public class ShotsFragment extends BaseFragment implements LoaderManager.LoaderCallbacks<Cursor>,PullToRefreshAttacher.OnRefreshListener {
+	private final static String TAG = "shotsfragmnet";
 	private int mPage = 1;
 	public static final String EXTRA_CATEGORY = "EXTRA_CATEGORY";
+	private static final int DISTANCE_SENSOR = 10;
+	private Dictionary<Integer, Integer> listViewItemHeights = new Hashtable<Integer, Integer>();
 	private Category mCategory;
 	private ShotsDataHelper mDataHelper;
 	private MainActivity mActivity;
@@ -89,6 +95,7 @@ public class ShotsFragment extends BaseFragment implements LoaderManager.LoaderC
 	        getLoaderManager().initLoader(0, null, this);
 	        mActivity = (MainActivity) getActivity();
 	        mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+	        	int previous = 0;
 	            @Override
 	            public void onScrollStateChanged(AbsListView view, int scrollState) {
 
@@ -97,6 +104,18 @@ public class ShotsFragment extends BaseFragment implements LoaderManager.LoaderC
 	            @Override
 	            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
 	                    int totalItemCount) {
+	            	int currentY = getScroll();
+					int direction = currentY - previous;
+					if(direction > DISTANCE_SENSOR){
+						Log.v(TAG, "runOutAnimation");
+						
+						ComposeBtnUtil.runOutAnimation(((MainActivity)getActivity()).getComposeButton());
+					}
+					else if(direction < (-DISTANCE_SENSOR)){
+						Log.v(TAG, "runInAnimation");
+						ComposeBtnUtil.runInAnimation(((MainActivity)getActivity()).getComposeButton());
+					}
+					previous = currentY;
 	                if (mLoadingFooter.getState() == LoadingFooter.State.Loading
 	                        || mLoadingFooter.getState() == LoadingFooter.State.TheEnd) {
 	                    return;
@@ -212,6 +231,22 @@ public class ShotsFragment extends BaseFragment implements LoaderManager.LoaderC
         loadFirstPage();
     }
 	
-	
+    private int getScroll() {
+	    View c = mListView.getChildAt(0); //this is the first visible row
+	    try{
+		    int scrollY = -c.getTop();
+		    listViewItemHeights.put(mListView.getFirstVisiblePosition(), c.getHeight());
+		    for (int i = 0; i < mListView.getFirstVisiblePosition(); ++i) {
+		        if (listViewItemHeights.get(i) != null) // (this is a sanity check)
+		            scrollY += listViewItemHeights.get(i); //add all heights of the views that are gone
+		      
+		    }
+		    return scrollY;
+	    }
+	    catch(NullPointerException e){
+	    	return 0;
+	    }
+	    
+	}
 	
 }

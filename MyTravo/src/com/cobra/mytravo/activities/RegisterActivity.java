@@ -89,15 +89,17 @@ public class RegisterActivity extends Activity
 		repassword = (EditText)findViewById(R.id.register_pwdconfirm);
 		
 		Intent intent = this.getIntent();
+		
 		user_type = intent.getStringExtra("user_type");
 		qq_token = intent.getStringExtra("access_token");
-		Log.i("user_type", user_type);
-		if(!"travo".equals(user_type))
+		//Log.i("user_type", user_type);
+		if(!"travo".equals(user_type)  && user_type != null)
 		{
 			email.setVisibility(View.INVISIBLE);
 			password.setVisibility(View.INVISIBLE);
 			repassword.setVisibility(View.INVISIBLE);
 		}
+		
 	}
 	
 	private boolean check()

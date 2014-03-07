@@ -1,7 +1,7 @@
 package com.cobra.mytravo.adapters;
 
 import com.cobra.mytravo.R;
-import com.cobra.mytravo.helpers.BitmapManager1;
+import com.cobra.mytravo.helpers.BitmapManager;
 import com.cobra.mytravo.helpers.TimeUtils;
 import com.cobra.mytravo.models.Note;
 
@@ -22,17 +22,20 @@ public class TravelDetailAdapter extends CursorAdapter{
 	private final static String TAG = "TravelDetailAdapter";
 	private LayoutInflater mLayoutInflater;
 	private ListView mListView;
-	private BitmapManager1 bitmapManager;
+	private BitmapManager bitmapManager;
 	public TravelDetailAdapter(Context context, ListView listView) {
 		super(context, null, false);
 		mLayoutInflater = ((Activity) context).getLayoutInflater();
         mListView = listView;
-        bitmapManager = new BitmapManager1(context);
+        bitmapManager = new BitmapManager(context);
 	}
 	@Override
 	public Note getItem(int position){
-		mCursor.moveToPosition(position);
-		return Note.fromCursor(mCursor);
+		if(position >= 0){
+			mCursor.moveToPosition(position);
+			return Note.fromCursor(mCursor);
+		}
+		return null;
 	}
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
@@ -43,9 +46,14 @@ public class TravelDetailAdapter extends CursorAdapter{
 		Note note = Note.fromCursor(cursor);
 		holder.descriptionTextView.setText(note.getDescription());
 		holder.timeTextView.setText(TimeUtils.getListTime(note.getTime()));
+		if(note.getLocation() != null){
+			if(note.getLocation().getNameString() != null){
+				holder.locationTextView.setText(note.getLocation().getNameString());
+			}
+		}
 		holder.imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.me_default_image));
 		if(note.getImage_url()!= null){
-			
+			holder.imageView.setVisibility(View.VISIBLE);
 			bitmapManager.fetchBitmapOnThread(note.getImage_url(), holder.imageView);
 		}
 		else{
@@ -69,13 +77,16 @@ public class TravelDetailAdapter extends CursorAdapter{
     }
 	private class Holder{
 		private ImageView imageView;
+		
 		private TextView descriptionTextView;
 		private TextView timeTextView;
+		private ImageView locationImageView;
 		private TextView locationTextView;
 		public Holder(View view){
 			imageView = (ImageView) view.findViewById(R.id.img_cover_note);
 			descriptionTextView = (TextView) view.findViewById(R.id.tv_description_note);
 			timeTextView = (TextView) view.findViewById(R.id.tv_time_note);
+			locationImageView = (ImageView) view.findViewById(R.id.img_location_note);
 			locationTextView = (TextView) view.findViewById(R.id.tv_location_note);
 		}
 	}

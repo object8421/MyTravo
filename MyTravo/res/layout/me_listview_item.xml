@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginBottom="10dp"
-    android:background="@drawable/bg_listitem_shot"
+    android:background="@drawable/card_bg"
     android:orientation="vertical"
     android:padding="8dp" >
 
@@ -12,7 +12,7 @@
         android:id="@+id/me_image"
         android:layout_width="match_parent"
         android:layout_height="@dimen/me_listview_image_height"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:src="@drawable/me_default_image" />
 
     <TextView

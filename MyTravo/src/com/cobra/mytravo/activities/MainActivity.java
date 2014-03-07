@@ -9,6 +9,7 @@ import com.cobra.mytravo.fragments.PersonalFragment;
 import com.cobra.mytravo.fragments.SettingFragment;
 import com.cobra.mytravo.fragments.ShotsFragment;
 import com.cobra.mytravo.helpers.ActionBarUtils;
+import com.cobra.mytravo.util.ComposeBtnUtil;
 
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
@@ -25,18 +26,22 @@ import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 /**
  * 
  * @author qiuky1 2013/12/2
- *
+ * Activity manages the whole UI components, including fragments
  */
 public class MainActivity extends FragmentActivity {
-
+	private ViewGroup rootView;
+	private Button composeButton;
 	private DrawerLayout mDrawerLayout;
 	private PullToRefreshAttacher mPullToRefreshAttacher;
 	private ActionBar actionBar;
@@ -57,8 +62,24 @@ public class MainActivity extends FragmentActivity {
 		mPullToRefreshAttacher = PullToRefreshAttacher.get(this);
 		listItems = getResources().getStringArray(R.array.drawermenu);
 		actionBar = getActionBar();
-        ActionBarUtils.InitialDarkActionBar(this, actionBar);
-        
+        ActionBarUtils.ShowActionBarLogo(this, actionBar);
+        rootView = ComposeBtnUtil.createLayout(this);
+        composeButton = (Button) ComposeBtnUtil.addComposeBtn(rootView, this);
+        composeButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if(AppData.getTravelTime() != null){
+        			Intent noteIntent = new Intent(MainActivity.this, AddNoteActivity.class);
+        			startActivity(noteIntent);
+        		}
+        		else{
+        			Intent travelIntent = new Intent(MainActivity.this, AddTravelActivity.class);
+            		startActivity(travelIntent);
+        		}
+			}
+		});
         //set drawer Listener
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.drawable.ic_drawer, 
         		R.string.drawer_open, R.string.drawer_close){
@@ -82,6 +103,7 @@ public class MainActivity extends FragmentActivity {
 		fragmentManager.beginTransaction()  
         .replace(R.id.left_drawer, new DrawerFragment())  
         .commit();  
+		Toast.makeText(this, "user_id is:"+ AppData.getUserId(), Toast.LENGTH_SHORT).show();
 	}
 	@Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -172,5 +194,8 @@ public class MainActivity extends FragmentActivity {
 		}
 		 FragmentManager fragmentManager = getFragmentManager();
 		 fragmentManager.beginTransaction().replace(R.id.content_frame, mContentFragment).commit();
+	}
+	public Button getComposeButton(){
+		return this.composeButton;
 	}
 }

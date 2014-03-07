@@ -14,10 +14,15 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
-
+/**
+ * 
+ * @author L!ar
+ * Photo Utils: including Camera and Gallery, 
+ * and the file operation(copy image file to TRAVO path, compressed to .JPG)
+ */
 public class PhotoUtils {
 	private static final String TAG = "PhotoUtils";
-	File PHOTO_DIR = new File(Environment.getExternalStorageDirectory() + "/Travo/Camera");  
+	//File PHOTO_DIR = new File(Environment.getExternalStorageDirectory() + "/Travo/Camera");  
 	private static final int REQUEST_CODE_CAMERA = 1;
 	private static final int REQUEST_CODE_GALLERY = 2;
 	public static void takePicture(Context context){
@@ -46,22 +51,13 @@ public class PhotoUtils {
 			Toast.makeText(mContext, "请从图库中选取图片", Toast.LENGTH_SHORT).show();
 			Intent intent = new Intent(Intent.ACTION_PICK,  
                     android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);  
-//	        intent.setType("image/*");  
-//	        intent.putExtra("crop", "true");  
-//	        intent.putExtra("aspectX", 1);  
-//	        intent.putExtra("aspectY", 1);  
-//	        intent.putExtra("outputX", 80);  
-//	        intent.putExtra("outputY", 80);  
-//	        intent.putExtra("return-data", true);  
             mContext.startActivityForResult(intent, REQUEST_CODE_GALLERY);  
 		}
 	}
 	public static String getPhotoPath(String photoTimeString){
 		
 	    try {
-	        // 获取 SD 卡根目录
-//	        String saveDir = Environment.getExternalStorageDirectory().toString();	        		
-//	        // 新建目录
+	        
             File dir = new File(AppData.TRAVO_PATH);
 	        if (! dir.exists()){
 	        	Log.v(TAG, "dir is not exist!");
@@ -70,8 +66,7 @@ public class PhotoUtils {
 	        // 生成文件名	       
 	        String photoPath = photoTimeString + ".jpg";
 	        // 新建文件
-	       // File file = new File(dir.getAbsolutePath(), filename);	       
-	       //return Uri.fromFile(file).toString();
+	       
 	        return photoPath;
 	        
 	    } catch (Exception e) {
@@ -88,10 +83,10 @@ public class PhotoUtils {
 		FileOutputStream fileOutputStream = null;
 	    try {
 	        // 获取 SD 卡根目录
-	        String saveDir = Environment.getExternalStorageDirectory().toString();
+	        String saveDir = Environment.getExternalStorageDirectory() + "/";
 	        		
 	        // 新建目录
-	        File dir = new File(saveDir + "/Travo");
+	        File dir = new File(saveDir + "Travo");
 	        if (! dir.exists()){
 	        	Log.v(TAG, "dir is not exist!");
 	        	dir.mkdir();

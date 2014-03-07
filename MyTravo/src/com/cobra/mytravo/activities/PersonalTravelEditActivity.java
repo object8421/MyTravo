@@ -21,7 +21,12 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
+/**
+ * 
+ * @author L!ar
+ *
+ *Activity 
+ */
 public class PersonalTravelEditActivity extends Activity {
 	private static final String TRAVEL_STRING = "travel";
 	private static final int SAVE_SUCCESS = 0;
@@ -71,7 +76,7 @@ public class PersonalTravelEditActivity extends Activity {
 		descriptionEditText = (EditText) findViewById(R.id.travel_description);
 		startButton = (Button) findViewById(R.id.btn_travel_start);
 		endButton = (Button) findViewById(R.id.btn_travel_end);
-		mDataHelper = new TravelsDataHelper(this, 0);
+		mDataHelper = new TravelsDataHelper(this,  AppData.getUserId());
 		initialData();
 	}
 	public void initialData(){
@@ -97,6 +102,9 @@ public class PersonalTravelEditActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+		case android.R.id.home:
+			this.onBackPressed();
+			break;
 		case R.id.action_save:
 			if(saveThread == null ){
 				saveThread = new SaveThread();

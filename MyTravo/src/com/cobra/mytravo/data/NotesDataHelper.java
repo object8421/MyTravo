@@ -74,12 +74,22 @@ public class NotesDataHelper extends BaseDataHelper {
 			deleteNote.getTravel_created_time(), deleteNote.getTime()});
 	}
    
-
+	public int getCount(){
+	    	return DatabaseUtils.queryCount(DataProvider.getDBHelper().getReadableDatabase(),
+	    			NotesDBInfo.TABLE_NAME, NotesDBInfo.USER_ID + "=?" 
+	    				    + " AND " +NotesDBInfo.TRAVEL_CREATED_TIME + "=?"+
+	    				    " AND " + TravelsDBInfo.IS_DELETED + "=?", new String[] {
+	    				        	String.valueOf(user_id),travel_created_time,String.valueOf(0)
+	    	                });    
+	}
    
     public CursorLoader getCursorLoader() {
-        return new CursorLoader(getContext(), getContentUri(), null, NotesDBInfo.USER_ID + "=?" + " AND " +NotesDBInfo.TRAVEL_CREATED_TIME + "=?",
+        return new CursorLoader(getContext(), getContentUri(), null, 
+        		NotesDBInfo.USER_ID + "=?" 
+    + " AND " +NotesDBInfo.TRAVEL_CREATED_TIME + "=?"+
+    " AND " + TravelsDBInfo.IS_DELETED + "=?",
                 new String[] {
-        	String.valueOf(user_id),travel_created_time
+        	String.valueOf(user_id),travel_created_time,String.valueOf(0)
                 }, NotesDBInfo._ID + " ASC");
     }
 

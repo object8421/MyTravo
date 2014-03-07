@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_listitem_shot"
-    android:paddingTop="6dp" >
+    android:background="@drawable/card_bg" >
 
     <ImageView
         android:id="@+id/img_cover_note"
@@ -12,7 +11,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:adjustViewBounds="true"
-        android:padding="6dp"
+        android:paddingTop="10dp"
         android:scaleType="centerCrop"
         android:src="@drawable/me_default_image" />
 
@@ -28,25 +27,39 @@
         android:text="TextView"
         android:textSize="16sp" />
 
-    <TextView
-        android:id="@+id/tv_location_note"
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tv_description_note"
-        android:layout_marginLeft="10dp"
-        android:text="TextView"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="12sp" />
+        android:layout_below="@+id/tv_description_note" >
 
-    <TextView
-        android:id="@+id/tv_time_note"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@id/tv_description_note"
-        android:layout_marginRight="10dp"
-        android:text="TextView"
-        android:textColor="@android:color/darker_gray"
-        android:textSize="12sp" />
+        <TextView
+            android:id="@+id/tv_time_note"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="4dp"
+            android:text="2014-03-12"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_location_note"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/img_location_note"
+            android:text="here&apos;s location string"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/img_location_note"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="4dp"
+            android:src="@drawable/send_location_button_light" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

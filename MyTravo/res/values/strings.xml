@@ -16,6 +16,8 @@
     <string name="select_picture">选择图片</string>
     <string name="take_picture">立即拍照</string>
     <string name="change_info">修改个人信息</string>
+    <string name="edit_email">修改邮箱</string>
+    <string name="edit_password">修改密码</string>
     <string name="save_info">保存</string>
     <string name="logout">退出</string>
     <string name="male">男</string>
@@ -49,6 +51,7 @@
     <string name="action_delete">删除</string>
     <string name="action_refresh">刷新</string>
     <string name="action_edit">编辑</string>
+    <string name="action_finish">结束游记</string>
     <string name="picture_description">写下你的游记或者图片描述</string>
 
     <string-array name="actionbar_spinner_sort">
@@ -88,5 +91,7 @@
     <string name="title_activity_my_travel_detail">MyTravelDetailActivity</string>
     <string name="title_activity_personal_notes">PersonalNotesActivity</string>
     <string name="title_activity_note_detail">NoteDetailActivity</string>
+    <string name="title_activity_edit_nickname">EditNicknameActivity</string>
+    <string name="title_activity_edit_gender">EditGenderActivity</string>
 
 </resources>

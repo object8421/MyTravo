@@ -14,13 +14,14 @@ import com.cobra.mytravo.data.AppData;
 import com.cobra.mytravo.data.MyHandlerMessage;
 import com.cobra.mytravo.data.NotesDataHelper;
 import com.cobra.mytravo.helpers.ActionBarUtils;
+import com.cobra.mytravo.helpers.BitmapUtil;
 import com.cobra.mytravo.helpers.MyImageUtil;
 import com.cobra.mytravo.helpers.PhotoUtils;
+import com.cobra.mytravo.helpers.ScreenUtil;
 import com.cobra.mytravo.helpers.TimeUtils;
 import com.cobra.mytravo.models.MyLocation;
 import com.cobra.mytravo.models.Note;
 import com.cobra.mytravo.models.Travel;
-import com.cobra.mytravo.util.AroundPlaceActivity;
 import com.cobra.mytravo.util.Tools;
 import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
 
@@ -51,30 +52,41 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
+/**
+ * 
+ * @author L!ar
+ *  Activity that add or edit a note
+ *
+ */
 public class AddNoteActivity extends Activity implements OnMenuItemClickListener{
 	private final static String TAG = "AddNoteAtivity";
 	private static final String NOTE_STRING = "note";
+	private final static String LOCATION_STRING = "mylocation";
+	private static final int REQUEST_LOCATION_CODE = 3;
 	private EditText descriptionEditText;
 	private TextView locationTextView;
 	private ProgressBar locationProgressBar;
 	private ImageView addImageView;
 	private ImageView coverImageView;
+	private Button deleteButton;
 	private Bitmap coverBitmap;
 	private String photoTimeString;
 	private String descriptionString;
 	private String locationString;
 	private Location location;
 	private String coverPathString;
+	private MyLocation myLocation, editMyLocation;
 	//mark if is edit
 	private boolean isEdit = false;
-	//
+	//if imageExist is true, means that we have picked a picture of this note
+	//(after we create the AddNoteActivity)
 	private boolean imageExist = false;
 	private NotesDataHelper mDataHelper;
 	private Note note;
@@ -97,6 +109,7 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 					progressDialog.dismiss();
 				AddNoteActivity.this.finish();
 				break;
+
 			default:
 				Toast.makeText(AddNoteActivity.this, "修改足迹失败!", Toast.LENGTH_SHORT).show();
 				if(progressDialog != null && progressDialog.isShowing())
@@ -112,16 +125,10 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 		ActionBarUtils.InitialDarkActionBar(this, getActionBar(),"添加足迹");
 		InitialData();
 		InitialView();
+		if(!isEdit)
+			getLocation();
 		mDataHelper = new NotesDataHelper(this, AppData.getUserId(), AppData.getTravelTime());
 		
-		getLocation();
-		
-	}
-	
-	/** 得到地理位置*/
-	private void getLocation()
-	{
-		new GetAddressTask(this).execute(Tools.getMyLocation(this));
 	}
 
 	@Override
@@ -141,7 +148,9 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 			progressDialog = ProgressDialog.show(this, "添加游记", "数据保存中......", false);
 			new Thread(new AddNoteThread()).start();
 			break;
-		
+		case android.R.id.home:
+			this.onBackPressed();
+			break;
 		default:
 			break;
 		}
@@ -154,23 +163,30 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 				 isEdit = true;
 				 //get the edditedtravel's coverpathstring if exists
 				 photoTimeString = editNote.getImage_url();
+				 
 			 }
 		 }
 	}
 	private void InitialView(){
+		locationProgressBar = (ProgressBar) findViewById(R.id.pgb_add_note);
 		descriptionEditText = (EditText) findViewById(R.id.edt_add_note);
 		locationTextView = (TextView) findViewById(R.id.tv_add_note);
-		locationTextView.setOnClickListener(new OnClickListener()
-		{
+		addImageView = (ImageView) findViewById(R.id.img_add_note);
+		deleteButton = (Button) findViewById(R.id.btn_delete_add_note);
+		coverImageView = (ImageView) findViewById(R.id.img_cover_add_note);
+		deleteButton.setOnClickListener(new OnClickListener() {
+			
 			@Override
-			public void onClick(View arg0)
-			{
-				Intent intent = new Intent(AddNoteActivity.this, AroundPlaceActivity.class);
-				startActivityForResult(intent, 4);
+			public void onClick(View view) {
+				// TODO Auto-generated method stub
+				
+					imageExist = false;
+					view.setVisibility(View.INVISIBLE);
+					coverImageView.setVisibility(View.INVISIBLE);
+				
+				
 			}
 		});
-		addImageView = (ImageView) findViewById(R.id.img_add_note);
-		coverImageView = (ImageView) findViewById(R.id.img_cover_add_note);
 		addImageView.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -184,16 +200,41 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
                 popupMenu.show();
 			}
 		});
+		locationTextView.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(AddNoteActivity.this, AroundPlaceActivity.class);
+				startActivityForResult(intent, REQUEST_LOCATION_CODE);
+			}
+		});
 		if(isEdit){
 			if(editNote.getImage_url() != null){
-				imageExist = true;
-				MyImageUtil.setBitmap(coverImageView, editNote.getImage_url());
-				coverImageView.setVisibility(View.VISIBLE);
-				if(editNote.getDescription() != null)
-					descriptionEditText.setText(editNote.getDescription());
+				coverBitmap = BitmapUtil.getRoundBitmap(BitmapUtil.createScaleBitmap
+	        			(AppData.TRAVO_PATH+"/"+editNote.getImage_url()+".jpg", ScreenUtil.dip2px(this, coverImageView.getWidth()), 
+	        					ScreenUtil.dip2px(this, coverImageView.getHeight())), 10);
+				//MyImageUtil.setBitmap(coverImageView, editNote.getImage_url());
+				if(coverBitmap != null){
+					coverImageView.setImageBitmap(coverBitmap);
+					coverImageView.setVisibility(View.VISIBLE);
+					deleteButton.setVisibility(View.VISIBLE);
+				}
+				
+				
 				
 			}
+			if(editNote.getDescription() != null)
+				descriptionEditText.setText(editNote.getDescription());
+			if(editNote.getLocation() != null){
+				 locationTextView.setText(editNote.getLocation().getNameString());
+				 locationProgressBar.setVisibility(View.INVISIBLE);
+			 }
 		}
+	}
+	private void getLocation()
+	{
+		new GetAddressTask(this).execute(Tools.getMyLocation(this));
 	}
 	private class AddNoteThread implements Runnable{
 
@@ -219,8 +260,11 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 				note = new Note();
 				note.setUser_id(AppData.getUserId());
 				note.setTravel_created_time(AppData.getTravelTime());
-				note.setTime(new Date().toString());
+				note.setTime(TimeUtils.getTime().toString());
 				note.setDescription(descriptionString);
+				if(myLocation != null){
+					note.setLocation(myLocation);
+				}
 				if(imageExist){
 					if(coverPathString == null){
 						if(photoTimeString != null){
@@ -258,9 +302,7 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 						editNote.setImage_url(photoTimeString);
 					}
 				}
-				else{
-					editNote.setImage_url(null);
-				}
+				
 				Note.clearCache();
 				mDataHelper.update(editNote);
 				return true;
@@ -285,12 +327,15 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 	        	Log.v(TAG, coverPathString);
 	        	coverPathString = AppData.TRAVO_PATH + "/"+ coverPathString;
 	        	coverBitmap = BitmapFactory.decodeFile(coverPathString);
+	        	
 	            if(coverBitmap != null){
-	            	Log.v(TAG, "camera data is not null");
-	            	
+	            	Log.v(TAG, "camera data is not null");            	
 	 	            imageExist = true;
-	 	            coverImageView.setVisibility(View.VISIBLE);
-	 	            coverImageView.setImageBitmap(coverBitmap); 
+	 	            coverImageView.setImageBitmap(BitmapUtil.getRoundBitmap(BitmapUtil.createScaleBitmap
+		        			(coverPathString, ScreenUtil.dip2px(this, coverImageView.getWidth()), 
+		        					ScreenUtil.dip2px(this, coverImageView.getHeight())), 10)); 
+	 	            coverImageView.setVisibility(View.VISIBLE);	 	   
+	 	            deleteButton.setVisibility(View.VISIBLE);
 	            }
 	            else{
 	            	 Log.v(TAG, "coverBitmap is null");
@@ -317,15 +362,21 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 	            BitmapFactory.Options options = new BitmapFactory.Options();
 	            options.inSampleSize = 2;
 	            coverBitmap = BitmapFactory.decodeFile(temp,options);
-	            coverImageView.setImageBitmap(coverBitmap);
+	            
+	            coverImageView.setImageBitmap(BitmapUtil.getRoundBitmap(BitmapUtil.createScaleBitmap
+	        			(temp, ScreenUtil.dip2px(this, coverImageView.getWidth()), 
+	        					ScreenUtil.dip2px(this, coverImageView.getHeight())), 10));
 	            coverImageView.setVisibility(View.VISIBLE);
+	            deleteButton.setVisibility(View.VISIBLE);
 	        	break;
-	        case 4:
-	        	MyLocation mylocation = (MyLocation) data.getSerializableExtra("location");
-	        	Log.i("mylocation", "jkljkl");
-	        	locationTextView.setText(mylocation.getNameString());
-	        	break;
-	        default:    
+	        case REQUEST_LOCATION_CODE:
+	        	myLocation = (MyLocation) data.getSerializableExtra(LOCATION_STRING);
+	        	if(myLocation != null){
+	        		locationTextView.setText(myLocation.getNameString());
+	        		locationProgressBar.setVisibility(View.INVISIBLE);
+	        	}
+	        	
+	        default:  
 	        	Toast.makeText(this, "!", Toast.LENGTH_SHORT).show();
 	            break;  
 	  
@@ -336,6 +387,8 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 	public boolean onMenuItemClick(MenuItem item) {
 		// TODO Auto-generated method stub
 		switch(item.getItemId()){
+		
+			
 		case R.id.camera:
 			photoTimeString = (String) TimeUtils.getPhotoTime(System.currentTimeMillis());
 			coverPathString = PhotoUtils.getPhotoPath(photoTimeString);
@@ -353,8 +406,8 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 		default:
 			return false;
 		}
+		
 	}  
-	
 	/** 通过location获得对应的地理位置信息的异步线程 */
 	private class GetAddressTask extends AsyncTask<Location, Void, String>
 	{
@@ -381,7 +434,7 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 			{
 				Log.e("MainActivity", "IO Exception in getFromLocation()");
 				e.printStackTrace();
-				return ("IO Exception trying to get address");
+				return null;
 			} catch (IllegalArgumentException e2)
 			{
 				// Error message to post in the log
@@ -391,7 +444,7 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 						+ " passed to address service";
 				Log.e("LocationSampleActivity", errorString);
 				e2.printStackTrace();
-				return errorString;
+				return null;
 			}
 			if (addresses != null && addresses.size() > 0)
 			{
@@ -401,14 +454,30 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 				return addressText;
 			} else
 			{
-				return "No address founded";
+				return null;
 			}
 		}
 
 		@Override
 		protected void onPostExecute(String address)
 		{
-			locationTextView.setText(address);
+			if(address != null){
+				if(locationProgressBar != null ){
+					locationProgressBar.setVisibility(View.INVISIBLE);
+				}
+				if(locationTextView != null)
+					locationTextView.setText(address);
+				Location location = Tools.getMyLocation(mContext);
+				if(location != null){
+					
+					myLocation = new MyLocation();
+					myLocation.setLatitude(String.valueOf(location.getLatitude()));
+					myLocation.setLongitude(String.valueOf(location.getLongitude()));
+					myLocation.setNameString(address);
+				}
+			}
+			
 		}
 	}
+	
 }

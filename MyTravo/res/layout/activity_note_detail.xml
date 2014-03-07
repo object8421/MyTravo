@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-<RelativeLayout 
+<RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_listitem_shot"
@@ -21,6 +21,7 @@
         android:src="@drawable/me_default_image" />
 
     <RelativeLayout
+        android:id="@+id/layout_descrption_note"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/img_cover_note" >
@@ -35,19 +36,8 @@
             android:layout_marginTop="4dp"
             android:maxLength="144"
             android:maxLines="3"
-            android:text="TextView"
+            android:text="描述"
             android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/tv_location_note"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_description_note"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
-            android:text="TextView"
-            android:textSize="16sp" />
-
     </RelativeLayout>
 
     <TextView
@@ -66,5 +56,27 @@
         android:textColor="@android:color/white"
         android:textSize="12sp" />
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout_descrption_note" >
+
+        <ImageView
+            android:id="@+id/img_add_cover_travel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/send_location_button_light" />
+
+        <TextView
+            android:id="@+id/tv_location_note"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="32dp"
+            android:text="TextView"
+            android:textSize="16sp" />
+
+    </LinearLayout>
 </RelativeLayout>
+
 </ScrollView>

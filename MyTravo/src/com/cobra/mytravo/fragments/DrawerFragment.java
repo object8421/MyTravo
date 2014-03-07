@@ -2,10 +2,13 @@ package com.cobra.mytravo.fragments;
 
 import com.cobra.mytravo.R;
 import com.cobra.mytravo.activities.MainActivity;
+import com.cobra.mytravo.activities.UserInfoActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -14,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 public class DrawerFragment extends BaseFragment{
-	//private ImageView avatarImageView;
+	private ImageView avatarImageView;
 	private ListView drawerListView;
 	private MainActivity mainActivity;
 	
@@ -23,6 +26,16 @@ public class DrawerFragment extends BaseFragment{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 		mainActivity = (MainActivity)getActivity();
 		View view = inflater.inflate(R.layout.fragment_drawer, null);
+		avatarImageView = (ImageView) view.findViewById(R.id.avatar_imgview);
+		avatarImageView.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Intent userInfoIntent = new Intent(getActivity(), UserInfoActivity.class);
+				getActivity().startActivity(userInfoIntent);
+			}
+		});
 		listItems = getResources().getStringArray(R.array.drawermenu);
 		drawerListView = (ListView) view.findViewById(R.id.drawer_listview);
 		drawerListView.setItemChecked(0, true);

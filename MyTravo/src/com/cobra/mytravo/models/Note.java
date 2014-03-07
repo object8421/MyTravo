@@ -53,7 +53,7 @@ public class Note extends BaseType implements Serializable{
 	private int comment_qty;
 	private int vote_qty;
 	private int is_public;
-	
+	private MyLocation location;
 	public int getNote_id() {
 		return note_id;
 	}
@@ -104,6 +104,15 @@ public class Note extends BaseType implements Serializable{
 	public void setIs_public(int is_public) {
 		this.is_public = is_public;
 	}
+	
+	public MyLocation getLocation() {
+		return location;
+	}
+
+	public void setLocation(MyLocation location) {
+		this.location = location;
+	}
+
 	public static Note fromJson(String json) {
         return new Gson().fromJson(json, Note.class);
     }

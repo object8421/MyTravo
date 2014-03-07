@@ -11,7 +11,7 @@
         android:orderInCategory="200"
 		android:showAsAction="always"
 		android:title="@string/action_delete"
-		android:icon="@drawable/action_remove" />
+		android:icon="@drawable/action_discard" />
 
 	
 </menu>

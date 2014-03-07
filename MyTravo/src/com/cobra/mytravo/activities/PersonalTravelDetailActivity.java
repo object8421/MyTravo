@@ -5,6 +5,7 @@ import com.cobra.mytravo.R.layout;
 import com.cobra.mytravo.R.menu;
 import com.cobra.mytravo.adapters.TravelDetailAdapter;
 import com.cobra.mytravo.data.AppData;
+import com.cobra.mytravo.data.DataProvider;
 import com.cobra.mytravo.data.NotesDataHelper;
 import com.cobra.mytravo.helpers.ActionBarUtils;
 import com.cobra.mytravo.helpers.MyImageUtil;
@@ -14,10 +15,15 @@ import com.cobra.mytravo.models.Travel;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.LoaderManager;
+import android.app.AlertDialog.Builder;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,29 +34,38 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
+import android.widget.Toast;
+/**
+ * 
+ * @author L!ar
+ * Activity shows a detail infomation about the current user's travel
+ * (including the list of notes related to the travel)
+ *
+ */
 public class PersonalTravelDetailActivity extends Activity implements LoaderManager.LoaderCallbacks<Cursor>{
 	private static final String TRAVEL_STRING = "travel";
 	private static final String NOTE_STRING = "note";
 	private static final int EDIT_TRAVEL_REQUEST_CODE = 1;
 	private TravelDetailAdapter mAdapter;
 	private Travel travel;
+	//show the number of notes
+	private int noteCount = 0;
 	private NotesDataHelper mDataHelper;
-	
+	private SQLiteDatabase db;
 	private View headerView;
 	private ImageView travelImageView;
 	private TextView titleTextView;
 	private TextView timeTextView;
 	private TextView descriptionTextView;
+	private TextView noteCountTextView;
 	private ListView mListView;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_personal_travel_detail);
-		ActionBarUtils.InitialDarkActionBar(this, getActionBar(), "游记详情");
+		ActionBarUtils.InitialActionBarWithBackAndTitle(this, getActionBar(), "游记详情");
 		InitialData();
 		InitialView();
-		mDataHelper = new NotesDataHelper(this, AppData.getUserId(), travel.getCreated_time());
 		mAdapter = new TravelDetailAdapter(this, mListView);
 		mListView.addHeaderView(headerView);
 		mListView.setAdapter(mAdapter);
@@ -61,12 +76,15 @@ public class PersonalTravelDetailActivity extends Activity implements LoaderMana
 					long arg3) {
 				// TODO Auto-generated method stub
 				Note note = mAdapter.getItem(position - mListView.getHeaderViewsCount());
-				Intent intent = new Intent();
-				intent.setClass(PersonalTravelDetailActivity.this, NoteDetailActivity.class);
-				Bundle bundle = new Bundle();
-				bundle.putSerializable(NOTE_STRING, note);
-				intent.putExtras(bundle);
-				startActivity(intent);
+				if(note != null){
+					Intent intent = new Intent();
+					intent.setClass(PersonalTravelDetailActivity.this, NoteDetailActivity.class);
+					Bundle bundle = new Bundle();
+					bundle.putSerializable(NOTE_STRING, note);
+					intent.putExtras(bundle);
+					startActivity(intent);
+				}
+				
 			}
 		});
 		getLoaderManager().initLoader(0, null, this);
@@ -79,27 +97,37 @@ public class PersonalTravelDetailActivity extends Activity implements LoaderMana
 		return true;
 	}
 	private void InitialView(){
-		headerView = LayoutInflater.from(this).inflate(R.layout.listitem_head_note, null);
+		headerView = LayoutInflater.from(this).inflate(R.layout.listitem_head_travel, null);
 		travelImageView = (ImageView) headerView.findViewById(R.id.img_travel_detail);
 		titleTextView = (TextView) headerView.findViewById(R.id.tv_title_travel_detail);
 		timeTextView = (TextView) headerView.findViewById(R.id.tv_time_travel_detail);
 		descriptionTextView = (TextView) headerView.findViewById(R.id.tv_description_travel_detail);
+		noteCountTextView = (TextView) headerView.findViewById(R.id.tv_note_count_travel_detail);
 		mListView = (ListView) findViewById(R.id.lv_travel_detail);
 		if(travel.getCover_url() != null){
-			BitmapFactory.Options options = new BitmapFactory.Options();
-	        options.inSampleSize = 2;
-			travelImageView.setImageBitmap(BitmapFactory.decodeFile(AppData.TRAVO_PATH + "/" + travel.getCover_url() + ".jpg", options));
+//			BitmapFactory.Options options = new BitmapFactory.Options();
+//	        options.inSampleSize = 2;
+//			travelImageView.setImageBitmap(BitmapFactory.decodeFile(AppData.TRAVO_PATH + "/" + travel.getCover_url() + ".jpg", options));
+			MyImageUtil.setBitmapResize(this, travelImageView, travel.getCover_url());
 		}
 			
 		titleTextView.setText(travel.getTitle());
 		timeTextView.setText(TimeUtils.getListTime(travel.getCreated_time()));
 		descriptionTextView.setText(travel.getDescription());
+		if(noteCount > 0){
+			noteCountTextView.setText(String.valueOf(noteCount));
+		}
+		else{
+			noteCountTextView.setText("0");
+		}
 	}
 	private void InitialData(){
 		Intent intent = getIntent();
 		if(intent != null){
 			travel = (Travel) intent.getSerializableExtra(TRAVEL_STRING);
 		}
+		mDataHelper = new NotesDataHelper(this, AppData.getUserId(), travel.getCreated_time());
+		noteCount = mDataHelper.getCount();
 	}
 
 	@Override
@@ -112,6 +140,15 @@ public class PersonalTravelDetailActivity extends Activity implements LoaderMana
 	public void onLoadFinished(Loader<Cursor> arg0, Cursor data) {
 		// TODO Auto-generated method stub
 		mAdapter.changeCursor(data);
+		if(noteCountTextView != null){
+			noteCount = mDataHelper.getCount();
+			if(noteCount > 0){
+				noteCountTextView.setText(String.valueOf(noteCount));
+			}
+			else{
+				noteCountTextView.setText("0");
+			}
+		}
 	}
 
 	@Override
@@ -124,6 +161,9 @@ public class PersonalTravelDetailActivity extends Activity implements LoaderMana
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
 		switch(item.getItemId()){
+		case android.R.id.home:
+			this.onBackPressed();
+			break;
 		case R.id.action_add:
 			Intent addNoteIntent = new Intent();
 			addNoteIntent.setClass(this, AddNoteActivity.class);
@@ -136,6 +176,29 @@ public class PersonalTravelDetailActivity extends Activity implements LoaderMana
 			bundle.putSerializable(TRAVEL_STRING, travel);
 			intent.putExtras(bundle);
 			startActivityForResult(intent, EDIT_TRAVEL_REQUEST_CODE);
+			break;
+		case R.id.action_finish:
+			
+			AlertDialog.Builder builder = new Builder(this);
+			builder.setMessage("确认结束该游记吗?");
+			builder.setPositiveButton("确认", new OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					AppData.setTravel_time(null);
+					PersonalTravelDetailActivity.this.finish();
+				}
+			});
+			builder.setNegativeButton("取消", new OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int arg1) {
+					// TODO Auto-generated method stub
+					dialog.dismiss();
+				}
+			});
+			builder.create().show();
 			break;
 		default:
 			break;
@@ -151,7 +214,7 @@ public class PersonalTravelDetailActivity extends Activity implements LoaderMana
 				Travel editedTravel = (Travel) data.getSerializableExtra(TRAVEL_STRING);
 				if(editedTravel != null){
 					if(editedTravel.getCover_url() != null){
-						MyImageUtil.setBitmap(travelImageView, editedTravel.getCover_url());
+						MyImageUtil.setBitmapResize(this, travelImageView, editedTravel.getCover_url());
 					}
 					titleTextView.setText(editedTravel.getTitle());
 					timeTextView.setText(TimeUtils.getListTime(editedTravel.getCreated_time()));

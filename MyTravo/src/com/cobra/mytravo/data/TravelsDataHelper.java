@@ -88,7 +88,8 @@ public class TravelsDataHelper extends BaseDataHelper{
 			deleteTravel.getCreated_time()});
 	}
 	public CursorLoader getCursorLoader() {
-        return new CursorLoader(getContext(), getContentUri(), null, TravelsDBInfo.USER_ID + "=?"
+        return new CursorLoader(getContext(), getContentUri(), null, 
+        		TravelsDBInfo.USER_ID + "=?"
         		+ " AND " + TravelsDBInfo.IS_DELETED + "=?",
                 new String[] {
         	String.valueOf(this.user_id), String.valueOf(0)
