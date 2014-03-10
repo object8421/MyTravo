@@ -119,7 +119,7 @@ class ReadHandler(BaseHandler):
 		self.handle()
 
 	def do(self):
-		TravelService.read(
+		return TravelService.read(
 				self.get_user_id_by_token(),
 				self.travel_id
 				)

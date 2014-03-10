@@ -21,6 +21,7 @@ def upload(user_id, travels):
 	#有多个travel，要对每一个travel返回结果
 	result = {rsp_code : RC['sucess']}
 	rsps = []
+	rsp = {} 
 	for travel in travels:
 		try:
 			tag = travel['tag']
@@ -307,7 +308,6 @@ def read(user_id, travel_id):
 		conn.commit()
 		return {rsp_code : RC['sucess']}
 	except Exception, e:
-		print(traceback.format_exc())
 		raise ServerError(e)
 	finally:
 		cur.close()

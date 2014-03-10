@@ -92,7 +92,7 @@ BEGIN
 	SELECT user_id, travel_id, title, destination, begin_date, end_date, average_spend,
 			create_time, comment_qty, vote_qty, favorite_qty, read_times, is_public,
 			is_deleted, description, cover_path FROM travel
-	WHERE travel_id = _travel_id AND is_deleted = FALSE;
+	WHERE travel_id = _travel_id AND NOT is_deleted;
 END;$$
 
 ##############################################
@@ -127,7 +127,7 @@ BEGIN
 
 	SELECT t.user_id, t.is_public INTO user_id, is_public
 	FROM travel t
-	WHERE t.travel_id = _travel_id;
+	WHERE t.travel_id = _travel_id AND NOT t.is_deleted;
 	
 	IF user_id = 0 THEN
 		SET code = -1;
@@ -155,7 +155,7 @@ BEGIN
     FROM travel t
 	LEFT JOIN user u
 	ON t.user_id = u.user_id
-	WHERE t.is_public IS TRUE
+	WHERE t.is_public IS TRUE AND NOT t.is_deleted
 	ORDER BY t.travel_id ASC
 	LIMIT first_idx, max_qty;
 END;$$
