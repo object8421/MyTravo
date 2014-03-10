@@ -8,7 +8,10 @@ def index(request):
     template = loader.get_template('travo/test.html')
     context = RequestContext(request, )
     return HttpResponse(template.render(context))
-
+def home_page(request):
+    template = loader.get_template('travo/homepage.html')
+    context = RequestContext(request, )
+    return HttpResponse(template.render(context))
 def create_user_view(request):
     user = User.objects.create_user(request.username, request.email, \
     	request.password)
