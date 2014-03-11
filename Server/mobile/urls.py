@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, url
+from django.conf.urls import patterns, url
 
 from mobile import views 
 
