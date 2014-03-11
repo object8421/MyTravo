@@ -36,7 +36,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-	'mobile'
+	'mobile',
+    'website',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -85,3 +86,4 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+
