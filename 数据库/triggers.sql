@@ -400,7 +400,7 @@ BEGIN
 	SET favorite_travel_qty = favorite_travel_qty - 1
 	WHERE user_id = old.user_id;
 end
-$$l
+$$
 ##################################
 ### trigger in travel_read_log
 ##################################

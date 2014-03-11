@@ -13,7 +13,7 @@ CREATE  TABLE IF NOT EXISTS `travo`.`user` (
   `qq_user_id` CHAR(32) NULL,
   `sina_user_id` VARCHAR(20) NULL,
   `password` VARCHAR(16) NULL ,
-  `register_time` DATETIME NOT NULL,
+  `register_time` DATETIME NOT NULL ,
   `nickname` VARCHAR(16) NOT NULL ,
   `face_path` CHAR(24) NULL DEFAULT NULL ,
   `signature` VARCHAR(70) NULL DEFAULT NULL ,
@@ -543,28 +543,6 @@ CREATE  TABLE IF NOT EXISTS `travo`.`error_log` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
-
-CREATE  TABLE IF NOT EXISTS `travo`.`image_vote` (
-  `image_no` INT(11) NOT NULL ,
-  `time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
-  `voter` INT(11) NOT NULL ,
-  PRIMARY KEY (`image_no`, `time`) ,
-  INDEX `fk_image_idx` (`image_no` ASC) ,
-  INDEX `fk_voter_idx` (`voter` ASC) ,
-  CONSTRAINT `fk_iv_image`
-    FOREIGN KEY (`image_no` )
-    REFERENCES `travo`.`image` (`image_no` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `fk_iv_voter`
-    FOREIGN KEY (`voter` )
-    REFERENCES `travo`.`user` (`user_id` )
-    ON DELETE NO ACTION
-    ON UPDATE CASCADE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8
-COLLATE = utf8_general_ci;
-
 
 -- -----------------------------------------------------
 -- Placeholder table for view `travo`.`complete_address`
