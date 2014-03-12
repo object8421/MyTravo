@@ -19,25 +19,36 @@ body {
 
 /* CUSTOMIZE THE NAVBAR
 -------------------------------------------------- */
+
 .navbar-fixed-top{
-  background-color: #00BFFF;
+    background-color: #00BFFF;
 }
 
 .navbar-brand{
-  color: #ffffff;
+  color: #1874cd;
   font-size: 24px;
 }
 .navbar-brand:hover,
 .navbar-brand:focus {
-  color: #5e5e5e;
+  color: #ffffff;
   background-color: transparent;
 }
 .navbar-collapse{
+  
   color: #ffffff;
 }
 
-.navbar-text {
-  color: #777777;
+.navbar-toggle {
+  border-color: #dddddd;
+}
+
+.navbar-toggle:hover,
+.navbar-toggle:focus {
+  background-color: #dddddd;
+}
+
+.navbar-toggle .icon-bar {
+  background-color: #cccccc;
 }
 
 .navbar-nav > li > a {
@@ -46,7 +57,7 @@ body {
 
 .navbar-nav > li > a:hover,
 .navbar-nav > li > a:focus {
-  color: #5e5e5e;
+  color: #1874cd;
   background-color: transparent;
 }
 
@@ -169,7 +180,7 @@ body {
 
   /* The navbar becomes detached from the top, so we round the corners */
   .navbar-wrapper .navbar {
-    border-radius: 4px;
+    border-radius: 0px;
   }
 
   /* Bump up size of carousel content */

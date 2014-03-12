@@ -24,3 +24,9 @@ class IndexView(View):
         template = loader.get_template('website/welcome.html')
         context = RequestContext(request)
         return HttpResponse(template.render(context))
+
+class MyInfoView(View):
+    def get(self,request):
+        template = loader.get_template('website/me.html')
+        context = RequestContext(request)
+        return HttpResponse(template.render(context))
