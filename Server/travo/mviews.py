@@ -1,9 +1,9 @@
 import uuid
-import re
 import traceback
 import json
 import urllib2
 import utils
+import userservice
 
 from rc import * 
 from django.shortcuts import render
@@ -19,9 +19,6 @@ from utils import *
 
 def IndexView(request):
 	return HttpResponse('Welcome!')
-
-class EmailError(BaseException):
-	pass
 
 class AuthError(BaseException):
 	pass
@@ -136,35 +133,16 @@ class LoginView(UserView):
 	
 	def do(self):
 		result = {
-			'travo' : self.travo_login,
-			'qq'	: self.qq_login,
-			'sina'	: self.sina_login
-		}[self.get_required_arg('user_type')]()
+			'travo' : userservice.travo_login(self.get_required_arg('email'), self.get_required_arg('password')),
+			'qq'	: userservice.qq_login(),
+			'sina'	: userservice.travo_login() 
+		}[self.get_required_arg('user_type')]
 
 		if result[RSP_CODE] == RC_SUCESS:
 			#record login
 			self.record_login(result['user'])
 		return result
 
-	def travo_login(self):
-		result = {}
-		try:
-			u = User.objects.get(email=self.get_required_arg('email'))
-		except ObjectDoesNotExist:
-			result[RSP_CODE] = RC_NO_SUCH_USER
-		else:
-			if u.password == self.get_required_arg('password'):
-				result[RSP_CODE] = RC_SUCESS
-				result['user'] = u
-			else:
-				result[RSP_CODE] = RC_WRONG_PASSWORD
-		return result 
-
-	def qq_login(self):
-		pass
-
-	def sina_login(self):
-		pass
 
 class RegisterView(UserView):
 	def post(self, request):
@@ -172,47 +150,16 @@ class RegisterView(UserView):
 		return HttpResponse(self.handle())
 
 	def do(self):
-		u = User()
-		u.nickname = self.get_required_data('nickname')
-		#check must data
-		try:
-			{
-				'travo' : self.check_travo_data,
-				'qq'	: self.check_qq_data,
-				'sina'	: self.check_sina_data
-			}[self.get_required_arg('user_type')](u)
-		except AuthError:
-			return {RSP_CODE : RC_AUTH_FAIL}
-		except EmailError:
-			return {RSP_CODE : RC_ILLEGAL_EMAIL}
+		return {
+			'travo' : userservice.travo_register(
+						self.get_required_data('nickname'),
+						self.get_required_data('email'),
+						self.get_required_data('password')
+					),
+			'qq'	: userservice.qq_register(), 
+			'sina'	: userservice.sina_register() 
+		}[self.get_required_arg('user_type')]
 
-		u.token = self._build_token()
-		try:
-			u.save()
-		except IntegrityError, e:
-			if 'email_UNIQUE' in str(e):
-				#email duplicate
-				return {RSP_CODE : RC_DUP_EMAIL}
-			elif 'nickname_UNIQUE' in str(e):
-				#nickname duplicate
-				return {RSP_CODE : RC_DUP_NICKNAME}
-			elif 'qq_user_id_UNIQUE' in str(e) or 'sina_user_id_UNIQUE' in str(e):
-				return {RSP_CODE : RC_DUP_BIND}
-
-		#register sucess
-		result = {RSP_CODE : RC_SUCESS}
-		result['token'] = u.token
-		result['user_id'] = u.id
-
-		self.record_login(u)
-		return result
-
-	def check_travo_data(self, u):
-		u.email = self.get_required_data('email')
-		u.password = self.get_required_data('password')
-
-		if not self._check_email(u.email):
-			raise EmailError(u.email)
 
 	def check_qq_data(self, u):
 		qq_token = self.get_required_data('qq_token')
@@ -237,12 +184,6 @@ class RegisterView(UserView):
 		except:
 			raise AuthError('sina auth fail')
 
-	def _build_token(self):
-		return uuid.uuid4().hex
-
-	def _check_email(self, email):
-		format = '^[\d\w-]+\@[\d\w-]+(\.[\d\w-]+)+$'
-		return re.match(format, email) is not None
 
 ##############################################
 ########	TRAVEL MOUDLE	##################
