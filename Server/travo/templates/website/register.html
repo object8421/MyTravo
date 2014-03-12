@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
+
+    <title>Carousel Template for Bootstrap</title>
+
+{% load staticfiles %}
+    <!-- Bootstrap core CSS -->
+    
+    <link rel="stylesheet" type="text/css" href="{% static 'travo/css/bootstrap.min.css' %}" />
+
+    <!-- Bootstrap core CSS -->
+    <!-- <link href="../../dist/css/bootstrap.min.css" rel="stylesheet"> -->
+
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'travo/css/carousel.css' %}" rel="stylesheet">
+  </head>
+<!-- NAVBAR
+================================================== -->
+  <body>
+    <div class="navbar-wrapper">
+      <div class="container">
+
+        <div class="navbar navbar-fixed-top" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <div class="thumbnail cobra-logo">
+              <img  src="../../static/travo/image/travo_logo.png">
+              </div>
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="navbar-brand" href="#"><b>Travo</b></a>
+            </div>
+            <div class="navbar-collapse collapse">
+              <ul class="nav navbar-nav">
+                <li class="active"><a href="#">首页</a></li>
+                <li><a href="#about">热门游记</a></li>
+                <li><a href="#contact">目的地</a></li>
+                <li><a href="#contact">客户端下载</a></li>
+                
+              </ul>
+              <ul class="nav navbar-nav navbar-right">
+                    <!--<li><a href="#">注册</a></li>-->
+                    <div class="btn-group" style="float:left;vertical-align:middle;margin-bottom:0;">
+                    <button type="button" class="btn btn-primary" >注册</button>
+                    <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+                      登录<span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                       <li><a href="#">使用邮箱登录</a></li>
+                       <li class="divider"></li>
+                       <li class="dropdown-header">使用第三方账号登录</li>
+                       <li><a href="#">新浪微博登录</a></li>
+                       <li><a href="#">腾讯QQ登录</a></li>
+                       <!--<li><a href="#">One more separated link</a></li> -->
+                     </ul>
+                  </div>
+                  <!--
+                    <li class="dropdown">
+                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">登录 <b class="caret"></b></a>
+                     <ul class="dropdown-menu">
+                       <li><a href="#">使用邮箱登录</a></li>
+                       <li class="divider"></li>
+                       <li class="dropdown-header">使用第三方账号登录</li>
+                       <li><a href="#">新浪微博登录</a></li>
+                       <li><a href="#">腾讯QQ登录</a></li>
+                       <!--<li><a href="#">One more separated link</a></li> 
+                     </ul>
+                     </li>
+                   -->
+                </ul>  
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    
+
+
+
+
+
+
+
+      <!-- FOOTER -->
+      <footer>
+        <p class="pull-right"><a href="#">Back to top</a></p>
+        <p>&copy; 2014 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+      </footer>
+
+    </div><!-- /.container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+<script src="http://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/twitter-bootstrap/3.0.3/js/bootstrap.min.js"></script>
+
+    <script src="../../static/travo/js/holder.js"></script>
+    <script src="../../static/travo/js/docs.min.js"></script>
+  </body>
+</html>
