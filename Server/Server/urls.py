@@ -8,6 +8,7 @@ urlpatterns = patterns('',
     # url(r'^$', 'Server.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
-	url(r'^mobile/', include('mobile.urls')),
+	url(r'^mobile/', include('travo.murls')),
+	url(r'', include('travo.surls')),
     url(r'^admin/', include(admin.site.urls)),
 )

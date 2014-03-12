@@ -5,7 +5,7 @@ from django.http import HttpResponse
 
 def index(request):
     #return HttpResponse("Hello, world. You're at the travo index.")
-    template = loader.get_template('travo/test.html')
+    template = loader.get_template('travo/welcome.html')
     context = RequestContext(request, )
     return HttpResponse(template.render(context))
 

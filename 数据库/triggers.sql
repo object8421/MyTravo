@@ -20,7 +20,7 @@ CREATE TRIGGER ains_user
 AFTER INSERT ON user FOR EACH ROW
 BEGIN
 	INSERT INTO user_info(user_id)
-	VALUES(new.user_id);
+	VALUES(new.id);
 END;
 $$
 ##################################
@@ -33,7 +33,7 @@ AFTER INSERT ON note_comment FOR EACH ROW
 BEGIN
 	UPDATE note
 	SET comment_qty = comment_qty + 1
-	WHERE note_id = new.note_id;
+	WHERE id = new.note_id;
 end
 $$
 
@@ -44,7 +44,7 @@ AFTER DELETE ON note_comment FOR EACH ROW
 BEGIN
 	UPDATE note
 	SET comment_qty = comment_qty - 1
-	WHERE note_id = old.note_id;
+	WHERE id = old.note_id;
 end
 $$
 ##################################
@@ -70,7 +70,7 @@ AFTER INSERT ON travel FOR EACH ROW
 BEGIN
 	UPDATE user
 	SET travel_qty = travel_qty + 1
-	WHERE user_id = new.user_id;
+	WHERE id = new.user_id;
 end
 $$
 ##################################
@@ -83,7 +83,7 @@ AFTER INSERT ON travel_comment FOR EACH ROW
 BEGIN
 	UPDATE travel
 	SET comment_qty = comment_qty + 1
-	WHERE travel_id = new.travel_id;
+	WHERE id = new.travel_id;
 end
 $$
 
@@ -94,7 +94,7 @@ AFTER DELETE ON travel_comment FOR EACH ROW
 BEGIN
 	UPDATE travel
 	SET comment_qty = comment_qty - 1
-	WHERE travel_id = old.travel_id;
+	WHERE id = old.travel_id;
 end
 $$
 ##################################
@@ -107,7 +107,7 @@ AFTER INSERT ON note_vote FOR EACH ROW
 BEGIN
 	UPDATE note
 	SET vote_qty = vote_qty + 1
-	WHERE note_id = new.note_id;
+	WHERE id = new.note_id;
 end
 $$
 
@@ -118,7 +118,7 @@ AFTER DELETE ON note_vote FOR EACH ROW
 BEGIN
 	UPDATE note
 	SET vote_qty = vote_qty - 1
-	WHERE note_id = old.note_id;
+	WHERE id = old.note_id;
 end
 $$
 ##################################
@@ -131,7 +131,7 @@ AFTER INSERT ON travel_vote FOR EACH ROW
 BEGIN
 	UPDATE travel
 	SET vote_qty = vote_qty + 1
-	WHERE travel_id = new.travel_id;
+	WHERE id = new.travel_id;
 end
 $$
 
@@ -142,7 +142,7 @@ AFTER DELETE ON travel_vote FOR EACH ROW
 BEGIN
 	UPDATE travel
 	SET vote_qty = vote_qty - 1
-	WHERE travel_id = old.travel_id;
+	WHERE id = old.travel_id;
 end
 $$
 
@@ -183,11 +183,11 @@ BEGIN
 	IF new.action = '1' THEN
 		UPDATE user
 		SET follower_qty = follower_qty + 1
-		WHERE user_id = new.passive;
+		WHERE id = new.passive;
 	ELSE IF new.action = '0' THEN
 		UPDATE user
 		SET follower_qty = follower_qty - 1
-		WHERE user_id = new.passive;
+		WHERE id = new.passive;
 		END IF;
 	END IF;
 end
@@ -202,7 +202,7 @@ AFTER INSERT ON achievement_scenic_point FOR EACH ROW
 BEGIN
 	UPDATE achievement
 	SET scenic_point_qty = scenic_point_qty + 1
-	WHERE achievement_id = new.achievement_id;
+	WHERE id = new.achievement_id;
 end
 $$
 
@@ -213,7 +213,7 @@ AFTER DELETE ON achievement_scenic_point FOR EACH ROW
 BEGIN
 	UPDATE achievement
 	SET scenic_point_qty = scenic_point_qty - 1
-	WHERE achievement_id = old.achievement_id;
+	WHERE id = old.achievement_id;
 end
 $$
 ##################################
@@ -332,7 +332,7 @@ BEGIN
 	##对应的user.scenic_point_qty++ 
 	UPDATE user
 	SET scenic_point_qty = scenic_point_qty + 1
-	WHERE user_id = new.user_id;
+	WHERE id = new.user_id;
 	
 end
 $$
@@ -344,7 +344,7 @@ AFTER DELETE ON user_scenic_point FOR EACH ROW
 BEGIN
 	UPDATE user
 	SET scenic_point_qty = scenic_point_qty - 1
-	WHERE user_id = old.user_id;
+	WHERE id = old.user_id;
 end
 $$
 ##################################
@@ -357,7 +357,7 @@ AFTER INSERT ON user_achievement FOR EACH ROW
 BEGIN
 	UPDATE user
 	SET achievement_qty = achievement_qty + 1
-	WHERE user_id = new.user_id;
+	WHERE id = new.user_id;
 end
 $$
 
@@ -368,7 +368,7 @@ AFTER DELETE ON user_achievement FOR EACH ROW
 BEGIN
 	UPDATE user
 	SET achievement_qty = achievement_qty - 1
-	WHERE user_id = old.user_id;
+	WHERE id = old.user_id;
 end
 $$
 ##################################
@@ -381,10 +381,10 @@ AFTER INSERT ON favorite_travel FOR EACH ROW
 BEGIN
 	UPDATE travel 
 	SET favorite_qty = favorite_qty + 1 
-	WHERE travel_id = new.travel_id; 
+	WHERE id = new.travel_id; 
 	UPDATE user
 	SET favorite_travel_qty = favorite_travel_qty + 1
-	WHERE user_id = new.user_id;
+	WHERE id = new.user_id;
 end
 $$
 
@@ -395,14 +395,14 @@ AFTER DELETE ON favorite_travel FOR EACH ROW
 BEGIN
 	UPDATE travel 
 	SET favorite_qty = favorite_qty - 1 
-	WHERE travel_id = old.travel_id; 
+	WHERE id = old.travel_id; 
 	UPDATE user
 	SET favorite_travel_qty = favorite_travel_qty - 1
-	WHERE user_id = old.user_id;
+	WHERE id = old.user_id;
 end
 $$
 ##################################
-### trigger in travel_read_log
+### trigger in travel_read_logcomplete_address
 ##################################
 DROP TRIGGER IF EXISTS ains_travel_read_log;
 $$
@@ -411,7 +411,7 @@ AFTER INSERT ON travel_read_log FOR EACH ROW
 BEGIN
 	UPDATE travel
 	SET read_times = read_times + 1
-	WHERE travel_id = new.travel_id;
+	WHERE id = new.travel_id;
 END
 $$
 
