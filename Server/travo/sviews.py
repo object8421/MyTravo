@@ -5,18 +5,21 @@ from django.views.generic import View
 from travo.forms import RegisterForm
 from django.http import HttpResponse
 from django.template import RequestContext, loader
-
+from travo import userservice
+from rc import *
 
 # Create your views here.
-class RegisterViewWebsite(View):
-    def get(self,request):
-        email = request.GET['inputEmail']
-        print email
-        #logging.DEBUG('get request from register view')
-        return HttpResponse("注册成功")
+class RegisterView(View):
     def post(self, request):
-        pass
-    
+        nickname = request.POST.get('nickname','')
+        password = request.POST.get('password','')
+        email = request.POST.get('email','')
+        print nickname
+        print password
+        print email
+        res = userservice.travo_register(nickname, email, password)
+        return HttpResponse(res[RSP_CODE])
+
 class ShowRegisterView(View):
     def get(self,request):
         template = loader.get_template('website/register_simple.html')
