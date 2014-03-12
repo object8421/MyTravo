@@ -5,10 +5,13 @@ from django.http import HttpResponse
 
 def index(request):
     #return HttpResponse("Hello, world. You're at the travo index.")
-    template = loader.get_template('travo/test.html')
+    template = loader.get_template('travo/welcome.html')
     context = RequestContext(request, )
     return HttpResponse(template.render(context))
-
+def home_page(request):
+    template = loader.get_template('travo/homepage.html')
+    context = RequestContext(request, )
+    return HttpResponse(template.render(context))
 def create_user_view(request):
     user = User.objects.create_user(request.username, request.email, \
     	request.password)
