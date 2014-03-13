@@ -1,5 +1,5 @@
 #-*- coding: utf-8 -*-
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response
 from django.views.generic.edit import FormView
 from django.views.generic import View
 from travo.forms import RegisterForm, ContactForm
@@ -45,6 +45,7 @@ class MyInfoView(View):
         context = RequestContext(request)
         return HttpResponse(template.render(context))
 class LoginView(View):
+
     def get(self,request):
         pass
     def post(self,request):
@@ -52,12 +53,19 @@ class LoginView(View):
         password = request.POST.get('password','')
         res = userservice.travo_login(email,password)
         if res[RSP_CODE] == RC_SUCESS:
-            return render(request,'website/welcome.html',{'user':res['user'],
-                'logged_in':'True'})
+            print res['user'].token
+            request.session['username'] = res['user'].nickname
+            request.session['token'] = res['user'].token
+            return render_to_response('website/welcome.html',context_instance=RequestContext(request))
         else:
             return render(request,'website/login_fail.html')
 
         pass
+
+class LogoutView(View):
+    def get(self,request):
+        del request.session['token']
+        return render(request,'website/welcome.html')
 class ContactView(View):
     def get(self,request):
         form = ContactForm()

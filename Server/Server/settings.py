@@ -44,6 +44,18 @@ INSTALLED_APPS = (
 	'travo'
 )
 
+TEMPLATE_CONTEXT_PROCESSORS = (  
+#"django.core.context_processors.auth",  
+
+"django.core.context_processors.debug",  
+"django.core.context_processors.i18n",  
+"django.core.context_processors.media",  
+"django.core.context_processors.request",  
+"django.contrib.auth.context_processors.auth",
+
+
+)  
+
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
