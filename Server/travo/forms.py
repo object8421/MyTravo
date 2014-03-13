@@ -8,6 +8,10 @@ class RegisterForm(forms.Form):
 
 
     def send_email(self):
-        print "Trying to send a validation email to user."
-        
+        print "Trying to send a validation email to user."    
 
+class ContactForm(forms.Form):
+    subject = forms.CharField(max_length=100)
+    message = forms.CharField()
+    sender = forms.EmailField()
+    cc_myself = forms.BooleanField(required=False)

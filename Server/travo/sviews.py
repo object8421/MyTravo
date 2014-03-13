@@ -2,9 +2,11 @@
 from django.shortcuts import render
 from django.views.generic.edit import FormView
 from django.views.generic import View
-from travo.forms import RegisterForm
+from travo.forms import RegisterForm, ContactForm
 from django.http import HttpResponse
 from django.template import RequestContext, loader
+from django.shortcuts import render
+from django.http import HttpResponseRedirect
 from travo import userservice
 from rc import *
 
@@ -18,19 +20,27 @@ class RegisterView(View):
         print password
         print email
         res = userservice.travo_register(nickname, email, password)
-        return HttpResponse(res[RSP_CODE])
+        if res[RSP_CODE] == 100:
+            return render(request,'website/register_successful.html')
+        else :
+            return render(request,'website/register_fail.html')
 
 class ShowRegisterView(View):
     def get(self,request):
         template = loader.get_template('website/register_simple.html')
         context = RequestContext(request)
         return HttpResponse(template.render(context))
-class RegisterSuccessfulView(View):
-    def get(self,request):
-    	return HttpResponse("register_successful")
+
 
 class IndexView(View):
     def get(self,request):
         template = loader.get_template('website/welcome.html')
         context = RequestContext(request)
         return HttpResponse(template.render(context))
+
+class ContactView(View):
+    def get(self,request):
+        contact_forms = ContactForm()
+        return render(request,'website/contact.html',contact_forms)
+    def post(self,request):
+        pass
