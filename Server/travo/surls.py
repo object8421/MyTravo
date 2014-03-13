@@ -13,6 +13,9 @@ urlpatterns = patterns('travo',
 
 		url(r'^me', sviews.MyInfoView.as_view(),name = 'me'),
 
-		url(r'^contact', sviews.ContactView.as_view(), name = 'contact')
-
+		url(r'^contact', sviews.ContactView.as_view(), name = 'contact'),
+		url(r'^user/register_success', sviews.RegisterSuccessView.as_view(), \
+			name = 'register_success'),
+		url(r'^user/new_travel',sviews.NewTravelView.as_view(),\
+			name = 'new_travel')
 	)
