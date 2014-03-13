@@ -11,6 +11,12 @@ urlpatterns = patterns('travo',
 		url(r'^user/show_register$', sviews.ShowRegisterView.as_view(), name='show_register'),
 		url(r'^index$', sviews.IndexView.as_view(), name ='index'),
 		url(r'^$', sviews.IndexView.as_view(), name ='index'),
+
 		url(r'^contact', sviews.ContactView.as_view(), name = 'contact'),
-		#url(r'^me', sviews.MyInfoView.as_view(),name = 'me')
+
+
+
+		url(r'^me', sviews.MyInfoView.as_view(),name = 'me'),
+
+
 	)

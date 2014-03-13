@@ -38,6 +38,12 @@ class IndexView(View):
         context = RequestContext(request)
         return HttpResponse(template.render(context))
 
+
+class MyInfoView(View):
+    def get(self,request):
+        template = loader.get_template('website/me.html')
+        context = RequestContext(request)
+        return HttpResponse(template.render(context))
 class LoginView(View):
 
     def get(self,request):
@@ -67,3 +73,4 @@ class ContactView(View):
     def post(self,request):
         return render(request,'website/contact_thanks.html')
         pass
+
