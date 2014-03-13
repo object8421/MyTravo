@@ -38,9 +38,24 @@ class IndexView(View):
         context = RequestContext(request)
         return HttpResponse(template.render(context))
 
+class LoginView(View):
+    def get(self,request):
+        pass
+    def post(self,request):
+        email = request.POST.get('email','')
+        password = request.POST.get('password','')
+        res = userservice.travo_login(email,password)
+        if res[RSP_CODE] == RC_SUCESS:
+            return render(request,'website/welcome.html',{'user':res['user'],
+                'logged_in':'True'})
+        else:
+            return render(request,'website/login_fail.html')
+
+        pass
 class ContactView(View):
     def get(self,request):
-        contact_forms = ContactForm()
-        return render(request,'website/contact.html',contact_forms)
+        form = ContactForm()
+        return render(request,'website/contact.html', {'form':form})
     def post(self,request):
+        return render(request,'website/contact_thanks.html')
         pass
