@@ -1,0 +1,44 @@
+<html>
+<head>
+    <title>Travo 注册</title>
+</head>
+<body>
+    <form action="/user/register" method="post">
+                            <div class="modal-body">
+                      
+                        <form class="form-horizontal" role="form">
+                          <div class="form-group">
+                            <label for="inputEmail" class="col-sm-2 control-label">邮箱</label>
+                            <div class="col-sm-10">
+                            <input type="email" class="form-control" id="inputEmail" name = "inputEmail" placeholder="Email">
+                           </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="inputUsername" class="col-sm-2 control-label">用户名</label>
+                            <div class="col-sm-10">
+                            <input type="text" class="form-control" id="inputUsername" name = "nickname"placeholder="UserName" >
+                           </div>
+                          </div> 
+                          <div class="form-group">
+                            <label for="inputPassword" class="col-sm-2 control-label">密码</label>
+                            <div class="col-sm-10">
+                            <input type="password" class="form-control" id="inputPassword" placeholder="Password" name ="password">
+                           </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="inputPswConfirm" class="col-sm-2 control-label">确认密码</label>
+                            <div class="col-sm-10">
+                            <input type="password" class="form-control" id="inputPswConfirm" placeholder="Confirm">
+                           </div>
+                          </div>
+                          <div class="form-group">
+                            <label for="inputVerify" class="col-sm-2 control-label">验证码</label>
+                            <div class="col-sm-5">
+                            <input type="text" class="form-control" id="inputVerify">
+                            </div>
+                            
+                            <img data-src="holder.js/100x25">
+                   <input type="submit" value="注册Travo">
+    </form>
+</body>
+</html>
