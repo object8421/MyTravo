@@ -1,0 +1,68 @@
+{% extends "website/base_index.html" %}
+{% block title %}新建游记{% endblock %}
+{% block content %}
+
+
+
+
+<div class="container">
+
+<!--  表单从这里开始 -->
+<form class="form-horizontal" role="form">
+  
+  <div class="form-group">
+    <label for="inputTravelName" class="col-sm-2 control-label">游记标题</label>
+    <div class="col-sm-6">
+      <input type="email" class="form-control" id="inputTravelName" placeholder="text">
+    </div>
+  </div>
+
+   <div class="form-group">
+                <label for="datetimepicker" class="col-sm-2 control-label">开始时间</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" value="" id="datetimepicker">
+                </div>
+                     
+            </div>
+
+ 
+
+        
+
+
+  
+  <div class="form-group">
+    <label for="inputTravelName" class="col-sm-2 control-label">游记描述</label>
+    <div class="col-sm-10">
+      <textarea class="form-control" rows="3" placeholder="请在这里添加游记描述"></textarea>
+    </div>
+  </div>
+  <div class="form-group">
+      <label for="cover_picker" class="col-sm-2 control-label">选择游记封面</label>
+      <div class="col-sm-4">
+      <div id="cover_picker" class="fileinput fileinput-new" data-provides="fileinput">
+
+        <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px;"></div>
+        <div>
+          <span class="btn btn-default btn-file"><span class="fileinput-new">Select image</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+          <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" class="btn btn-default">提交</button>
+    </div>
+  </div>
+
+
+</form><!--表单end-->
+<div id="cover_view" style="width:50px;height:50px;display:block;"></div>  
+</div><!-- container end-->
+
+
+
+
+
+{% endblock %}

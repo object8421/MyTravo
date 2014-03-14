@@ -74,4 +74,17 @@ class ContactView(View):
         return render(request,'website/contact.html', {'form':form})
     def post(self,request):
         return render(request,'website/contact_thanks.html')
-        pass
+
+
+class RegisterSuccessView(View):
+    def get(self,request):
+        template = loader.get_template('website/register_successful.html')
+        context = RequestContext(request)
+        return HttpResponse(template.render(context))
+
+class NewTravelView(View):
+    def get(self,request):
+        template = loader.get_template('website/new_travel.html')
+        context = RequestContext(request)
+        return HttpResponse(template.render(context))
+

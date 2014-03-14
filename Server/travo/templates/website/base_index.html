@@ -27,6 +27,9 @@
 
     <!-- Custom styles for this template -->
     <link href="{% static 'travo/css/carousel.css' %}" rel="stylesheet">
+    <link href="{% static 'travo/css/bootstrap-datetimepicker.min.css' %}" rel="stylesheet" media="screen">
+    <link href="{% static 'travo/css/jasny-bootstrap.min.css' %}" rel="stylesheet">
+    
 </head>
 
 <body>
@@ -233,5 +236,63 @@
 
     <script src="../../static/travo/js/holder.js"></script>
     <script src="../../static/travo/js/docs.min.js"></script>
+    <script type="text/javascript" src="../../static/travo/js/bootstrap-datetimepicker.min.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="../../static/travo/js/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="../../static/travo/js/jasny-bootstrap.min.js" charset="UTF-8"></script>
+    
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#insert').click(function(){
+  var value = $('#fileInput').val();
+  $("#cover_view").html('<img src="' + value + '" />');
+  });
+});  
+$('#datetimepicker').datetimepicker({
+  language: "zh-CN",
+        weekStart: 1,
+        todayBtn:  1,
+    autoclose: 1,
+    todayHighlight: 1,
+    startView: 2,
+    minView: 2,
+    forceParse: 0,
+    format: 'yyyy-mm-dd'
+});
+    $('.form_datetime').datetimepicker({
+        
+      language: "zh-CN",
+        weekStart: 1,
+        todayBtn:  1,
+    autoclose: 1,
+    todayHighlight: 1,
+    startView: 2,
+    forceParse: 0,
+        showMeridian: 1
+    });
+  $('.form_date').datetimepicker({
+        language: "zh-CN",
+        weekStart: 1,
+        todayBtn:  1,
+    autoclose: 1,
+    todayHighlight: 1,
+    startView: 2,
+    minView: 2,
+    forceParse: 0
+    });
+  $('.form_time').datetimepicker({
+        language: "zh-CN",
+        weekStart: 1,
+        todayBtn:  1,
+    autoclose: 1,
+    todayHighlight: 1,
+    startView: 1,
+    minView: 0,
+    maxView: 1,
+    forceParse: 0
+    });
+</script>
+
+
 </body>
 </html>
