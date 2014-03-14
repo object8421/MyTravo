@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from django.template import RequestContext, loader
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
+import logging
 from travo import userservice
 from rc import *
 
@@ -38,12 +39,6 @@ class IndexView(View):
         context = RequestContext(request)
         return HttpResponse(template.render(context))
 
-
-class MyInfoView(View):
-    def get(self,request):
-        template = loader.get_template('website/me.html')
-        context = RequestContext(request)
-        return HttpResponse(template.render(context))
 class LoginView(View):
 
     def get(self,request):
@@ -53,7 +48,7 @@ class LoginView(View):
         password = request.POST.get('password','')
         res = userservice.travo_login(email,password)
         if res[RSP_CODE] == RC_SUCESS:
-            print res['user'].token
+            logging.debug('user %s login successful',res['user'].nickname)
             request.session['username'] = res['user'].nickname
             request.session['token'] = res['user'].token
             return render_to_response('website/welcome.html',context_instance=RequestContext(request))
@@ -64,8 +59,15 @@ class LoginView(View):
 
 class LogoutView(View):
     def get(self,request):
-        del request.session['token']
+        try:
+            del request.session['token']
+        except KeyError, e:
+             pass
+
+        logging.debug('user %s logout successfully.',request.session['username'])
         return render(request,'website/welcome.html')
+
+
 class ContactView(View):
     def get(self,request):
         form = ContactForm()
@@ -73,4 +75,3 @@ class ContactView(View):
     def post(self,request):
         return render(request,'website/contact_thanks.html')
         pass
-
