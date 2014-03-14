@@ -62,7 +62,7 @@ class UpdateHandler(BaseHandler):
 class GetCoverHandler(BaseHandler):
 	def get(self, travel_id):
 		self.travel_id = travel_id
-		self.handle()
+		result = self.handle()
 
 	def do(self):
 		self.user_id = 0

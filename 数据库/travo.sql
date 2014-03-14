@@ -175,18 +175,12 @@ DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
 CREATE  TABLE IF NOT EXISTS `travo`.`location` (
-  `user_id` INT(11) NOT NULL ,
-  `time` DATETIME NOT NULL ,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `address` VARCHAR(45) NULL,
   `longitude` FLOAT(17,14) NOT NULL ,
   `latitude` FLOAT(17,14) NOT NULL ,
-  PRIMARY KEY (`user_id`, `time`) ,
-  INDEX `fk_user_idx` (`user_id` ASC) ,
-  CONSTRAINT `fk_location_user`
-    FOREIGN KEY (`user_id` )
-    REFERENCES `travo`.`user` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`id`)
+)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
@@ -277,17 +271,16 @@ CREATE  TABLE IF NOT EXISTS `travo`.`note` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `user_id` INT(11) NOT NULL ,
   `travel_id` INT(11) NOT NULL ,
+  `location_id` INT(11) NOT NULL,
   `create_time` DATETIME NOT NULL,
   `content` VARCHAR(2048) NULL DEFAULT NULL ,
   `image_path` CHAR(24) NULL DEFAULT NULL,
-  `comment_qty` INT(11) NOT NULL DEFAULT 0 ,
-  `vote_qty` INT(11) NOT NULL DEFAULT 0 ,
-  `is_public` TINYINT(1) NOT NULL DEFAULT true ,
   `is_deleted` TINYINT(1) NOT NULL DEFAULT false ,
   `lm_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) ,
   INDEX `fk_user_idx` (`user_id` ASC) ,
   INDEX `fk_travel_idx` (`travel_id` ASC) ,
+  INDEX `fk_location_idx` (`location_id` ASC),
   CONSTRAINT `fk_note_user`
     FOREIGN KEY (`user_id` )
     REFERENCES `travo`.`user` (`id` )
@@ -297,7 +290,12 @@ CREATE  TABLE IF NOT EXISTS `travo`.`note` (
     FOREIGN KEY (`travel_id` )
     REFERENCES `travo`.`travel` (`id` )
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_note_location`
+	FOREIGN KEY (`location_id`)
+	REFERENCES `travo`.`location` (`id`)
+	ON DELETE NO ACTION
+	ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;

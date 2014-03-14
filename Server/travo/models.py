@@ -8,12 +8,15 @@
 # Also note: You'll have to insert the output of 'django-admin.py sqlcustom [appname]'
 # into your database.
 from __future__ import unicode_literals
+import sys
 
 from django.db import models
 from datetime import datetime
 from datetime import date
-from utils import strpdatetime
-from utils import strpdate
+from django.core.exceptions import ObjectDoesNotExist
+
+def _first_upper(s):
+	return s[0].upper() + s[1:]
 
 class MyModel():
 	@classmethod
@@ -23,6 +26,19 @@ class MyModel():
 			if not key.startswith('_'):
 				if d.has_key(key):
 					setattr(o, key, d[key])
+				'''
+				if key.endswith('_id'):
+					#it's a model field 
+					field = key[0:-3]	#user_id[0:-3] = user
+					Field = _first_upper(field)
+					mmod = sys.modules['travo.models']
+					mcls = getattr(mmod, Field) 
+					if d.has_key(field):
+						setattr(o, field, mcls.from_dict(d[field]))
+				else:
+					if d.has_key(key):
+						setattr(o, key, d[key])
+				'''
 		return o
 
 	def dict(self):
@@ -45,6 +61,14 @@ class MyModel():
 			if isinstance(d[key], datetime) or isinstance(d[key], date):
 				newd[key] = str(d[key])
 		return newd
+
+class SyncModel(MyModel):
+	@classmethod
+	def lm_time(cls, user):
+		try:
+			return str(cls.objects.filter(user=user).latest('lm_time').lm_time)
+		except ObjectDoesNotExist:
+			return None
 
 class User(models.Model, MyModel):
 	id = models.AutoField(primary_key=True)
@@ -71,7 +95,7 @@ class User(models.Model, MyModel):
 		managed = False
 		db_table = 'user'
 
-class Travel(models.Model, MyModel):
+class Travel(models.Model, SyncModel):
 	id = models.AutoField(primary_key=True)
 	user = models.ForeignKey('User')
 	title = models.CharField(max_length=45)
@@ -93,21 +117,28 @@ class Travel(models.Model, MyModel):
 		managed = False
 		db_table = 'travel'
 
-class Note(models.Model, MyModel):
-	id = models.IntegerField(primary_key=True)
+class Note(models.Model, SyncModel):
+	id = models.AutoField(primary_key=True)
 	user = models.ForeignKey('User')
 	travel = models.ForeignKey('Travel')
+	location = models.ForeignKey('Location', null=True)
 	create_time = models.DateTimeField()
 	content = models.CharField(max_length=2048, blank=True)
 	image_path = models.CharField(max_length=24, blank=True)
-	comment_qty = models.IntegerField()
-	vote_qty = models.IntegerField()
-	is_public = models.IntegerField()
-	is_deleted = models.IntegerField()
+	is_deleted = models.IntegerField(default=False)
 	lm_time = models.DateTimeField()
 	class Meta:
 		managed = False
 		db_table = 'note'
+
+class Location(models.Model, MyModel):
+	id = models.AutoField(primary_key=True)
+	address = models.CharField(max_length=45, null=True)
+	longitude = models.FloatField()
+	latitude = models.FloatField()
+	class Meta:
+		managed = False
+		db_table = 'location'
 
 class Achievement(models.Model):
 	id = models.IntegerField(primary_key=True)
@@ -187,15 +218,6 @@ class Follow(models.Model):
 		managed = False
 		db_table = 'follow'
 
-class Location(models.Model):
-	user = models.ForeignKey('User')
-	time = models.DateTimeField()
-	address = models.CharField(max_length=45, blank=True)
-	longitude = models.FloatField()
-	latitude = models.FloatField()
-	class Meta:
-		managed = False
-		db_table = 'location'
 
 class LoginRecord(models.Model, MyModel):
 	user = models.ForeignKey('User')
@@ -327,8 +349,8 @@ class UserAchievement(models.Model):
 		managed = False
 		db_table = 'user_achievement'
 
-class UserInfo(models.Model):
-	id = models.IntegerField(primary_key=True)
+class UserInfo(models.Model, SyncModel):
+	#id = models.IntegerField(primary_key=True)
 	phone = models.CharField(max_length=12, blank=True)
 	mobile = models.CharField(max_length=11, blank=True)
 	qq = models.CharField(max_length=12, blank=True)
@@ -341,7 +363,7 @@ class UserInfo(models.Model):
 	native_place = models.ForeignKey(Province, db_column='native_place', blank=True, null=True)
 	degree = models.CharField(max_length=6, blank=True)
 	job = models.CharField(max_length=15, blank=True)
-	user = models.ForeignKey(User)
+	user = models.ForeignKey(User, primary_key=True)
 	lm_time = models.DateTimeField()
 	class Meta:
 		managed = False

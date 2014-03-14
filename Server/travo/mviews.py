@@ -1,36 +1,28 @@
-import uuid
 import traceback
 import json
-import urllib2
-import utils
-import userservice
+import service
 
-from rc import * 
+from service import userservice, travelservice, noteservice
+from rc import *
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.generic import View
 from django.db import IntegrityError
 from django.utils.datastructures import MultiValueDictKeyError
 from django.views.generic import View
-from django.core.exceptions import ObjectDoesNotExist
 from django.conf import settings
+from exceptions import IllegalDataError, MissingArgumentError, TokenError
 from models import * 
-from utils import * 
+from utils import MyJsonEncoder 
+
+class JsonResponse(HttpResponse):
+	def __init__(self, data, **kwargs):
+		content = MyJsonEncoder().encode(data)
+		kwargs['content_type'] = 'application/json'
+		super(JsonResponse, self).__init__(content, kwargs)
 
 def IndexView(request):
 	return HttpResponse('Welcome!')
-
-class AuthError(BaseException):
-	pass
-
-class IllegalDataError(BaseException):
-	pass
-
-class MissingArgumentError(BaseException):
-	pass
-
-class TokenError(BaseException):
-	pass
 
 class BaseView(View):
 	def __init__(self):
@@ -47,20 +39,20 @@ class BaseView(View):
 		try:
 			result = self.do()
 			print('==========response==========')
-			print(MyJsonEncoder().encode(result))
-			return MyJsonEncoder().encode(result)
+			#print(MyJsonEncoder().encode(result))
+			return result
 		except IllegalDataError:
 			print('======caught exception======')
 			print(traceback.format_exc())
-			return MyJsonEncoder().encode({RSP_CODE : RC_ILLEGAL_DATA})
+			return {RSP_CODE : RC_ILLEGAL_DATA}
 		except MissingArgumentError:
 			print('======caught exception======')
 			print(traceback.format_exc())
-			return MyJsonEncoder().encode({RSP_CODE : RC_WRONG_ARG})
+			return {RSP_CODE : RC_WRONG_ARG}
 		except Exception, e:
 			print('======caught exception======')
 			print(traceback.format_exc())
-			return MyJsonEncoder().encode({RSP_CODE : RC_SERVER_ERROR})
+			return {RSP_CODE : RC_SERVER_ERROR}
 		except TokenError, e:
 			print('======caught exception======')
 			print(traceback.format_exc())
@@ -68,7 +60,7 @@ class BaseView(View):
 					'no_such_user' : RC_NO_SUCH_USER,
 					'token_overdate': RC_TOKEN_OVERDATE
 					}[e.args[0]]
-			return MyJsonEncoder().encode({RSP_CODE : rsp_code}) 
+			return {RSP_CODE : rsp_code}
 
 	def do(self):
 		pass
@@ -104,18 +96,6 @@ class BaseView(View):
 		else:
 			return data	
 
-	def get_user(self):
-		t = self.get_required_arg('token')
-		u = None
-		try:
-			u = User.objects.get(token=t)
-		except ObjectDoesNotExist:
-			raise TokenError('no_such_user')
-		lr = LoginRecord.objects.filter(user=u).latest('time')
-		if (datetime.now() - lr.time).days >= 60:
-			raise TokenError('token_overdate')
-		return u
-
 ###############################################
 ########	USER MOUDLE		###################
 ###############################################
@@ -129,25 +109,25 @@ class UserView(BaseView):
 class LoginView(UserView):
 	def get(self, request, *args):
 		self._request = request
-		return HttpResponse(self.handle())
+		return JsonResponse(self.handle())
 	
 	def do(self):
 		result = {
 			'travo' : userservice.travo_login(self.get_required_arg('email'), self.get_required_arg('password')),
 			'qq'	: userservice.qq_login(),
-			'sina'	: userservice.travo_login() 
+			'sina'	: userservice.sina_login() 
 		}[self.get_required_arg('user_type')]
 
 		if result[RSP_CODE] == RC_SUCESS:
 			#record login
-			self.record_login(result['user'])
+			pass
+			#self.record_login(result['user'])
 		return result
-
 
 class RegisterView(UserView):
 	def post(self, request):
 		self._request = request
-		return HttpResponse(self.handle())
+		return JsonResponse(self.handle())
 
 	def do(self):
 		return {
@@ -160,142 +140,48 @@ class RegisterView(UserView):
 			'sina'	: userservice.sina_register() 
 		}[self.get_required_arg('user_type')]
 
-
-	def check_qq_data(self, u):
-		qq_token = self.get_required_data('qq_token')
-		u.qq_user_id = self._get_qq_user_id(qq_token)
-
-	def check_sina_data(self):
-		sina_token = self.get_required_data('sina_token')
-		u.sina_user_id = self._get_sina_user_id(sina_token)
-
-	def _get_qq_user_id(self, qq_token):
-		r = urllib2.urlopen('https://graph.z.qq.com/moc2/me?access_token=' + qq_token)
-		response = r.read()
-		if response.startswith('code'):
-			raise AuthError('qq auth fail')
-		else:
-			return response[-32:]
-
-	def _get_sina_user_id(self, sina_token):
-		try:
-			r = urllib2.urlopen('https://api.weibo.com/2/account/get_uid.json?access_token=' + sina_token)
-			return json.loads(r.read())['uid']
-		except:
-			raise AuthError('sina auth fail')
-
-
 ##############################################
 ########	TRAVEL MOUDLE	##################
 ##############################################
 class UploadTravelView(BaseView):
 	def post(self, request):
 		self._request = request
-		return HttpResponse(self.handle())
-
-	def update_travel(self, user, t):
-		'''use dict t to update travel'''
-		travel = None
-		rsp = {RSP_CODE : RC_SUCESS}
-		try:
-			travel = Travel.objects.get(pk=t['id'])
-		except ObjectDoesNotExist:
-			rsp[RSP_CODE] = RC_NO_SUCH_TRAVEL
-		else:
-			if travel.user != user:
-				#not same user
-				rsp[RSP_CODE] = RC_PERMISSION_DENIED
-			else:
-				travel.update(t)
-				if t.has_key('cover'):
-					travel.cover_path = self.build_cover_path()
-					utils.save_cover(travel.cover_path, t['cover'])
-				try:
-					travel.save()
-				except ValidationError, e:
-					rsp[RSP_CODE] = RC_ILLEGAL_DATA
-		rsp['id'] = t['id']
-
-
+		return JsonResponse(self.handle())
 
 	def do(self):
-		user = self.get_user_by_token()
-		travels = self.get_required_data('travels')
-		rsps = []
-		for t in travels:
-			rsp = {RSP_CODE : RC_SUCESS}
-			travel = None
-			if t.has_key('id'):
-				#update
-				try:
-					travel = Travel.objects.get(pk=t['id'])
-				except ObjectDoesNotExist:
-					rsp[RSP_CODE] = RC_NO_SUCH_TRAVEL
-				else:
-					if travel.user != user:
-						#not same user
-						rsp[RSP_CODE] = RC_PERMISSION_DENIED
-					else:
-						travel.update(t)
-						if t.has_key('cover'):
-							travel.cover_path = self.build_cover_path()
-							utils.save_cover(travel.cover_path, t['cover'])
-						try:
-							travel.save()
-						except ValidationError, e:
-							rsp[RSP_CODE] = RC_ILLEGAL_DATA
-				rsp['id'] = t['id']
-			else:
-				#upload
-				try:
-					travel = Travel.from_dict(t)
-				except ValueError, e:
-					raise IllegalDataError(e)
-				travel.user = user
-				try:
-					#search weahter have same travel
-					Travel.objects.get(user_id=user.id, title=travel.title, create_time=travel.create_time)
-				except:
-					#do not found any same travel
-					if t.has_key('cover'):
-						#save cover
-						travel.cover_path = self.build_cover_path()
-						utils.save_cover(travel.cover_path, t['cover'])
-					try:
-						travel.save()
-					except ValidationError, e:
-						rsp[RSP_CODE] = RC_ILLEGAL_DATA
-					else:
-						#sucess upload
-						rsp['id'] = travel.id
-				else:
-					#found same travel
-					rsp[RSP_CODE] = RC_DUP_DATA
-			rsp['tag'] = t.get('tag')
-			rsps.append(rsp)
-		result = {RSP_CODE : RC_SUCESS}
-		result['rsps'] = rsps
-		return result 
-
-	def build_cover_path(self):
-		return uuid.uuid4().hex[0:16]
+		return travelservice.upload(
+				self.get_required_arg('token'),
+				self.get_required_data('travels')
+				)
 
 class SyncTravelView(BaseView):
 	def get(self, request):
 		self._request = request
-		return HttpResponse(self.handle())
+		return JsonResponse(self.handle())
 
 	def do(self):
-		u = self.get_user_by_token()
-		begin_time = self.get_arg('begin_time')
-		result = {RSP_CODE : RC_SUCESS}
-		if begin_time is None:
-			#sync all travel
-			result['travels'] = list(Travel.objects.filter(user = u))
+		return travelservice.sync(
+				self.get_required_arg('token'),
+				self.get_arg('begin_time')
+				)
+
+class CoverView(BaseView):
+	def get(self, request, travel_id):
+		self._request = request
+		self._travel_id = travel_id
+		result = self.handle()
+		if result[RSP_CODE] == RC_SUCESS:
+			response = HttpResponse(result.pop('cover'), 'image/jpeg; charsete=utf-8')
+			response.write(MyJsonEncoder().encode(result))
+			return response
 		else:
-			begin_time = utils.strpdatetime(begin_time)
-			result['travels'] = list(Travel.objects.filter(user=u,lm_time__gte=begin_time))
-		return result 
+			return HttpResponse(MyJsonEncoder().encode(result))
+
+	def do(self):
+		return travelservice.get_cover(
+				self._travel_id,
+				self.get_arg('token')
+				)
 
 #############################################
 ########	Note MOUDLE		#################
@@ -303,29 +189,32 @@ class SyncTravelView(BaseView):
 class UploadNoteView(BaseView):
 	def post(self, request):
 		self._request = request
-		return HttpResponse(self.handle())
-'''
-	def do(self):
-		user = self.get_user_by_token()
-		notes = self.get_required_data('notes')
-		rsps = []
-		for n in notes:
-			if n.has_key('id'):
-				rsp = self.update_note(user, n)
-			else:
-				rsp = self.new_note(user, n)
-			rsps.append(rsp)
-		rsps[RSP_CODE] = RC_SUCESS
+		return JsonResponse(self.handle())
 
-				note = Note.objects.get(pk=n['id'])
-				if note.user != user:
-					rsp[RSP_CODE] = RC_PERMISSION_DENIED
-				else:
-					note.update(n)
-					if n.has_key('image'):
-						note.image_path = self.build
-					note.save()
-						if t.has_key('cover'):
-							travel.cover_path = self.build_cover_path()
-							utils.save_cover(travel.cover_path, t['cover'])
-'''
+	def do(self):
+		return noteservice.upload(
+				self.get_required_arg('token'),
+				self.get_required_data('notes')
+				)
+	pass
+
+class SyncNoteView(BaseView):
+	def get(self, request):
+		self._request = request
+		return JsonResponse(self.handle())
+
+	def do(self):
+		return noteservice.sync(
+				self.get_required_arg('token'),
+				self.get_arg('begin_time')
+				)
+
+#############################################
+########	SYNC MOUDLE		#################
+#############################################
+class SyncView(BaseView):
+	def get(self, request):
+		self._request = request
+		return JsonResponse(self.handle())
+	def do(self):
+		return service.sync_state(self.get_required_arg('token'))
