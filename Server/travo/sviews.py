@@ -8,7 +8,8 @@ from django.template import RequestContext, loader
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 import logging
-from service import userservice
+from datetime import datetime
+from service import userservice,travelservice
 from rc import *
 
 # Create your views here.
@@ -87,10 +88,25 @@ class NewTravelView(View):
         template = loader.get_template('website/new_travel.html')
         context = RequestContext(request)
         return HttpResponse(template.render(context))
+    def post(self,request):
+        token = request.session['token']
+        travel = {}
+        travel['title'] = request.POST.get('travel_name')
+        travel['begin_date'] = request.POST.get('start_time')
+        travel['description'] = request.POST.get('travel_description')
+        travel['cover'] = request.FILES.get('cover', None)
+        travel['create_time'] = datetime.now()
+        result = travelservice.upload(token,[travel,])
+        print result
+        return '添加成功！'
 
 class MyInfoView(View):
     def get(self, request):
         template = loader.get_template('website/me.html')
         context =  RequestContext(request)
-        return HttpResponse(template.render(context))
+        token = request.session['token']
+        user = get_object_or_404(User, token=token)
+        return HttpResponse(template.render(context),{"user":user})
+
+
 
