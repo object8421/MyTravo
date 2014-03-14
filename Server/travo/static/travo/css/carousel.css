@@ -19,6 +19,12 @@ body {
 
 /* CUSTOMIZE THE NAVBAR
 -------------------------------------------------- */
+.half-transparent{
+  filter:alpha(Opacity=60);
+  -moz-opacity:0.8;
+  opacity: 0.8; 
+
+}
 
 .navbar-fixed-top{
     background-color: #00BFFF;
