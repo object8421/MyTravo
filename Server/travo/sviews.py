@@ -8,7 +8,7 @@ from django.template import RequestContext, loader
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 import logging
-from travo import userservice
+from service import userservice
 from rc import *
 
 # Create your views here.

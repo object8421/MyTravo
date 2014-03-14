@@ -1,0 +1,18 @@
+{% extends "website/base_index.html" %}
+{% block title %}上传图片{% endblock %}
+{%block content%}
+<form enctype="multipart/form-data" method="POST" action="/photo/upload/" target="_self">
+<br />
+<br />
+<br />
+<table id=control width="100%" border="0" cellspacing="0" cellpadding="0" class="borderon">
+<input type="hidden" name="title" value = "{{ cfn.columnid}}-{{ cfi.columnid }}"></p>
+
+<td align="center">
+<input type="file" name="file_photo"/><br/>
+<br />
+<input type="submit" value="上传图片">
+</td>
+</table>
+</form>
+{%endblock%}
