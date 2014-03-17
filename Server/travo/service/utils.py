@@ -19,7 +19,7 @@ def get_cover(path):
 
 def __save_image(path, image_data):
 	def do_save(_path, _image_data):
-		with open(_path, 'w') as f:
+		with open(_path, 'wb') as f:
 			f.write(_image_data)
 
 	Thread(target = do_save, kwargs = {'_path' : path,

@@ -1,5 +1,5 @@
 #-*- coding: utf-8 -*-
-from django.shortcuts import render, render_to_response
+from django.shortcuts import render, render_to_response,get_object_or_404
 from django.views.generic.edit import FormView
 from django.views.generic import View
 from travo.forms import RegisterForm, ContactForm
@@ -10,6 +10,7 @@ from django.http import HttpResponseRedirect
 import logging
 from datetime import datetime
 from service import userservice,travelservice
+from models import User
 from rc import *
 
 # Create your views here.
@@ -91,14 +92,18 @@ class NewTravelView(View):
     def post(self,request):
         token = request.session['token']
         travel = {}
-        travel['title'] = request.POST.get('travel_name')
-        travel['begin_date'] = request.POST.get('start_time')
-        travel['description'] = request.POST.get('travel_description')
-        travel['cover'] = request.FILES.get('cover', None)
+        travel['title'] = request.POST.get('travel_name','')
+        travel['begin_date'] = request.POST.get('start_time','')
+        travel['description'] = request.POST.get('travel_description','')
+        cover_original = request.FILES.get('cover', None)
+        cover_name = cover_original.name
+        print cover_name
+        travel['cover'] = content = cover_original.read()
         travel['create_time'] = datetime.now()
         result = travelservice.upload(token,[travel,])
         print result
-        return '添加成功！'
+
+        return HttpResponse('添加成功!')
 
 class MyInfoView(View):
     def get(self, request):
@@ -107,6 +112,19 @@ class MyInfoView(View):
         token = request.session['token']
         user = get_object_or_404(User, token=token)
         return HttpResponse(template.render(context),{"user":user})
+
+class TestView(View):
+    def get(self,request):
+        template = loader.get_template('website/test.html')
+        context = RequestContext(request)
+        return HttpResponse(template.render(context))
+    def post(self, request):
+        buf = request.FILES.get('cover',None)
+        content = buf.name
+        print content
+        with open('haha.jpg','wb') as image:
+            image.write(buf.read())
+        return HttpResponse('添加成功!')
 
 
 
