@@ -21,9 +21,11 @@ urlpatterns = patterns('travo',
 			name = 'register_success'),
 		url(r'^user/new_travel',sviews.NewTravelView.as_view(),\
 			name = 'new_travel'),
+
 		
 		url(r'^user/set_account', sviews.AuthoritySetView.as_view(),\
             name = 'set_account')
+		url(r'^test', sviews.TestView.as_view(),name='test'),
 
 
 	)

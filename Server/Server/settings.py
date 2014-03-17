@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-WEB_ROOT = '/usr/travo/'	#
+WEB_ROOT = '/Users/EthanWu/travo/'	#
 IMAGE_PATH = WEB_ROOT + 'image/'
 FACE_PATH = IMAGE_PATH + 'face/'
 COVER_PATH = IMAGE_PATH + 'cover/'

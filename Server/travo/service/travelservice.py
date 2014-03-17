@@ -5,7 +5,7 @@ import userservice
 from travo.rc import *
 from travo.models import Travel
 from django.core.exceptions import ObjectDoesNotExist
-
+from django.core.exceptions import ValidationError
 def _build_cover_path():
 	return uuid.uuid4().hex[0:16]
 
