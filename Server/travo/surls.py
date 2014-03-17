@@ -24,8 +24,11 @@ urlpatterns = patterns('travo',
 
 		
 		url(r'^user/set_account', sviews.AuthoritySetView.as_view(),\
-            name = 'set_account')
+            name = 'set_account'),
 		url(r'^test', sviews.TestView.as_view(),name='test'),
+
+		url(r'^user/detail_info', sviews.DetailInfoView.as_view(),\
+			name = 'detail_info'),
 
 
 	)

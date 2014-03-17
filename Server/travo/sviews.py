@@ -135,3 +135,9 @@ class AuthoritySetView(View):
         context = RequestContext(request)
         return HttpResponse(template.render(context))
 
+class DetailInfoView(View):
+    def get(self, request):
+        template = loader.get_template('website/detail_info.html')
+        context = RequestContext(request)
+        return HttpResponse(template.render(context))
+
