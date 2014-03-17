@@ -1,0 +1,174 @@
+{% extends "website/base_index.html" %}
+{% block title %}注册成功{% endblock %}
+{% block content %}
+
+
+
+<div class="container">
+
+<div class="row" align="center">
+
+	<div class="panel panel-info" style="width:60%; margin-top:60px; text-align:left;">
+
+<div class="panel-heading" >
+    <h3 class="panel-title">账号设置</h3>
+  </div>
+
+		<div class="panel-body">
+
+<!-- Nav tabs -->
+<ul class="nav nav-tabs">
+  <li class="active"><a href="#editinfo" data-toggle="tab">修改个人信息</a></li>
+  <li ><a href="#setpassword" data-toggle="tab">更改密码</a></li>
+  <li><a href="#changemail" data-toggle="tab">修改邮箱</a></li>
+
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+ <!-- tab0 starts here -->
+ <div class="tab-pane fade  in active" id="editinfo">
+    <form class="form-horizontal" role="form" style="margin-top:20px;">
+  
+  <div class="form-group">
+    <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">昵称</label>
+    <div class="col-sm-6">
+      <input type="email" class="form-control" id="inputTravelName" value={{request.session.username}} name="nickname">
+    </div>
+  </div>
+
+  
+ <div class="form-group">
+      <label for="cover_picker" class="col-sm-2 control-label" style="color: #104e8b;">上传新头像</label>
+      <div class="col-sm-4">
+      <div id="cover_picker" class="fileinput fileinput-new" data-provides="fileinput">
+
+        <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 192px; height: 150px; padding:0;"></div>
+        <div>
+          <span class="btn btn-default btn-file btn-success btn-sm"><span class="fileinput-new">选择照片上传</span>
+          <span class="fileinput-exists">重新选择照片</span><input type="file" name="..."></span>
+          <a href="#" class="btn btn-default btn-danger fileinput-exists btn-sm" data-dismiss="fileinput">移除当前照片</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+   <div class="form-group control-group">
+    <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">性别</label>
+    <div class="controls col-sm-2">
+            <label class="radio inline col-sm-6" style="float:left;">
+              <input type="radio" value="男" name="single" checked="checked"> 男
+            </label>
+            <label class="radio inline" style="float:left;">
+              <input type="radio" value="女" name="single"> 女
+            </label>
+
+          </div>
+  </div>
+
+
+
+
+
+ 
+  
+  <div class="form-group">
+    <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">个性签名</label>
+    <div class="col-sm-9">
+      <textarea class="form-control" rows="3" placeholder="请在这里添加游记描述"></textarea>
+    </div>
+  </div>
+
+ 
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">  
+      <button type="submit" class="btn btn-primary" >确认修改</button>
+   </div>
+</div>
+  
+
+
+
+</form>
+ </div><!-- tab1 end -->
+
+
+	<!-- tab1 starts here -->
+  <div class="tab-pane fade" id="setpassword">
+
+  	 <form class="form-horizontal" role="form" style="margin-top:20px;">
+  
+  <div class="form-group">
+    <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">请输入原密码</label>
+    <div class="col-sm-6">
+      <input type="email" class="form-control" id="inputOringinPassword" placeholder="input the oringinal password">
+    </div>
+  </div>
+
+   <div class="form-group">
+    <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">设置新密码</label>
+    <div class="col-sm-6">
+      <input type="email" class="form-control" id="inputNewPassword" placeholder="set new password here">
+    </div>
+  </div>
+
+ 
+  
+  <div class="form-group">
+    <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">确认新密码</label>
+    <div class="col-sm-6">
+      <input type="email" class="form-control" id="inputCheckPassword" placeholder="input your new password again">
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">  
+      <button type="submit" class="btn btn-primary" >确认修改</button>
+   </div>
+</div>
+
+
+
+</form>
+
+  </div><!-- tab1 end-->
+
+
+  <!-- tab2 stars here -->
+  <div class="tab-pane fade" id="changemail">
+
+ <form class="form-horizontal" role="form" style="margin-top:20px;">
+  
+  <div class="form-group">
+    <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">修改邮箱</label>
+    <div class="col-sm-6">
+      <input type="email" class="form-control" id="inputMailBox" placeholder="set your new mail box">
+    </div>
+  </div>
+
+
+  
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">  
+      <button type="submit" class="btn btn-primary" >确认修改</button>
+   </div>
+</div>
+
+
+
+</form>
+
+
+  </div><!-- tab2 end-->
+
+</div><!-- tab content end -->
+</div><!--  panel body end-->
+</div><!--  panel end-->
+</div><!-- row end -->
+
+</div><!-- container end -->
+
+
+
+{% endblock %}

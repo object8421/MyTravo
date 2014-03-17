@@ -94,3 +94,10 @@ class MyInfoView(View):
         context =  RequestContext(request)
         return HttpResponse(template.render(context))
 
+
+class AuthoritySetView(View):
+    def get(self, request):
+        template = loader.get_template('website/set.html')
+        context = RequestContext(request)
+        return HttpResponse(template.render(context))
+

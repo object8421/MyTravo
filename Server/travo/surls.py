@@ -20,7 +20,10 @@ urlpatterns = patterns('travo',
 		url(r'^user/register_success', sviews.RegisterSuccessView.as_view(), \
 			name = 'register_success'),
 		url(r'^user/new_travel',sviews.NewTravelView.as_view(),\
-			name = 'new_travel')
+			name = 'new_travel'),
+		
+		url(r'^user/set_account', sviews.AuthoritySetView.as_view(),\
+            name = 'set_account')
 
 
 	)
