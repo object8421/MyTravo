@@ -1,6 +1,7 @@
 #-*- coding: utf-8 -*-
 from django.shortcuts import render, render_to_response,get_object_or_404
 from django.views.generic.edit import FormView
+from django.core.mail import send_mail
 from django.views.generic import View
 from travo.forms import RegisterForm, ContactForm
 from django.http import HttpResponse
@@ -10,6 +11,8 @@ from django.http import HttpResponseRedirect
 import logging
 from datetime import datetime
 from service import userservice,travelservice
+
+
 from models import User
 from rc import *
 
@@ -19,10 +22,10 @@ class RegisterView(View):
         nickname = request.POST.get('nickname','')
         password = request.POST.get('password','')
         email = request.POST.get('email','')
-        print nickname
-        print password
-        print email
         res = userservice.travo_register(nickname, email, password)
+        for key in request.POST:
+            print "%s : %s"%(key,request.POST.get(key))
+
         if res[RSP_CODE] == 100:
             return render(request,'website/register_successful.html')
         else :
@@ -106,6 +109,7 @@ class NewTravelView(View):
         return HttpResponse('添加成功!')
 
 class MyInfoView(View):
+    '''展示个人主页'''
     def get(self, request):
         template = loader.get_template('website/me.html')
         context =  RequestContext(request)
@@ -127,13 +131,36 @@ class TestView(View):
         return HttpResponse('添加成功!')
 
 
-
-
-class AuthoritySetView(View):
+class PersonalInfoSetView(View):
+    '''设置个人信息/未完成图片处理'''
     def get(self, request):
         template = loader.get_template('website/set.html')
         context = RequestContext(request)
-        return HttpResponse(template.render(context))
+        user = get_object_or_404(User,token=request.session['token'])
+        return HttpResponse(template.render(context),{'user':user})
+    def post(self, request):
+        attr_dict = request.POST
+        userservice.change_self_info(request.session['token'],attr_dict)
+        template = loader.get_template('website/me.html')
+        context = RequestContext(request)
+        user = request.get_object_or_404(User,token=token)
+        return HttpResponse(template.render(context),{'user':user})
+
+class ChangePasswordView(View):
+    def post(self,request):
+        result = userservice.change_password(request.session['token'],request.POST.\
+            get('original_password'),request.POST.get('new_password'))
+        if result[RSP_CODE] == RC_SUCESS:
+            return HttpResponse('修改成功！')
+        else:
+            return HttpResponse('对不起，您的原密码有误。')
+
+
+class ChangeEmailView(View):
+    def post(self,request):
+        pass
+
+
 
 class DetailInfoView(View):
     def get(self, request):
