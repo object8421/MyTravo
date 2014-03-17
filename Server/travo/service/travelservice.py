@@ -110,3 +110,20 @@ def get_cover(travel_id, token):
 	else:
 		result['cover'] = utils.get_cover(travel.cover_path)
 	return result
+
+#######	    get  travel		###########
+def get_travel(token,recent = False):
+	user = userservice.get_user(token)
+	user_id = user.id
+	result = {RSP_CODE : RC_SUCESS}
+	try:
+		if recent == False:
+			travel_list = Travel.objects.filter(user=user_id).order_by('create_time')
+			result['travel_list'] = travel_list
+			return result
+		else:
+			travel_list = Travel.objects.filter(user=user_id).order_by('create_time')[:recent]
+			result['travel_list'] = travel_list
+			return result
+	except ObjectDoesNotExist:
+		return {RSP_CODE : RC_NO_SUCH_TRAVEL}

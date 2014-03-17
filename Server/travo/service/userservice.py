@@ -107,3 +107,23 @@ def qq_register():
 
 def sina_register():
 	pass
+
+def change_self_info(token,attr_dict):
+	user = User.Objects.get(token=token)
+	for attr in attr_dict.keys():
+		if attr in user.keys():
+			user['attr'] = attr_dict['attr']
+	user.save()
+	result = {RSP_CODE:RC_SUCESS}
+	return result
+
+def change_password(token, original_password, new_password):
+	user = User.Objects.get(token=token)
+	if user.password == original_password:
+		user.password = original_password
+		result = {RSP_CODE:RC_SUCESS}
+		return result
+	else:
+		result = result = {RSP_CODE:RC_WRONG_PASSWORD}
+		return result
+

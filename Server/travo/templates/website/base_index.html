@@ -76,7 +76,7 @@
                       欢迎你：{{request.session.username}}<span class="caret"></span>
                       </button>
                        <ul class="dropdown-menu">
-                       <li ><a href="#" >个人信息</a></li>
+                       <li ><a href="{%url 'me'%}" >个人信息</a></li>
                        <li><a href="#">设置</a></li>
                        <li><a href={%url 'logout'%}>退出</a></li>
 
