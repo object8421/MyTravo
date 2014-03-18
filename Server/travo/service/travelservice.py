@@ -68,7 +68,7 @@ def _new(user, t):
 				rsp[RSP_CODE] = RC_ILLEGAL_DATA
 			else:
 				#sucess new 
-				rsp['id'] = travel.id
+			rsp['id'] = travel.id
 		else:
 			#found same travel
 			rsp[RSP_CODE] = RC_DUP_DATA
