@@ -9,6 +9,7 @@ from django.template import RequestContext, loader
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
 import logging
+from django.conf import settings
 from datetime import datetime
 from service import userservice,travelservice
 
@@ -112,10 +113,20 @@ class MyInfoView(View):
     '''展示个人主页'''
     def get(self, request):
         template = loader.get_template('website/me.html')
-        context =  RequestContext(request)
         token = request.session['token']
         user = get_object_or_404(User, token=token)
-        return HttpResponse(template.render(context),{"user":user})
+        my_recent_travel_list = travelservice.get_travel(token,3)['travel_list']
+        basic_travel_path = settings.COVER_PATH
+        context =  RequestContext(request,{\
+            "user":user,
+            "recent_travel_list":my_recent_travel_list,
+            "basic_travel_path":basic_travel_path,})
+
+        return HttpResponse(template.render(context))
+
+class ShowMyTravel(View):
+    def get(self,request):
+        pass
 
 class TestView(View):
     def get(self,request):
@@ -124,7 +135,12 @@ class TestView(View):
         return HttpResponse(template.render(context))
     def post(self, request):
         buf = request.FILES.get('cover',None)
+        title = request.POST.get('title',None)
         content = buf.name
+        print title
+        for attr in request.POST:
+
+            print "%s : %s"%(attr,request.POST.get('attr'))
         print content
         with open('haha.jpg','wb') as image:
             image.write(buf.read())
@@ -148,19 +164,21 @@ class PersonalInfoSetView(View):
 
 class ChangePasswordView(View):
     def post(self,request):
-        result = userservice.change_password(request.session['token'],request.POST.\
-            get('original_password'),request.POST.get('new_password'))
+        token = request.session['token']
+        original_password = request.POST.get('original_password')
+        new_password = request.POST.get('new_password')
+        print original_password
+        print new_password
+        result = userservice.change_password(token,original_password,new_password)
+
         if result[RSP_CODE] == RC_SUCESS:
             return HttpResponse('修改成功！')
         else:
             return HttpResponse('对不起，您的原密码有误。')
 
-
 class ChangeEmailView(View):
     def post(self,request):
         pass
-
-
 
 class DetailInfoView(View):
     def get(self, request):

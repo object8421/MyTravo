@@ -68,7 +68,7 @@ def _new(user, t):
 				rsp[RSP_CODE] = RC_ILLEGAL_DATA
 			else:
 				#sucess new 
-			rsp['id'] = travel.id
+				rsp['id'] = travel.id
 		else:
 			#found same travel
 			rsp[RSP_CODE] = RC_DUP_DATA
@@ -118,11 +118,11 @@ def get_travel(token,recent = False):
 	result = {RSP_CODE : RC_SUCESS}
 	try:
 		if recent == False:
-			travel_list = Travel.objects.filter(user=user_id).order_by('create_time')
+			travel_list = Travel.objects.filter(user=user_id).order_by('-create_time')
 			result['travel_list'] = travel_list
 			return result
 		else:
-			travel_list = Travel.objects.filter(user=user_id).order_by('create_time')[:recent]
+			travel_list = Travel.objects.filter(user=user_id).order_by('-create_time')[:recent]
 			result['travel_list'] = travel_list
 			return result
 	except ObjectDoesNotExist:

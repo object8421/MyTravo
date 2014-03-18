@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 from mobile import views 
-
+from django.conf import settings  
 urlpatterns = patterns('',
 		url(r'index', views.IndexView, name='welcome'),
 		url(r'^user/login$', views.LoginView.as_view(), name='login'),
