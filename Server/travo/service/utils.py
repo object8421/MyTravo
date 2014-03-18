@@ -17,6 +17,19 @@ def get_cover(path):
 	with open(settings.COVER_PATH + path) as f:
 		return f.read()
 
+def save_image(path, image_data):
+	__save_image(settings.IMAGE_PATH + path, image_data)
+
+def get_image(path):
+	with open(settings.IMAGE_PATH + path) as f:
+		return f.read()
+def save_face(path, image_data):
+	__save_image(settings.FACE_PATH + path, image_data)
+
+def get_face(path):
+	with open(settings.FACE_PATH + path) as f:
+		return f.read()
+
 def __save_image(path, image_data):
 	def do_save(_path, _image_data):
 		with open(_path, 'wb') as f:

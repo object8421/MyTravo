@@ -3,7 +3,7 @@ import uuid
 import userservice
 
 from travo.rc import *
-from travo.models import Note, Location
+from travo.models import Note, Location, Travel
 from django.core.exceptions import ValidationError
 
 
@@ -58,25 +58,29 @@ def _new(user, n):
 	except ValueError, e:
 		rsp[RSP_CODE] = RC_ILLEGAL_DATA
 	else:
-		try:
-			#search whether have same note 
-			Note.objects.get(user_id=user.id, travel_id=n['travel_id'], create_time=note.create_time)
-		except:
-			#do not found any same travel
-			if n.has_key('image'):
-				note.image_path = _fetch_image_and_save(n['image']) 
-			try:
-				location.save()
-				note.location = location
-				note.save()
-			except ValidationError, e:
-				rsp[RSP_CODE] = RC_ILLEGAL_DATA
-			else:
-				#sucess new 
-				rsp['id'] = note.id
+		if not Travel.objects.filter(user_id=user.id, id=n['travel_id']).exists():
+			#test the travel wheather belongs to this user
+			rsp[RSP_CODE] = RC_PERMISSION_DENIED
 		else:
-			#found same travel
-			rsp[RSP_CODE] = RC_DUP_DATA
+			try:
+				#search whether have same note 
+				Note.objects.get(user_id=user.id, travel_id=n['travel_id'], create_time=note.create_time)
+			except:
+				#do not found any same travel
+				if n.has_key('image'):
+					note.image_path = _fetch_image_and_save(n['image']) 
+				try:
+					location.save()
+					note.location = location
+					note.save()
+				except ValidationError, e:
+					rsp[RSP_CODE] = RC_ILLEGAL_DATA
+				else:
+					#sucess new 
+					rsp['id'] = note.id
+			else:
+				#found same travel
+				rsp[RSP_CODE] = RC_DUP_DATA
 	return rsp
 
 def _fetch_image_and_save(n):
@@ -95,3 +99,19 @@ def sync(token, begin_time):
 		begin_time = utils.strpdatetime(begin_time)
 		result['travels'] = list(Note.objects.filter(user=user,lm_time__gte=begin_time))
 	return result 
+
+########	image	##########
+def get_image(note_id, token):
+	note = None
+	try:
+		note = Note.objects.get(pk=note_id).image_path
+	except ObjectDoesNotExist:
+		return {RSP_CODE : RC_NO_SUCH_NOTE}
+	if note.image_path is None:
+		return {RSP_CODE : RC_NO_IMAGE}
+	result = {RSP_CODE : RC_SUCESS}
+	result['image'] = utils.get_image(note.image_path)
+	return result
+
+
+

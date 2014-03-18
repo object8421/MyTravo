@@ -39,7 +39,7 @@ class BaseView(View):
 		try:
 			result = self.do()
 			print('==========response==========')
-			#print(MyJsonEncoder().encode(result))
+			print result
 			return result
 		except IllegalDataError:
 			print('======caught exception======')
@@ -64,6 +64,9 @@ class BaseView(View):
 
 	def do(self):
 		pass
+
+	def get_token(self):
+		return self.get_required_arg('token')
 
 	def get_required_arg(self, key):
 		arg = self.get_arg(key)
@@ -140,6 +143,20 @@ class RegisterView(UserView):
 			'sina'	: userservice.sina_register() 
 		}[self.get_required_arg('user_type')]
 
+class UpdateUserView(BaseView):
+	def put(self, request):
+		self._request = request
+		return JsonResponse(self.handle())
+
+	def do(self):
+		return userservice.update(
+				self.get_token(),
+				nickname = self.get_data('nickname'),
+				signature = self.get_data('signature'),
+				is_info_public = self.get_data('is_info_public'),
+				face = self.get_data('face')
+				)
+
 ##############################################
 ########	TRAVEL MOUDLE	##################
 ##############################################
@@ -175,7 +192,7 @@ class CoverView(BaseView):
 			response.write(MyJsonEncoder().encode(result))
 			return response
 		else:
-			return HttpResponse(MyJsonEncoder().encode(result))
+			return HttpResponse(JsonResponse(result))
 
 	def do(self):
 		return travelservice.get_cover(
@@ -209,6 +226,22 @@ class SyncNoteView(BaseView):
 				self.get_arg('begin_time')
 				)
 
+class ImageView(BaseView):
+	def get(self, request, note_id):
+		self._request = request
+		self._note_id = note_id
+		result = self.handle()
+		if result[RSP_CODE] == RC_SUCESS:
+			response = HttpResponse(result.pop('image'), 'image/jpeg; charsete=utf-8')
+			response.write(MyJsonEncoder().encode(result))
+			return response
+		else:
+			return HttpResponse(JsonResponse(result))
+	
+	def do(self):
+		return travelservice.get_cover(
+				self.note_id)
+
 #############################################
 ########	SYNC MOUDLE		#################
 #############################################
@@ -218,3 +251,4 @@ class SyncView(BaseView):
 		return JsonResponse(self.handle())
 	def do(self):
 		return service.sync_state(self.get_required_arg('token'))
+
