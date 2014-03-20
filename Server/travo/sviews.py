@@ -105,7 +105,9 @@ class NewTravelView(View):
             print cover_name
             travel['cover'] = content = cover_original.read()
             travel['create_time'] = datetime.now()
-        result = travelservice.upload(token,[travel,])
+            result = travelservice.upload(token,[travel,])
+        except:
+            pass
         print result
 
         return HttpResponse('添加成功!')
