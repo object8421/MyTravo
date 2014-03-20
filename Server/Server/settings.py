@@ -17,7 +17,8 @@ IMAGE_PATH = WEB_ROOT + 'image/'
 FACE_PATH = IMAGE_PATH + 'face/'
 COVER_PATH = IMAGE_PATH + 'cover/'
 MEDIA_ROOT = IMAGE_PATH
-MEDIA_URL = '/images/'
+MEDIA_URL = '/media/'
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.6/howto/deployment/checklist/
 

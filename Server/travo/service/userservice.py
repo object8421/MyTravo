@@ -1,16 +1,21 @@
 import uuid
 import re
 import urllib2
+import utils
 
 from travo.exceptions import TokenError
 from django.db import IntegrityError
 from travo.models import User, LoginRecord
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ValidationError
 from travo.rc import * 
 from datetime import datetime
 
 def _build_token():
 	return uuid.uuid4().hex
+
+def _build_face_path():
+	return uuid.uuid4().hex[0:16]
 
 def _check_email(email):
 	format = '^[\d\w-]+\@[\d\w-]+(\.[\d\w-]+)+$'
@@ -107,9 +112,26 @@ def qq_register():
 
 def sina_register():
 	pass
+<<<<<<< HEAD
+#########	update	################
+def update(token, **kwargs):
+	user = get_user(token)
+	user.update(kwargs)
+	if kwargs['face']:
+		face_path = _build_face_path()
+		user.face_path = face_path
+		utils.save_face(face_path, kwargs['face'])
+	try:
+		user.save()
+	except IntegrityError:
+		return {RSP_CODE : RC_DUP_NICKNAME}
+
+	return {RSP_CODE : RC_SUCESS}
+=======
 
 def change_self_info(token,attr_dict):
-	user = User.Objects.get(token=token)
+	#didn't handle portrait.
+	user = User.objects.get(token=token)
 	for attr in attr_dict.keys():
 		if attr in user.keys():
 			user['attr'] = attr_dict['attr']
@@ -118,12 +140,14 @@ def change_self_info(token,attr_dict):
 	return result
 
 def change_password(token, original_password, new_password):
-	user = User.Objects.get(token=token)
+	user = User.objects.get(token=token)
 	if user.password == original_password:
-		user.password = original_password
+		user.password = new_password
+		user.save()
 		result = {RSP_CODE:RC_SUCESS}
 		return result
 	else:
 		result = result = {RSP_CODE:RC_WRONG_PASSWORD}
 		return result
 
+>>>>>>> 1e9edda1584f20e7a89e7e2f5b17168029aa2e90
