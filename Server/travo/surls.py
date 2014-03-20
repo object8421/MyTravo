@@ -22,7 +22,10 @@ urlpatterns = patterns('travo',
 		url(r'^user/new_travel',sviews.NewTravelView.as_view(),\
 			name = 'new_travel'),
 
-		
+		url(r'user/new_note',sviews.NewNoteView.as_view(),\
+			name = 'new_note'),	
+		url(r'detail_travel',sviews.DetailTravelView.as_view(),\
+			name = 'detail_travel'),	
 
 		
 		url(r'^user/set_account', sviews.PersonalInfoSetView.as_view(),\

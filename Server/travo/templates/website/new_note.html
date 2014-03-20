@@ -1,0 +1,96 @@
+{% extends "website/base_index.html" %}
+{% block title %}新建游记{% endblock %}
+{% block content %}
+
+
+
+
+<div class="container" align="center" >
+
+<!--  表单从这里开始 -->
+<div class="panel panel-info" style="margin-top:30px; width:60%; text-align:left;">
+
+
+<div class="panel-heading">
+    <h3 class="panel-title">添加足迹</h3>
+  </div>
+
+  <div class="panel-body">
+   
+
+
+<form action="/user/login" method="POST" class="form-horizontal" role="form">
+
+                          <div class="form-group">
+                   <label for="cover_picker" class="col-sm-2 control-label" style="color: #104e8b;">上传照片</label>
+                    <div class="col-sm-4">
+                      <div id="cover_picker" class="fileinput fileinput-new" name="cover" data-provides="fileinput">
+
+                        <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 192px; height: 150px; padding:0;"></div>
+                      <div>
+                        <span class="btn btn-default btn-file btn-success btn-sm"><span class="fileinput-new">选择照片上传</span>
+                        <span class="fileinput-exists">重新选择照片</span><input type="file" name="cover"></span>
+
+                        <a href="#" class="btn btn-default btn-danger fileinput-exists btn-sm" data-dismiss="fileinput">移除当前照片</a>
+                      </div>
+                      </div>
+                  </div>
+               </div>
+                          
+                        
+<div class="form-group">
+                <label for="datetimepicker" class="col-sm-2  control-label" style="color: #104e8b;">时间</label>
+                <div class="col-sm-6">
+                    <input type="text"  class="form-control" name="start_time" value="" id="datetimepicker" placeholder="yyyy-mm-dd">
+                </div>
+                     
+            </div>
+
+
+                          <div class="form-group">
+                            <label  class="col-sm-2 control-label" style="color: #104e8b;">地点</label>
+                            <div class="col-sm-4">
+                              <input  id="geocomplete" type="text" placeholder="输入足迹地址" class="form-control"/>
+                            </div>
+                             <div >
+                                <input id="find" type="button" value="查找" class="btn btn-info" />
+                             </div>
+
+                            <div class="map_canvas col-md-offset-2" style="margin-top:10px;"></div>
+                          </div> 
+                          <div class="form-group">
+                 <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">游记描述</label>
+                 <div class="col-sm-9">
+                    <textarea class="form-control" rows="3" name="travel_description" placeholder="请在这里添加游记描述"></textarea>
+                </div>
+              </div>
+                          
+                      
+<!-- 在表单后加footer脚注，因为是在panel里，表单放在panel body里 -->
+
+<div class="panel-footer" style="clear:both;text-align:right; background-color:#ffffff; border-top-color:#bce8f1;">
+ <!-- <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-9">  -->
+      <button type="submit" class="btn btn-primary" style="margin-right:50px;">添加足迹</button>
+  <!--  </div>
+  </div>
+--></div>
+
+
+
+
+
+                        </form>
+
+
+
+
+<!--什么东西，注释掉果然没有那么高尾巴了
+<div id="cover_view" style="width:50px;height:50px;display:block;"></div>  -->
+</div><!-- container end-->
+
+
+
+
+
+{% endblock %}
