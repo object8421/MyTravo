@@ -99,11 +99,12 @@ class NewTravelView(View):
         travel['title'] = request.POST.get('travel_name','')
         travel['begin_date'] = request.POST.get('start_time','')
         travel['description'] = request.POST.get('travel_description','')
-        cover_original = request.FILES.get('cover', None)
-        cover_name = cover_original.name
-        print cover_name
-        travel['cover'] = content = cover_original.read()
-        travel['create_time'] = datetime.now()
+        try:
+            cover_original = request.FILES.get('cover', None)
+            cover_name = cover_original.name
+            print cover_name
+            travel['cover'] = content = cover_original.read()
+            travel['create_time'] = datetime.now()
         result = travelservice.upload(token,[travel,])
         print result
 

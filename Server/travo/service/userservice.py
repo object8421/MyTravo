@@ -112,7 +112,7 @@ def qq_register():
 
 def sina_register():
 	pass
-<<<<<<< HEAD
+
 #########	update	################
 def update(token, **kwargs):
 	user = get_user(token)
@@ -127,7 +127,7 @@ def update(token, **kwargs):
 		return {RSP_CODE : RC_DUP_NICKNAME}
 
 	return {RSP_CODE : RC_SUCESS}
-=======
+
 
 def change_self_info(token,attr_dict):
 	#didn't handle portrait.
@@ -150,4 +150,3 @@ def change_password(token, original_password, new_password):
 		result = result = {RSP_CODE:RC_WRONG_PASSWORD}
 		return result
 
->>>>>>> 1e9edda1584f20e7a89e7e2f5b17168029aa2e90
