@@ -271,7 +271,7 @@ CREATE  TABLE IF NOT EXISTS `travo`.`note` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `user_id` INT(11) NOT NULL ,
   `travel_id` INT(11) NOT NULL ,
-  `location_id` INT(11) NOT NULL,
+  `location_id` INT(11) NULL,
   `create_time` DATETIME NOT NULL,
   `content` VARCHAR(2048) NULL DEFAULT NULL ,
   `image_path` CHAR(24) NULL DEFAULT NULL,
@@ -445,6 +445,7 @@ DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
 CREATE  TABLE IF NOT EXISTS `travo`.`travel_comment` (
+  `id` INT(11) NULL,
   `travel_id` INT(11) NOT NULL ,
   `time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
   `commenter` INT(11) NOT NULL ,
@@ -488,6 +489,7 @@ DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
 CREATE  TABLE IF NOT EXISTS `travo`.`travel_read_log` (
+  `id` INT(11) NULL,
   `travel_id` INT(11) NOT NULL,
   `reader`  INT(11) NOT NULL,
   `time`  TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -510,9 +512,9 @@ COLLATE = utf8_general_ci;
 
 CREATE  TABLE IF NOT EXISTS `travo`.`travel_vote` (
   `travel_id` INT(11) NOT NULL ,
-  `time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
   `voter` INT(11) NOT NULL ,
-  PRIMARY KEY (`travel_id`, `time`) ,
+  `time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+  PRIMARY KEY (`travel_id`, `voter`) ,
   INDEX `fk_travel_idx` (`travel_id` ASC) ,
   INDEX `fk_voter_idx` (`voter` ASC) ,
   CONSTRAINT `fk_tv_travel`
@@ -528,7 +530,6 @@ CREATE  TABLE IF NOT EXISTS `travo`.`travel_vote` (
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
-
 
 
 CREATE  TABLE IF NOT EXISTS `travo`.`error_log` (

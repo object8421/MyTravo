@@ -15,30 +15,32 @@ from datetime import datetime
 from datetime import date
 from django.core.exceptions import ObjectDoesNotExist
 
-def _first_upper(s):
-	return s[0].upper() + s[1:]
+def strpdatetime(s):
+	try:
+		if s is not None:
+			return datetime.strptime(s, '%Y-%m-%d %H:%M:%S')
+	except Exception, e:
+		raise ValueError(e)
+
+def strpdate(s):
+	try:
+		if s is not None:
+			return datetime.strptime(s, '%Y-%m-%d').date()
+	except Exception, e:
+		raise ValueError(e)
 
 class MyModel():
 	@classmethod
 	def from_dict(cls, d):
 		o = cls()
 		for key in o.__dict__:
-			if not key.startswith('_'):
-				if d.has_key(key):
-					setattr(o, key, d[key])
-				'''
-				if key.endswith('_id'):
-					#it's a model field 
-					field = key[0:-3]	#user_id[0:-3] = user
-					Field = _first_upper(field)
-					mmod = sys.modules['travo.models']
-					mcls = getattr(mmod, Field) 
-					if d.has_key(field):
-						setattr(o, field, mcls.from_dict(d[field]))
+			if not key.startswith('_') and d.has_key(key):
+				if key.endswith('date'):
+					setattr(o, key, strpdate(d[key]))
+				elif key.endswith('time'):
+					setattr(o, key, strpdatetime(d[key]))
 				else:
-					if d.has_key(key):
-						setattr(o, key, d[key])
-				'''
+					setattr(o, key, d[key])
 		return o
 
 	def dict(self):
@@ -91,6 +93,16 @@ class User(models.Model, MyModel):
 	is_info_public = models.IntegerField(default=True)
 	lm_time = models.DateTimeField()
 
+	def public_dict(self):
+		'''return a dict only include public key in this user'''
+		d = self.dict()
+		d.pop('qq_user_id')
+		d.pop('sina_user_id')
+		d.pop('password')
+		d.pop('token')
+		d.pop('lm_time')
+		return d
+
 	class Meta:
 		managed = False
 		db_table = 'user'
@@ -101,7 +113,7 @@ class Travel(models.Model, SyncModel):
 	title = models.CharField(max_length=45)
 	cover_path = models.CharField(max_length=24,null=True)
 	destination = models.CharField(max_length=45)
-	begin_date = models.DateField()
+	begin_date = models.DateField(null=True)
 	end_date = models.DateField(blank=True, null=True)
 	average_spend = models.CharField(max_length=20, null=True)
 	description = models.CharField(max_length=4096, null=True)
@@ -121,10 +133,10 @@ class Note(models.Model, SyncModel):
 	id = models.AutoField(primary_key=True)
 	user = models.ForeignKey('User')
 	travel = models.ForeignKey('Travel')
-	location = models.ForeignKey('Location', null=True)
+	location = models.OneToOneField('Location', null=True)
 	create_time = models.DateTimeField()
 	content = models.CharField(max_length=2048, blank=True)
-	image_path = models.CharField(max_length=24, blank=True)
+	image_path = models.CharField(max_length=24, null=True)
 	is_deleted = models.IntegerField(default=False)
 	lm_time = models.DateTimeField()
 	class Meta:
@@ -136,6 +148,11 @@ class Location(models.Model, MyModel):
 	address = models.CharField(max_length=45, null=True)
 	longitude = models.FloatField()
 	latitude = models.FloatField()
+	def useful_dict(self):
+		d = self.dict()
+		d.pop('id')
+		return d
+
 	class Meta:
 		managed = False
 		db_table = 'location'
@@ -204,7 +221,7 @@ class ErrorLog(models.Model):
 class FavoriteTravel(models.Model):
 	user = models.ForeignKey('User')
 	travel = models.ForeignKey('Travel')
-	time = models.DateTimeField()
+	time = models.DateTimeField(auto_now=True)
 	class Meta:
 		managed = False
 		db_table = 'favorite_travel'
@@ -217,7 +234,6 @@ class Follow(models.Model):
 	class Meta:
 		managed = False
 		db_table = 'follow'
-
 
 class LoginRecord(models.Model, MyModel):
 	user = models.ForeignKey('User')
@@ -235,7 +251,6 @@ class LoginRecord(models.Model, MyModel):
 		managed = False
 		db_table = 'login_record'
 		unique_together=('user', 'time')
-
 
 class NoteComment(models.Model):
 	note = models.ForeignKey(Note)
@@ -293,14 +308,21 @@ class ScenicPointInfo(models.Model):
 		managed = False
 		db_table = 'scenic_point_info'
 
-class TravelComment(models.Model):
+class TravelComment(models.Model, MyModel):
 	travel = models.ForeignKey(Travel)
 	time = models.DateTimeField()
 	commenter = models.ForeignKey('User', db_column='commenter')
-	content = models.CharField(max_length=200)
+	content = models.CharField(max_length=200, null=False)
+
+	def dict(self):
+		d = super(TravelComment, self).dict()
+		d.pop('id')
+		return d
+
 	class Meta:
 		managed = False
 		db_table = 'travel_comment'
+		unique_together=('travel', 'time')
 
 class TravelPlan(models.Model):
 	user = models.ForeignKey('User')
@@ -328,15 +350,15 @@ class TravelPlan(models.Model):
 class TravelReadLog(models.Model):
 	travel = models.ForeignKey(Travel)
 	reader = models.ForeignKey('User', db_column='reader')
-	time = models.DateTimeField()
+	time = models.DateTimeField(auto_now=True)
 	class Meta:
 		managed = False
 		db_table = 'travel_read_log'
 
 class TravelVote(models.Model):
 	travel = models.ForeignKey(Travel)
-	time = models.DateTimeField()
-	voter = models.ForeignKey('User', db_column='voter')
+	voter = models.ForeignKey(User, db_column='voter')
+	time = models.DateTimeField(auto_now=True)
 	class Meta:
 		managed = False
 		db_table = 'travel_vote'
@@ -350,20 +372,20 @@ class UserAchievement(models.Model):
 		db_table = 'user_achievement'
 
 class UserInfo(models.Model, SyncModel):
-	#id = models.IntegerField(primary_key=True)
-	phone = models.CharField(max_length=12, blank=True)
-	mobile = models.CharField(max_length=11, blank=True)
-	qq = models.CharField(max_length=12, blank=True)
-	sina_blog = models.CharField(max_length=25, blank=True)
-	name = models.CharField(max_length=4, blank=True)
-	age = models.IntegerField(blank=True, null=True)
-	sex = models.CharField(max_length=1, blank=True)
-	address = models.ForeignKey(Address, db_column='address', blank=True, null=True, related_name='+')
-	address2 = models.ForeignKey(Address, db_column='address2', blank=True, null=True, related_name='+')
-	native_place = models.ForeignKey(Province, db_column='native_place', blank=True, null=True)
-	degree = models.CharField(max_length=6, blank=True)
-	job = models.CharField(max_length=15, blank=True)
 	user = models.ForeignKey(User, primary_key=True)
+	#id = models.IntegerField(primary_key=True)
+	phone = models.CharField(max_length=12, null=True)
+	mobile = models.CharField(max_length=11, null=True)
+	qq = models.CharField(max_length=12, null=True)
+	sina_blog = models.CharField(max_length=25, null=True)
+	name = models.CharField(max_length=4, null=True)
+	age = models.IntegerField(blank=True, null=True)
+	sex = models.CharField(max_length=1, null=True)
+	address = models.ForeignKey(Address, db_column='address', null=True, related_name='+')
+	address2 = models.ForeignKey(Address, db_column='address2', null=True, related_name='+')
+	native_place = models.ForeignKey(Province, db_column='native_place', null=True)
+	degree = models.CharField(max_length=6, null=True)
+	job = models.CharField(max_length=15, null=True)
 	lm_time = models.DateTimeField()
 	class Meta:
 		managed = False
