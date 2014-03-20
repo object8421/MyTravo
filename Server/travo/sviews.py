@@ -187,3 +187,15 @@ class DetailInfoView(View):
         context = RequestContext(request)
         return HttpResponse(template.render(context))
 
+class NewNoteView(View):
+    def get(self, request):
+        template = loader.get_template('website/new_note.html')
+        context = RequestContext(request)
+        return HttpResponse(template.render(context))
+
+class DetailTravelView(View):
+    def get(self,request):
+        template = loader.get_template('website/detail_travel.html')
+        context = RequestContext(request)
+        return HttpResponse(template.render(context))
+

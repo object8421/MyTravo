@@ -239,7 +239,7 @@
     <div id="content">
         {% block content %}{% endblock %}
     </div>
-
+<script src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places"></script>
 <script src="http://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
     <script src="http://cdn.bootcss.com/twitter-bootstrap/3.0.3/js/bootstrap.min.js"></script>
 
@@ -248,8 +248,37 @@
     <script type="text/javascript" src="../../static/travo/js/bootstrap-datetimepicker.min.js" charset="UTF-8"></script>
     <script type="text/javascript" src="../../static/travo/js/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
     <script type="text/javascript" src="../../static/travo/js/jasny-bootstrap.min.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="../../static/travo/js/jquery.geocomplete.min.js" charset="UTF-8"></script>
     
-
+<script>
+      $(function(){
+        
+        var options = {
+          map: ".map_canvas"
+        };
+        
+        $("#geocomplete").geocomplete(options)
+          .bind("geocode:result", function(event, result){
+            $.log("Result: " + result.formatted_address);
+          })
+          .bind("geocode:error", function(event, status){
+            $.log("ERROR: " + status);
+          })
+          .bind("geocode:multiple", function(event, results){
+            $.log("Multiple: " + results.length + " results found");
+          });
+        
+        $("#find").click(function(){
+          $("#geocomplete").trigger("geocode");
+        });
+        
+        $("#examples a").click(function(){
+          $("#geocomplete").val($(this).text()).trigger("geocode");
+          return false;
+        });
+        
+      });
+    </script>
 <script type="text/javascript">
 $(document).ready(function(){
   $('#insert').click(function(){
