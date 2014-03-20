@@ -19,6 +19,13 @@ body {
 
 /* CUSTOMIZE THE NAVBAR
 -------------------------------------------------- */
+.map_canvas { 
+ 
+ width: 300px;
+ height: 300px;
+}
+
+
 .half-transparent{
   filter:alpha(Opacity=60);
   -moz-opacity:0.8;

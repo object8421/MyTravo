@@ -63,6 +63,8 @@ class MyModel():
 			if isinstance(d[key], datetime) or isinstance(d[key], date):
 				newd[key] = str(d[key])
 		return newd
+	class meta:
+		abstract = True
 
 class SyncModel(MyModel):
 	@classmethod

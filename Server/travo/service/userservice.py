@@ -159,7 +159,8 @@ def update_info(token, info):
 	return {RSP_CODE : RC_SUCESS}
 
 def change_self_info(token,attr_dict):
-	user = User.Objects.get(token=token)
+	#didn't handle portrait.
+	user = User.objects.get(token=token)
 	for attr in attr_dict.keys():
 		if attr in user.keys():
 			user['attr'] = attr_dict['attr']
@@ -168,9 +169,10 @@ def change_self_info(token,attr_dict):
 	return result
 
 def change_password(token, original_password, new_password):
-	user = User.Objects.get(token=token)
+	user = User.objects.get(token=token)
 	if user.password == original_password:
-		user.password = original_password
+		user.password = new_password
+		user.save()
 		result = {RSP_CODE:RC_SUCESS}
 		return result
 	else:

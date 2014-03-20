@@ -4,10 +4,6 @@
 
 {% block content %}
 
-
-
-
-
 <div class="container" style="padding-top:20px;background-color:#efefef;">
  <div class="row">
  
@@ -37,7 +33,7 @@
         <h1>{{request.session.username}}</h1>
         <h3>女</h3>
         <h4>我的个性签名是不是菜鸡</h4>
-        <li type="button"  class="btn btn-success btn-lg" ><a href="{%url 'new_travel'%}">＋创建新游记</a></lis>
+        <li type="button"  class="btn btn-success btn-lg" ><a href="{%url 'new_travel'%}">＋创建新游记</a></li>
   </div>
 
 
@@ -60,23 +56,21 @@
 </div>
 <!-- 我的游记 条 从这里开始-->
 <div class="row clearfix" align="center">
- 
-
 
 <!-- 这里是第一篇游记，span1 -->
-  
+{%for travel in recent_travel_list %}
   <div  class="col-md-4 column" >
 
 <div class="panel panel-default" style="width:350px;">
   <div class="panel-body">
-     <img src="http://lorempixel.com/300/300/" alt="..." class="img-rounded" style="width:100%; height:250px; margin=0;">
+     <img src="/medias/cover/{{travel.cover_path}}" alt="..." class="img-rounded" style="width:100%; height:250px; margin=0;">
     
   </div>
   <div class="panel-footer" align="left">
     <table class="table" style="width:300px;margin:0;padding:0;">
               <tr style="width:300px; padding:0; margin:0;" align="left">
                 <div style="float:left;">
-                <h5 class="pull-left">游记名称在这里</h5>
+                <h5 class="pull-left">{{travel.title}}</h5>
                 
               </div>
               
@@ -87,7 +81,7 @@
                 </div>
 
               <div style="clear:both;">
-                <h6 >我才是游记描述哈哈哈哈啊好是大脑神经是救死扶伤份发生份是否善发生发生发生是否  </h6>
+                <h6 > {{travel.description}} </h6>
               </div>
                
                    
@@ -95,7 +89,9 @@
               
               <div style="clear:both; float:left;"><h6>2014-03-13</h6>
               </div>
-              <div style="float:right; padding-right:10px;"><h6><span class="glyphicon glyphicon-heart"></span> 2<span class="glyphicon glyphicon-list-alt"></span> 3</h6>
+              <div style="float:right; padding-right:10px;"><h6>
+                <span class="glyphicon glyphicon-heart"></span> {{ travel.vote_qty}}
+                <span class="glyphicon glyphicon-list-alt"></span>{{ travel.favorite_qty}}</h6>
               </div>
 
               </tr>
@@ -104,99 +100,7 @@
 </div>
 </div>
 </div><!--  这是三分之一的span (1)end-->
-
-
-<!-- 这里是第二篇游记，span2 -->
-
-<div  class="col-md-4 column"  >
-
-<div class="panel panel-default" style="width:350px;">
-  <div class="panel-body">
-     <img src="http://lorempixel.com/300/300/" alt="..." class="img-rounded" style="width:100%; height:250px; margin=0;">
-    
-  </div>
-  <div class="panel-footer" style="clear:both;" align="left">
-    <table class="table" style="width:300px;margin:0;padding:0;">
-              <tr style="width:300px; padding:0; margin:0;" align="left">
-                <div style="float:left;">
-                <h5 class="pull-left">游记名称在这里</h5>
-                
-              </div>
-              
-
-              <div class="btn-group " style="float:right; margin－top:0;" >
-                    <button type="button" class="btn btn-link btn-sm" >标签1</button>
-                    <button type="button" class="btn btn-link btn-sm" >标签2</button>
-                </div>
-
-              <div style="clear:both;">
-                <h6 >我才是游记描述哈哈哈哈啊好是大脑神经是救死扶伤份发生份是否善发生发生发生是否  </h6>
-              </div>
-               
-                   
-              </tr>
-              
-              <div style="clear:both; float:left;"><h6>2014-03-13</h6>
-              </div>
-              <div style="float:right; padding-right:10px;"><h6><span class="glyphicon glyphicon-heart"></span> 2    <span class="glyphicon glyphicon-list-alt"></span> 3</h6>
-              </div>
-
-              </tr>
-            
-             </table>
-</div>
-</div>
-</div><!--  这是三分之一的span （2）end-->
-
-
-<!-- 这里是第三篇游记，span3 -->
-
-<div  class="col-md-4 column" >
-
-<div class="panel panel-default" style="width:350px;">
-  <div class="panel-body">
-     <img src="http://lorempixel.com/300/300/" alt="..." class="img-rounded" style="width:100%; height:250px; margin=0;">
-    
-  </div>
-  <div class="panel-footer" style="clear:both;" align="left">
-    <table class="table" style="width:300px;margin:0;padding:0;">
-              <tr style="width:300px; padding:0; margin:0;" align="left">
-                <div style="float:left;">
-                <h5 class="pull-left">游记名称在这里</h5>
-                
-              </div>
-              
-
-              <div class="btn-group " style="float:right; margin－top:0;" >
-                    <button type="button" class="btn btn-link btn-sm" >标签1</button>
-                    <button type="button" class="btn btn-link btn-sm" >标签2</button>
-                </div>
-
-              <div style="clear:both;">
-                <h6 >我才是游记描述哈哈哈哈啊好是大脑神经是救死扶伤份发生份是否善发生发生发生是否  </h6>
-              </div>
-               
-                   
-              </tr>
-              
-              <div style="clear:both; float:left;"><h6>2014-03-13</h6>
-              </div>
-              <div style="float:right; padding-right:10px;"><h6><span class="glyphicon glyphicon-heart"></span> 2    <span class="glyphicon glyphicon-list-alt"></span> 3</h6>
-              </div>
-
-              </tr>
-            
-             </table>
-</div>
-</div>
-</div><!--  这是三分之一的span（3）end -->
-
-
-
-
-
-
-
+{% endfor %}
 
 </div><!-- 游记条end-->
 
@@ -208,27 +112,4 @@
 
 </div><!-- end of container -->
 
-
-
-
-
-
-
-
-
-
-
-
-
-    <!-- Marketing messaging and featurettes
-    ================================================== -->
-    <!-- Wrap the rest of the page in another container to center all the content. -->
-
-
-
-
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
     {% endblock %}
