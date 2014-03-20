@@ -9,8 +9,8 @@
         <table class="table" style="float:left;width:250px;margin-right:50px;">
           <tr>
             <td style="padding:0;">
-            <img src="../../static/travo/image/welcome_bg1.jpg" alt="..." class="img-rounded" style="width:100%; height:250px; margin=0;">
-            <!-- ATTENTION: 这里该放的是游记封皮！！！！！ -->
+           <img src="/medias/cover/{{travel.cover_path}}" alt="..." class="img-rounded" style="width:100%; height:250px; margin=0;">
+                <!-- ATTENTION: 这里该放的是游记封皮！！！！！ -->
              </td>
           </tr>
           
@@ -20,10 +20,12 @@
 
 
   <div style="float:left;margin-top:50px;">
-        <h1>游记title那个title</h1><!-- h1这里放的应该是个游记title -->
-        <h3>yyyy-mm-dd</h3>
-        <h4>我是游记描述我是游记描述我是游记描述我是游记描述我是游记描述</h4>
-        <li type="button"  class="btn btn-success btn-lg" ><a href="{%url 'new_note'%}">＋添加新足迹</a></li>
+
+        <h1>游记名称：{{travel.title}}</h1><!-- h1这里放的应该是个游记title -->
+        <h1>游记编号：{{travel.id}}</h1>
+        <h3>{{travel.create_time}}</h3>
+        <h4>{{travel.description}}</h4>
+        <li type="button"  class="btn btn-success btn-lg" ><a href="{%url 'new_note' travel.id%}">＋添加新足迹</a></li>
   </div>
 
 

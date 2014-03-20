@@ -70,7 +70,9 @@
     <table class="table" style="width:300px;margin:0;padding:0;">
               <tr style="width:300px; padding:0; margin:0;" align="left">
                 <div style="float:left;">
-                <h5 class="pull-left">{{travel.title}}</h5>
+
+                <h5 class="pull-left"><a href="{%url 'detail_travel' travel.id %}">{{travel.title}}</a></h5>
+                <h5 class="pull-left"><a href="{%url 'detail_travel' travel.id %}">{{travel.id}}</a></h5>
                 
               </div>
               

@@ -19,9 +19,10 @@
    
 
 
-<form action="/user/login" method="POST" class="form-horizontal" role="form">
+<form action="/add_new_note" enctype="multipart/form-data" method="POST" class="form-horizontal" role="form">
 
-                          <div class="form-group">
+                <div class="form-group">
+                <input type="hidden" name="travel_id" value={{travel_id}}>
                    <label for="cover_picker" class="col-sm-2 control-label" style="color: #104e8b;">上传照片</label>
                     <div class="col-sm-4">
                       <div id="cover_picker" class="fileinput fileinput-new" name="cover" data-provides="fileinput">
@@ -29,7 +30,7 @@
                         <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 192px; height: 150px; padding:0;"></div>
                       <div>
                         <span class="btn btn-default btn-file btn-success btn-sm"><span class="fileinput-new">选择照片上传</span>
-                        <span class="fileinput-exists">重新选择照片</span><input type="file" name="cover"></span>
+                        <span class="fileinput-exists">重新选择照片</span><input type="file" name="note_photo"></span>
 
                         <a href="#" class="btn btn-default btn-danger fileinput-exists btn-sm" data-dismiss="fileinput">移除当前照片</a>
                       </div>
@@ -41,7 +42,7 @@
 <div class="form-group">
                 <label for="datetimepicker" class="col-sm-2  control-label" style="color: #104e8b;">时间</label>
                 <div class="col-sm-6">
-                    <input type="text"  class="form-control" name="start_time" value="" id="datetimepicker" placeholder="yyyy-mm-dd">
+                    <input type="text"  class="form-control" name="create_time" value="" id="datetimepicker" placeholder="yyyy-mm-dd">
                 </div>
                      
             </div>
@@ -53,7 +54,7 @@
                               <input  id="geocomplete" type="text" placeholder="输入足迹地址" class="form-control"/>
                             </div>
                              <div >
-                                <input id="find" type="button" value="查找" class="btn btn-info" />
+                                <input id="find" name="note_location" type="button" value="查找" class="btn btn-info" />
                              </div>
 
                             <div class="map_canvas col-md-offset-2" style="margin-top:10px;"></div>
@@ -61,7 +62,7 @@
                           <div class="form-group">
                  <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">游记描述</label>
                  <div class="col-sm-9">
-                    <textarea class="form-control" rows="3" name="travel_description" placeholder="请在这里添加游记描述"></textarea>
+                    <textarea class="form-control" rows="3" name="note_description" placeholder="请在这里添加游记描述"></textarea>
                 </div>
               </div>
                           

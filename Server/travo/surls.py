@@ -1,3 +1,4 @@
+#-*- coding: utf-8 -*-
 from django.conf.urls import patterns, url
 from django.conf import settings  
 from travo import sviews 
@@ -16,10 +17,11 @@ urlpatterns = patterns('travo',
 			name = 'register_success'),
 		url(r'^user/new_travel',sviews.NewTravelView.as_view(),\
 			name = 'new_travel'),
-
-		url(r'user/new_note',sviews.NewNoteView.as_view(),\
+		#显示添加note的表单
+		url(r'new_note/(?P<travel_id>\d+)/',sviews.NewNoteView.as_view(),\
 			name = 'new_note'),	
-		url(r'detail_travel',sviews.DetailTravelView.as_view(),\
+		url(r'add_new_note',sviews.AddNewNoteView.as_view(),name = 'add_new_note'),
+		url(r'detail_travel/(?P<travel_id>\d+)/',sviews.DetailTravelView.as_view(),\
 			name = 'detail_travel'),	
 
 		url(r'^user/show_my_travel',sviews.ShowMyTravel.as_view(),name='show_my_travel'),
