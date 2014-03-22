@@ -41,10 +41,14 @@
 
 
 
-                          <div class="form-group">
+                          <div id="details" class="form-group">
                             <label  class="col-sm-2 control-label" style="color: #104e8b;">地点</label>
                             <div class="col-sm-6">
+
                               <input class="form-control" name="note_location" id="geocomplete" type="text" placeholder="输入足迹地址" />
+                              <input name="latitude" type="hidden"  data-geo="lat"/>
+                              <input name="longitude" type="hidden"  data-geo="lng"/>
+
                             </div>
                              <div >
                                 <input id="find"  type="button" value="查找" class="btn btn-info" />

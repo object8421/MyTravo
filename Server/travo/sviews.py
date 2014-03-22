@@ -10,6 +10,7 @@ from django.shortcuts import render
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 import logging
+import string
 from django.conf import settings
 from datetime import datetime
 from service import userservice,travelservice,noteservice
@@ -120,11 +121,15 @@ class ChangePasswordView(View):
         print original_password
         print new_password
         result = userservice.change_password(token,original_password,new_password)
-
+        response = HttpResponse()
+        response['Content-Type']="text/javascript"
+        ret = "0"
         if result[RSP_CODE] == RC_SUCESS:
-            return HttpResponse('修改成功！')
+            ret = "1"
         else:
-            return HttpResponse('对不起，您的原密码有误。')
+            ret = "2"
+        response.write(ret)
+        return response
 
 class ChangeEmailView(View):
     def post(self,request):
@@ -236,16 +241,21 @@ class AddNewNoteView(View):
         #note_photo = request.FILES.get('note_photo', None)
         note['content'] = request.POST.get('note_description','暂无描述')
         location ={}
-        location['address'] = request.POST.get('note_location','')
-        note['location'] = location
+        #location['address'] = request.POST.get('note_location','')
+        
+        #location['latitude'] = float(request.POST.get('latitude',0.0))
+        #location['longitude'] = float(request.POST.get('longitude',0.0))
+        #note['location'] = location
         note['image'] = 'note_photo'
         
         note['create_time'] = str(datetime.now())[0:19]
         print request.POST.get('create_time',datetime.now())
         result = noteservice.upload(token,[note,],request.FILES)
+
         print result
         for key in note:
             print '%s:%s'%(key,note[key])
+        print 'Latitude is %r'%request.POST.get('latitude',0.0)
         template = loader.get_template('website/detail_travel.html')
         context = RequestContext(request,{'travel_id':request.POST['travel_id'],})
         #return HttpResponse(template.render(context))

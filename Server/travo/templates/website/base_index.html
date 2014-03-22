@@ -254,7 +254,10 @@
       $(function(){
         
         var options = {
-          map: ".map_canvas"
+          map: ".map_canvas",
+          details: ".details",
+          detailsAttribute: "data-geo",
+          types: ["geocode", "establishment"]
         };
         
         $("#geocomplete").geocomplete(options)
@@ -330,7 +333,20 @@ $('#datetimepicker').datetimepicker({
     forceParse: 0
     });
 </script>
-
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#btnChangePassword').click(function(){
+  var original_password = $("#inputOringinPassword").val();
+  var new_password = $("#inputNewPassword").val();
+  $.post("/user/change_password",{'original_password':original_password,'new_password':new_password}, function(ret){
+    if(ret == '1')
+      alert("修改成功!");  
+    else
+      alert("修改失败!");  
+  });
+  });
+});
+</script>
 
 </body>
 </html>
