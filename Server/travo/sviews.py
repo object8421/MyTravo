@@ -208,19 +208,20 @@ class DetailTravelView(View):
     def get(self,request,travel_id):
         template = loader.get_template('website/detail_travel.html')
         travel = get_object_or_404(Travel,pk=travel_id)
-        
-        context = RequestContext(request,{'travel':travel,})
+
+        result = noteservice.get_all_in_travel(travel_id)
+        if result[RSP_CODE] == RC_SUCESS:
+            note_list = result['notes']
+        else:
+            return HttpResponse('获取游记出现问题')
+        print note_list
+        context = RequestContext(request,{\
+            'travel':travel,
+            'note_list':note_list,
+            })
         return HttpResponse(template.render(context))
 
 #======================note view======================================
-class ShowNoteView(View):
-    def post(self,request):
-        pass
-
-    def get(self,request):
-        token = request.session['token']
-
-        pass
 
 
 
@@ -241,11 +242,11 @@ class AddNewNoteView(View):
         #note_photo = request.FILES.get('note_photo', None)
         note['content'] = request.POST.get('note_description','暂无描述')
         location ={}
-        #location['address'] = request.POST.get('note_location','')
+        location['address'] = request.POST.get('note_location','')
         
-        #location['latitude'] = float(request.POST.get('latitude',0.0))
-        #location['longitude'] = float(request.POST.get('longitude',0.0))
-        #note['location'] = location
+        location['latitude'] = float(request.POST.get('latitude',0.0))
+        location['longitude'] = float(request.POST.get('longitude',0.0))
+        note['location'] = location
         note['image'] = 'note_photo'
         
         note['create_time'] = str(datetime.now())[0:19]
@@ -255,7 +256,7 @@ class AddNewNoteView(View):
         print result
         for key in note:
             print '%s:%s'%(key,note[key])
-        print 'Latitude is %r'%request.POST.get('latitude',0.0)
+        print 'Latitude is %s'%request.POST.get('latitude',0.0)
         template = loader.get_template('website/detail_travel.html')
         context = RequestContext(request,{'travel_id':request.POST['travel_id'],})
         #return HttpResponse(template.render(context))
