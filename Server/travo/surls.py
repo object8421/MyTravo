@@ -18,10 +18,12 @@ urlpatterns = patterns('travo',
 		url(r'^user/new_travel',sviews.NewTravelView.as_view(),\
 			name = 'new_travel'),
 		#显示添加note的表单
-		url(r'new_note/(?P<travel_id>\d+)/',sviews.NewNoteView.as_view(),\
-			name = 'new_note'),	
-		url(r'add_new_note',sviews.AddNewNoteView.as_view(),name = 'add_new_note'),
-		url(r'detail_travel/(?P<travel_id>\d+)/',sviews.DetailTravelView.as_view(),\
+		
+		url(r'^new_note/(?P<travel_id>\d+)/',sviews.NewNoteView.as_view(),name = 'new_note'),	
+		url(r'^new_note',sviews.NewNoteView.as_view(),name = 'new_note'),	
+		url(r'create_new_note',sviews.AddNewNoteView.as_view(),name = 'create_new_note'),	
+		
+		url(r'^detail_travel/(?P<travel_id>\d+)/',sviews.DetailTravelView.as_view(),\
 			name = 'detail_travel'),	
 
 		url(r'^user/show_my_travel',sviews.ShowMyTravel.as_view(),name='show_my_travel'),

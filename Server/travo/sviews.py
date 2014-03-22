@@ -7,11 +7,12 @@ from travo.forms import RegisterForm, ContactForm
 from django.http import HttpResponse
 from django.template import RequestContext, loader
 from django.shortcuts import render
+from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 import logging
 from django.conf import settings
 from datetime import datetime
-from service import userservice,travelservice
+from service import userservice,travelservice,noteservice
 
 
 from models import User,Travel,Location
@@ -176,32 +177,33 @@ class NewTravelView(View):
         travel['title'] = request.POST.get('travel_name','')
         travel['begin_date'] = request.POST.get('start_time','')
         travel['description'] = request.POST.get('travel_description','')
-        try:
-            cover_original = request.FILES
-            cover_name = cover_original.name
-            print cover_name
-            travel['cover'] = 'cover'
-
-
-            travel['create_time'] = datetime.now()
-            result = travelservice.upload(token,[travel,],cover_original)
-        except:
-            print '添加异常'
-        print result
-
+        travel['create_time'] = str(datetime.now())[0:19]
+        travel['cover'] = 'cover'
+        result = travelservice.upload(token,[travel,],request.FILES)
         return HttpResponse('添加成功!')
 
 
 
 class ShowMyTravel(View):
     def get(self,request):
+        template = loader.get_template('website/all_my_travel.html')
+        token = request.session['token']
+        user = get_object_or_404(User, token=token)
+        my_recent_travel_list = travelservice.get_travel(token)['travel_list']
+        basic_travel_path = settings.COVER_PATH
+        context =  RequestContext(request,{\
+            "user":user,
+            "recent_travel_list":my_recent_travel_list,
+            "basic_travel_path":basic_travel_path,})
 
+        return HttpResponse(template.render(context))
         pass
 
 class DetailTravelView(View):
     def get(self,request,travel_id):
         template = loader.get_template('website/detail_travel.html')
         travel = get_object_or_404(Travel,pk=travel_id)
+        
         context = RequestContext(request,{'travel':travel,})
         return HttpResponse(template.render(context))
 
@@ -222,29 +224,29 @@ class NewNoteView(View):
         template = loader.get_template('website/new_note.html')
         context = RequestContext(request,{'travel_id':travel_id,})
         return HttpResponse(template.render(context))
+
+
 class AddNewNoteView(View):
     def post(self,request):
         token = request.session['token']
         note = {}
-        note['user'] = request.session['userid']
-        note['travel'] = request.POST['travel_id']
-
-        try:
-            note_photo = request.FILES.get('note_photo', None)
-            note['content'] = request.POST.get('description','暂无描述')
-            location ={}
-            location['address'] = request.POST.get('location','')
-            location['longitude'] = 0.0
-            location['latitude'] = 0.0
-            note['location'] = location
-            note['image'] = request.POST.get('note_photo','')
-
-            note['create_time'] = request.POST.get('create_time',datetime.now())
-            result = noteservice.upload(token,[note,],request.FILES)
-
-        except:
-            pass
+        note['user_id'] = request.session['userid']
+        note['travel_id'] = request.POST['travel_id']
+        travel_id = request.POST['travel_id']
+        #note_photo = request.FILES.get('note_photo', None)
+        note['content'] = request.POST.get('note_description','暂无描述')
+        location ={}
+        location['address'] = request.POST.get('note_location','')
+        note['location'] = location
+        note['image'] = 'note_photo'
+        
+        note['create_time'] = str(datetime.now())[0:19]
+        print request.POST.get('create_time',datetime.now())
+        result = noteservice.upload(token,[note,],request.FILES)
+        print result
+        for key in note:
+            print '%s:%s'%(key,note[key])
         template = loader.get_template('website/detail_travel.html')
-        context = RequestContext(request,{'travel_id':travel_id,})
-        return HttpResponse(template.render(context))
-
+        context = RequestContext(request,{'travel_id':request.POST['travel_id'],})
+        #return HttpResponse(template.render(context))
+        return HttpResponseRedirect(reverse('detail_travel',args=(travel_id,)))
