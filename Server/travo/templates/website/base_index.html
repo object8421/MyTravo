@@ -340,9 +340,9 @@ $(document).ready(function(){
   var new_password = $("#inputNewPassword").val();
   $.post("/user/change_password",{'original_password':original_password,'new_password':new_password}, function(ret){
     if(ret == '1')
-      alert("修改成功!");  
+      $('#changePasswordSuccessModal').modal('show');
     else
-      alert("修改失败!");  
+      $('#changePasswordFailModal').modal('show');
   });
   });
 });
