@@ -26,27 +26,29 @@ $$
 ##################################
 ### trigger in note_comment
 ##################################
-DROP TRIGGER IF EXISTS ains_note_comment;
-$$
-CREATE TRIGGER ains_note_comment
-AFTER INSERT ON note_comment FOR EACH ROW
-BEGIN
-	UPDATE note
-	SET comment_qty = comment_qty + 1
-	WHERE id = new.note_id;
-end
-$$
 
-DROP TRIGGER IF EXISTS adel_note_comment;
-$$
-CREATE TRIGGER adel_note_comment 
-AFTER DELETE ON note_comment FOR EACH ROW
-BEGIN
-	UPDATE note
-	SET comment_qty = comment_qty - 1
-	WHERE id = old.note_id;
-end
-$$
+-- DROP TRIGGER IF EXISTS ains_note_comment;
+-- $$
+-- CREATE TRIGGER ains_note_comment
+-- AFTER INSERT ON note_comment FOR EACH ROW
+-- BEGIN
+-- 	UPDATE note
+-- 	SET comment_qty = comment_qty + 1
+-- 	WHERE id = new.note_id;
+-- end
+-- $$
+-- 
+-- DROP TRIGGER IF EXISTS adel_note_comment;
+-- $$
+-- CREATE TRIGGER adel_note_comment 
+-- AFTER DELETE ON note_comment FOR EACH ROW
+-- BEGIN
+-- 	UPDATE note
+-- 	SET comment_qty = comment_qty - 1
+-- 	WHERE id = old.note_id;
+-- end
+-- $$
+
 ##################################
 ### trigger in note
 ##################################
@@ -100,27 +102,27 @@ $$
 ##################################
 ### trigger in note_vote
 ##################################
-DROP TRIGGER IF EXISTS ains_note_vote;
-$$
-CREATE TRIGGER ains_note_vote
-AFTER INSERT ON note_vote FOR EACH ROW
-BEGIN
-	UPDATE note
-	SET vote_qty = vote_qty + 1
-	WHERE id = new.note_id;
-end
-$$
-
-DROP TRIGGER IF EXISTS adel_note_vote;
-$$
-CREATE TRIGGER adel_note_vote 
-AFTER DELETE ON note_vote FOR EACH ROW
-BEGIN
-	UPDATE note
-	SET vote_qty = vote_qty - 1
-	WHERE id = old.note_id;
-end
-$$
+-- DROP TRIGGER IF EXISTS ains_note_vote;
+-- $$
+-- CREATE TRIGGER ains_note_vote
+-- AFTER INSERT ON note_vote FOR EACH ROW
+-- BEGIN
+-- 	UPDATE note
+-- 	SET vote_qty = vote_qty + 1
+-- 	WHERE id = new.note_id;
+-- end
+-- $$
+-- 
+-- DROP TRIGGER IF EXISTS adel_note_vote;
+-- $$
+-- CREATE TRIGGER adel_note_vote 
+-- AFTER DELETE ON note_vote FOR EACH ROW
+-- BEGIN
+-- 	UPDATE note
+-- 	SET vote_qty = vote_qty - 1
+-- 	WHERE id = old.note_id;
+-- end
+-- $$
 ##################################
 ### trigger in travel_vote
 ##################################

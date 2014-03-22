@@ -1,7 +1,7 @@
 {% extends "website/base_index.html" %}
-{% block title %}我的游记新建足迹{% endblock %}
-{% block content %}
+{% block title %}我的足迹{% endblock %}
 
+{% block content %}
 
 <div class="container" style="padding-top:20px;background-color:#efefef;">
  <div class="row">
@@ -9,8 +9,8 @@
         <table class="table" style="float:left;width:250px;margin-right:50px;">
           <tr>
             <td style="padding:0;">
-            <img src="../../static/travo/image/welcome_bg1.jpg" alt="..." class="img-rounded" style="width:100%; height:250px; margin=0;">
-            <!-- ATTENTION: 这里该放的是游记封皮！！！！！ -->
+           <img src="/medias/cover/{{travel.cover_path}}" alt="..." class="img-rounded" style="width:100%; height:250px; margin=0;">
+                <!-- ATTENTION: 这里该放的是游记封皮！！！！！ -->
              </td>
           </tr>
           
@@ -20,10 +20,11 @@
 
 
   <div style="float:left;margin-top:50px;">
-        <h1>游记title那个title</h1><!-- h1这里放的应该是个游记title -->
-        <h3>yyyy-mm-dd</h3>
-        <h4>我是游记描述我是游记描述我是游记描述我是游记描述我是游记描述</h4>
-        <li type="button"  class="btn btn-success btn-lg" ><a href="{%url 'new_note'%}">＋添加新足迹</a></li>
+
+        <h1>游记名称：{{travel.title}}</h1><!-- h1这里放的应该是个游记title -->
+        <h3>{{travel.create_time}}</h3>
+        <h4>{{travel.description}}</h4>
+        <li type="button"  class="btn btn-success btn-lg" ><a href="{%url 'new_note' travel.id %}">＋添加新足迹</a></li>
   </div>
 
 
@@ -37,7 +38,7 @@
  </div><!-- row end -->
 
 <!-- Here comes the divider -->
-
+{%for note in note_list %}
 <hr class="featurette-divider">
 
 <!-- 开始显示啦 -->
@@ -50,18 +51,15 @@
 <table class="table" style="width:300px;">
               <tr style="width:300px; padding:0; margin:0;" align="left">
                 <div style="float:left;">
-                <h4 class="pull-left">2013-03-18</h4>
-                
-              </div>
-              
-
+                <h4 class="pull-left">{{note.create_time}}</h4>
+                </div>
               <div class="btn-group " style="float:right; margin－top:0;" >
-                    <button type="button" class="btn btn-link" >地点</button>
+                    <button type="button" class="btn btn-link" >{{note.location.address}}</button>
             
                 </div>
 
               <div style="clear:both;">
-                <h5 >我才是足迹描述哈哈哈哈啊好是大脑神经是救死扶伤份发生份是否善发生发生发生是否 再多也不怕是肯德基啊觉得很开放 i 复活IE去凤凰IE ui u 和期望刘德华气度和 i 读环球好</h5>
+                <h5 >{{note.content}}</h5>
               </div>
                
                    
@@ -71,87 +69,18 @@
          </div>
 
 <div>
-		<img src="../../static/travo/image/welcome_bg3.jpg" style="width:60%; height:350px; margin=0;">
+		<img src="/medias/{{note.image_path}}" style="width:60%; height:350px; margin=0;">
 	</div>
 
 </div>
 	<!-- note1 end -->
-
-
-<!--  note2 starts here -->
-<div class="row" style="margin-bottom:20px;">
-
-
-<div class="col-md-3" style="margin-right:55px;margin-left:55px;">
-<table class="table" style="width:300px;">
-              <tr style="width:300px; padding:0; margin:0;" align="left">
-                <div style="float:left;">
-                <h4 class="pull-left">2013-03-18</h4>
-                
-              </div>
-              
-
-              <div class="btn-group " style="float:right; margin－top:0;" >
-                    <button type="button" class="btn btn-link" >地点</button>
-            
-                </div>
-
-              <div style="clear:both;">
-                <h5 >我才是足迹描述哈哈哈哈啊好是大脑神经是救死扶伤份发生份是否善发生发生发生是否 再多也不怕是肯德基啊觉得很开放 i 复活IE去凤凰IE ui u 和期望刘德华气度和 i 读环球好</h5>
-              </div>
-               
-                   
-  
-            
-             </table>
-         </div>
-<div >
-		<img src="../../static/travo/image/welcome_bg7.jpg" style="width:60%; height:350px; margin=0;">
-	</div>
-
-</div>
-<!-- note2 ends here-->
-
-<!-- note3 stars here -->
-
-<div class="row" style="margin-bottom:20px;">
-
-
-<div class="col-md-3" style="margin-right:55px;margin-left:55px;">
-<table class="table" style="width:300px;">
-              <tr style="width:300px; padding:0; margin:0;" align="left">
-                <div style="float:left;">
-                <h4 class="pull-left">2013-03-18</h4>
-                
-              </div>
-              
-
-              <div class="btn-group " style="float:right; margin－top:0;" >
-                    <button type="button" class="btn btn-link" >地点</button>
-            
-                </div>
-
-              <div style="clear:both;">
-                <h5 >我才是足迹描述哈哈哈哈啊好是大脑神经是救死扶伤份发生份是否善发生发生发生是否 再多也不怕是肯德基啊觉得很开放 i 复活IE去凤凰IE ui u 和期望刘德华气度和 i 读环球好</h5>
-              </div>
-               
-                   
-  
-            
-             </table>
-         </div>
-<div >
-		<img src="../../static/travo/image/welcome_bg2.jpg" style="width:60%; height:350px; margin=0;">
-	</div>
-
-</div>
-
-<!--note3 ends here -->
+{% endfor %}
 
 <!-- Here comes the divider -->
 
 <hr class="featurette-divider">
 <!-- divider ends -->
+
 
 
 
@@ -167,20 +96,6 @@
 </div>
 
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -331,9 +246,5 @@
                   </div><!-- /.modal-content -->
                 </div><!-- /.modal-dialog -->
               </div><!-- /.modal -->
-
-
-
-
 
 {% endblock %}

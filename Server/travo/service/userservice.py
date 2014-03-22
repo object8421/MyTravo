@@ -5,7 +5,7 @@ import utils
 
 from travo.exceptions import TokenError
 from django.db import IntegrityError
-from travo.models import User, LoginRecord
+from travo.models import User, LoginRecord,UserInfo
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ValidationError
 from travo.rc import * 
@@ -34,6 +34,12 @@ def get_user(t):
 		raise TokenError('token_overdate')
 	'''
 	return u
+
+def get_user_by_id(user_id):
+	try:
+		return User.objects.get(pk=user_id)
+	except ObjectDoesNotExist:
+		raise tokenError('no_such_user')
 
 ########	login	###############
 def travo_login(email, password):
@@ -116,7 +122,12 @@ def sina_register():
 #########	update	################
 def update(token, **kwargs):
 	user = get_user(token)
-	user.update(kwargs)
+	if kwargs['nickname'] is not None:
+		user.nickname = kwargs['nickname']
+	if kwargs['signature'] is not None:
+		user.signature = kwargs['signature']
+	if kwargs['is_info_public'] is not None:
+		user.is_info_public = kwargs['is_info_public']
 	if kwargs['face']:
 		face_path = _build_face_path()
 		user.face_path = face_path
@@ -128,6 +139,24 @@ def update(token, **kwargs):
 
 	return {RSP_CODE : RC_SUCESS}
 
+######    get face    ######
+def get_face(user_id):
+	user = get_user_by_id(user_id)
+	result = {}
+	if user.face_path is None:
+		result[RSP_CODE] = RC_NO_FACE
+	else:
+		result[RSP_CODE] = RC_SUCESS
+		result['face'] = utils.get_face(user.face_path)
+	return result
+
+######   update info    ######
+def update_info(token, info):
+	user = get_user(token)
+	ui = UserInfo.from_dict(info)
+	ui.user = user
+	ui.save()
+	return {RSP_CODE : RC_SUCESS}
 
 def change_self_info(token,attr_dict):
 	#didn't handle portrait.

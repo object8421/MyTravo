@@ -4,13 +4,11 @@ import service
 
 from service import userservice, travelservice, noteservice
 from rc import *
-from django.shortcuts import render
 from django.http import HttpResponse
-from django.views.generic import View
 from django.db import IntegrityError
 from django.utils.datastructures import MultiValueDictKeyError
 from django.views.generic import View
-from django.conf import settings
+from django.http import Http404
 from exceptions import IllegalDataError, MissingArgumentError, TokenError
 from models import * 
 from utils import MyJsonEncoder 
@@ -21,6 +19,11 @@ class JsonResponse(HttpResponse):
 		kwargs['content_type'] = 'application/json'
 		super(JsonResponse, self).__init__(content, kwargs)
 
+class ImageResponse(HttpResponse):
+	def __init__(self, data, **kwargs):
+		kwargs['content_type'] = 'image/jpeg; charsete=utf-8'
+		super(ImageResponse, self).__init__(data, kwargs)
+
 def IndexView(request):
 	return HttpResponse('Welcome!')
 
@@ -30,12 +33,16 @@ class BaseView(View):
 		self._data = None
 
 	def handle(self):
+		print
 		print('===========request==========')
 		print('host:' + self._request.META['REMOTE_ADDR'])
 		print('arg:' + str(self._request.GET))
-		print('post:' + str(self._request.POST))
 		print('body:' + self._request.body)
-		
+		'''
+		print('post:' + str(self._request.POST))
+		print('FILES:' + str(self._request.FILES))
+		'''
+
 		try:
 			result = self.do()
 			print('==========response==========')
@@ -49,10 +56,6 @@ class BaseView(View):
 			print('======caught exception======')
 			print(traceback.format_exc())
 			return {RSP_CODE : RC_WRONG_ARG}
-		except Exception, e:
-			print('======caught exception======')
-			print(traceback.format_exc())
-			return {RSP_CODE : RC_SERVER_ERROR}
 		except TokenError, e:
 			print('======caught exception======')
 			print(traceback.format_exc())
@@ -61,6 +64,10 @@ class BaseView(View):
 					'token_overdate': RC_TOKEN_OVERDATE
 					}[e.args[0]]
 			return {RSP_CODE : rsp_code}
+		except Exception, e:
+			print('======caught exception======')
+			print(traceback.format_exc())
+			return {RSP_CODE : RC_SERVER_ERROR}
 
 	def do(self):
 		pass
@@ -98,6 +105,18 @@ class BaseView(View):
 			return default
 		else:
 			return data	
+
+	def get_form_data(self, key):
+		try:
+			data = self._request.POST[key]
+		except MultiValueDictKeyError:
+			raise IllegalDataError(key)
+		try:
+			return json.loads(data)[key]
+		except ValueError:
+			raise IllegalDataError('can not parse json string to object')
+		except KeyError:
+			raise IllegalDataError('json object key must be same as form key')
 
 ###############################################
 ########	USER MOUDLE		###################
@@ -151,11 +170,35 @@ class UpdateUserView(BaseView):
 	def do(self):
 		return userservice.update(
 				self.get_token(),
-				nickname = self.get_data('nickname'),
-				signature = self.get_data('signature'),
-				is_info_public = self.get_data('is_info_public'),
-				face = self.get_data('face')
+				nickname = self.get_arg('nickname'),
+				signature = self.get_arg('signature'),
+				is_info_public = self.get_arg('is_info_public'),
+				face = self._request.FILES.get('face') 
 				)
+
+class UpdateUserInfoView(BaseView):
+	def put(self, request):
+		self._request = request
+		return JsonResponse(self.handle())
+
+	def do(self):
+		return userservice.update_info(
+				self.get_token(),
+				json.loads(self._request.body)
+				)
+
+class GetFaceView(BaseView):
+	def get(self, request, user_id):
+		self._request = request
+		self._user_id = user_id
+		result = self.handle()
+		if result[RSP_CODE] == RC_SUCESS:
+			return ImageResponse(result.pop('face'))
+		else:
+			raise Http404
+
+	def do(self):
+		return travelservice.get_face(self._user_id)
 
 ##############################################
 ########	TRAVEL MOUDLE	##################
@@ -168,7 +211,8 @@ class UploadTravelView(BaseView):
 	def do(self):
 		return travelservice.upload(
 				self.get_required_arg('token'),
-				self.get_required_data('travels')
+				self.get_form_data('travels'),
+				self._request.FILES
 				)
 
 class SyncTravelView(BaseView):
@@ -188,17 +232,106 @@ class CoverView(BaseView):
 		self._travel_id = travel_id
 		result = self.handle()
 		if result[RSP_CODE] == RC_SUCESS:
-			response = HttpResponse(result.pop('cover'), 'image/jpeg; charsete=utf-8')
-			response.write(MyJsonEncoder().encode(result))
-			return response
+			return ImageResponse(result.pop('cover'))
 		else:
-			return HttpResponse(JsonResponse(result))
+			raise Http404
 
 	def do(self):
 		return travelservice.get_cover(
 				self._travel_id,
 				self.get_arg('token')
 				)
+
+class UserAppender():
+	def append_user(self, travels):
+		'''append user info into travels'''
+		d_travels = []
+		for t in travels:
+			travel = t.dict()
+			travel['user'] = t.user.public_dict()
+			d_travels.append(travel)
+		return d_travels 
+
+class SearchTravelView(BaseView,UserAppender):
+	def get(self, request):
+		self._request = request
+		return JsonResponse(self.handle())
+
+	def do(self):
+		travels = travelservice.search(
+				self.get_arg('order'),
+				self.get_arg('first_idx'),
+				self.get_arg('max_qty')
+				)
+		return self.append_user(travels)
+
+class FavoritTravelView(BaseView):
+	def post(self, request, travel_id):
+		self._request = request
+		self._travel_id = travel_id
+		return JsonResponse(self.handle())
+	def do(self):
+		return travelservice.favorit(
+				self.get_required_arg('token'),
+				self._travel_id
+				)
+
+class GetFavoritTravelView(BaseView, UserAppender):
+	def get(self, request):
+		self._request = request
+		return JsonResponse(self.handle())
+
+	def do(self):
+		result = travelservice.get_favorit(
+				self.get_required_arg('token'),
+				int(self.get_arg('first_index', 1)),
+				int(self.get_arg('max_qty', 20))
+				)
+		result['travels'] = self.append_user(result['travels'])
+		return result
+
+class ReadTravelView(BaseView):
+	def post(self, request, travel_id):
+		self._request = request
+		self._travel_id = travel_id
+		return JsonResponse(self.handle())
+	def do(self):
+		return travelservice.read(
+				self.get_required_arg('token'),
+				self._travel_id
+				)
+
+class VoteTravelView(BaseView):
+	def post(self, request, travel_id):
+		self._request = request
+		self._travel_id = travel_id
+		return JsonResponse(self.handle())
+	def do(self):
+		return travelservice.vote(
+				self.get_required_arg('token'),
+				self._travel_id
+				)
+
+class CommentTravelView(BaseView):
+	def post(self, request, travel_id):
+		self._request = request
+		self._travel_id = travel_id
+		return JsonResponse(self.handle())
+
+	def do(self):
+		return travelservice.comment(
+				self.get_token(),
+				self._travel_id,
+				self.get_required_data('content')
+				)
+class GetCommentsView(BaseView):
+	def get(self, request, travel_id):
+		self._request = request
+		self._travel_id = travel_id
+		return JsonResponse(self.handle())
+
+	def do(self):
+		return travelservice.get_comments(self._travel_id)
 
 #############################################
 ########	Note MOUDLE		#################
@@ -211,20 +344,35 @@ class UploadNoteView(BaseView):
 	def do(self):
 		return noteservice.upload(
 				self.get_required_arg('token'),
-				self.get_required_data('notes')
+				self.get_form_data('notes'),
+				self._request.FILES
 				)
-	pass
 
-class SyncNoteView(BaseView):
+class LocationAppender():
+	'''append location info to note'''
+	def append_location(self, notes):
+		d_notes = []
+		for n in notes:
+			note = n.dict()
+			if n.location is None:
+				note['location'] = None
+			else:
+				note['location'] = n.location.useful_dict()
+			d_notes.append(note)
+		return d_notes
+
+class SyncNoteView(BaseView, LocationAppender):
 	def get(self, request):
 		self._request = request
 		return JsonResponse(self.handle())
 
 	def do(self):
-		return noteservice.sync(
+		result = noteservice.sync(
 				self.get_required_arg('token'),
 				self.get_arg('begin_time')
 				)
+		result['notes'] = self.append_location(result['notes'])
+		return result
 
 class ImageView(BaseView):
 	def get(self, request, note_id):
@@ -232,15 +380,25 @@ class ImageView(BaseView):
 		self._note_id = note_id
 		result = self.handle()
 		if result[RSP_CODE] == RC_SUCESS:
-			response = HttpResponse(result.pop('image'), 'image/jpeg; charsete=utf-8')
-			response.write(MyJsonEncoder().encode(result))
-			return response
+			return ImageResponse(result.pop('image'))
 		else:
-			return HttpResponse(JsonResponse(result))
+			raise Http404
 	
 	def do(self):
-		return travelservice.get_cover(
-				self.note_id)
+		return noteservice.get_image(
+				self._note_id)
+
+class GetNoteInTravelView(BaseView, LocationAppender):
+	def get(self, request, travel_id):
+		self._request = request
+		self._travel_id = travel_id
+		return JsonResponse(self.handle())
+
+	def do(self):
+		result = noteservice.get_all_in_travel(self._travel_id)
+		if result[RSP_CODE] == RC_SUCESS:
+			result['notes'] = self.append_location(result['notes'])
+		return result
 
 #############################################
 ########	SYNC MOUDLE		#################

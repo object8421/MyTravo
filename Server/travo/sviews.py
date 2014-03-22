@@ -7,17 +7,21 @@ from travo.forms import RegisterForm, ContactForm
 from django.http import HttpResponse
 from django.template import RequestContext, loader
 from django.shortcuts import render
+from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 import logging
+import string
 from django.conf import settings
 from datetime import datetime
-from service import userservice,travelservice
+from service import userservice,travelservice,noteservice
 
 
-from models import User
+from models import User,Travel,Location
 from rc import *
 
 # Create your views here.
+
+#===================user view=====================================
 class RegisterView(View):
     def post(self, request):
         nickname = request.POST.get('nickname','')
@@ -38,80 +42,6 @@ class ShowRegisterView(View):
         context = RequestContext(request)
         return HttpResponse(template.render(context))
 
-
-class IndexView(View):
-    def get(self,request):
-        template = loader.get_template('website/welcome.html')
-        context = RequestContext(request)
-        return HttpResponse(template.render(context))
-
-class LoginView(View):
-
-    def get(self,request):
-        pass
-    def post(self,request):
-        email = request.POST.get('email','')
-        password = request.POST.get('password','')
-        res = userservice.travo_login(email,password)
-        if res[RSP_CODE] == RC_SUCESS:
-            logging.debug('user %s login successful',res['user'].nickname)
-            request.session['username'] = res['user'].nickname
-            request.session['token'] = res['user'].token
-            return render_to_response('website/welcome.html',context_instance=RequestContext(request))
-        else:
-            return render(request,'website/login_fail.html')
-
-        pass
-
-class LogoutView(View):
-    def get(self,request):
-        try:
-            del request.session['token']
-        except KeyError, e:
-             pass
-
-        logging.debug('user %s logout successfully.',request.session['username'])
-        return render(request,'website/welcome.html')
-
-
-class ContactView(View):
-    def get(self,request):
-        form = ContactForm()
-        return render(request,'website/contact.html', {'form':form})
-    def post(self,request):
-        return render(request,'website/contact_thanks.html')
-
-
-class RegisterSuccessView(View):
-    def get(self,request):
-        template = loader.get_template('website/register_successful.html')
-        context = RequestContext(request)
-        return HttpResponse(template.render(context))
-
-class NewTravelView(View):
-    def get(self,request):
-        template = loader.get_template('website/new_travel.html')
-        context = RequestContext(request)
-        return HttpResponse(template.render(context))
-    def post(self,request):
-        token = request.session['token']
-        travel = {}
-        travel['title'] = request.POST.get('travel_name','')
-        travel['begin_date'] = request.POST.get('start_time','')
-        travel['description'] = request.POST.get('travel_description','')
-        try:
-            cover_original = request.FILES.get('cover', None)
-            cover_name = cover_original.name
-            print cover_name
-            travel['cover'] = content = cover_original.read()
-            travel['create_time'] = datetime.now()
-            result = travelservice.upload(token,[travel,])
-        except:
-            pass
-        print result
-
-        return HttpResponse('添加成功!')
-
 class MyInfoView(View):
     '''展示个人主页'''
     def get(self, request):
@@ -127,28 +57,46 @@ class MyInfoView(View):
 
         return HttpResponse(template.render(context))
 
-class ShowMyTravel(View):
+class RegisterSuccessView(View):
     def get(self,request):
-        pass
-
-class TestView(View):
-    def get(self,request):
-        template = loader.get_template('website/test.html')
+        template = loader.get_template('website/register_successful.html')
         context = RequestContext(request)
         return HttpResponse(template.render(context))
-    def post(self, request):
-        buf = request.FILES.get('cover',None)
-        title = request.POST.get('title',None)
-        content = buf.name
-        print title
-        for attr in request.POST:
 
-            print "%s : %s"%(attr,request.POST.get('attr'))
-        print content
-        with open('haha.jpg','wb') as image:
-            image.write(buf.read())
-        return HttpResponse('添加成功!')
+class DetailInfoView(View):
+    def get(self, request):
+        template = loader.get_template('website/detail_info.html')
+        context = RequestContext(request)
+        return HttpResponse(template.render(context))
 
+class LoginView(View):
+
+    def get(self,request):
+        pass
+    def post(self,request):
+        email = request.POST.get('email','')
+        password = request.POST.get('password','')
+        res = userservice.travo_login(email,password)
+        if res[RSP_CODE] == RC_SUCESS:
+            logging.debug('user %s login successful',res['user'].nickname)
+            request.session['username'] = res['user'].nickname
+            request.session['token'] = res['user'].token
+            request.session['userid'] = res['user'].id
+            return render_to_response('website/welcome.html',context_instance=RequestContext(request))
+        else:
+            return render(request,'website/login_fail.html')
+
+        pass
+
+class LogoutView(View):
+    def get(self,request):
+        try:
+            del request.session['token']
+        except KeyError, e:
+             pass
+
+        logging.debug('user %s logout successfully.',request.session['username'])
+        return render(request,'website/welcome.html')
 
 class PersonalInfoSetView(View):
     '''设置个人信息/未完成图片处理'''
@@ -173,31 +121,143 @@ class ChangePasswordView(View):
         print original_password
         print new_password
         result = userservice.change_password(token,original_password,new_password)
-
+        response = HttpResponse()
+        response['Content-Type']="text/javascript"
+        ret = "0"
         if result[RSP_CODE] == RC_SUCESS:
-            return HttpResponse('修改成功！')
+            ret = "1"
         else:
-            return HttpResponse('对不起，您的原密码有误。')
+            ret = "2"
+        response.write(ret)
+        return response
 
 class ChangeEmailView(View):
     def post(self,request):
         pass
 
-class DetailInfoView(View):
-    def get(self, request):
-        template = loader.get_template('website/detail_info.html')
+#===================generic view=====================================
+
+class IndexView(View):
+    def get(self,request):
+        template = loader.get_template('website/welcome.html')
         context = RequestContext(request)
         return HttpResponse(template.render(context))
 
-class NewNoteView(View):
-    def get(self, request):
-        template = loader.get_template('website/new_note.html')
+class ContactView(View):
+    def get(self,request):
+        form = ContactForm()
+        return render(request,'website/contact.html', {'form':form})
+    def post(self,request):
+        return render(request,'website/contact_thanks.html')
+
+class TestView(View):
+    def get(self,request):
+        template = loader.get_template('website/test.html')
         context = RequestContext(request)
         return HttpResponse(template.render(context))
+    def post(self, request):
+        buf = request.FILES.get('cover',None)
+        title = request.POST.get('title',None)
+        content = buf.name
+        print title
+        for attr in request.POST:
+
+            print "%s : %s"%(attr,request.POST.get('attr'))
+        print content
+        with open('haha.jpg','wb') as image:
+            image.write(buf.read())
+        return HttpResponse('添加成功!')
+
+
+#===================travel view=====================================
+
+class NewTravelView(View):
+    def get(self,request):
+        template = loader.get_template('website/new_travel.html')
+        context = RequestContext(request)
+        return HttpResponse(template.render(context))
+    def post(self,request):
+        token = request.session['token']
+        travel = {}
+        travel['title'] = request.POST.get('travel_name','')
+        travel['begin_date'] = request.POST.get('start_time','')
+        travel['description'] = request.POST.get('travel_description','')
+        travel['create_time'] = str(datetime.now())[0:19]
+        travel['cover'] = 'cover'
+        result = travelservice.upload(token,[travel,],request.FILES)
+        return HttpResponse('添加成功!')
+
+
+
+class ShowMyTravel(View):
+    def get(self,request):
+        template = loader.get_template('website/all_my_travel.html')
+        token = request.session['token']
+        user = get_object_or_404(User, token=token)
+        my_recent_travel_list = travelservice.get_travel(token)['travel_list']
+        basic_travel_path = settings.COVER_PATH
+        context =  RequestContext(request,{\
+            "user":user,
+            "recent_travel_list":my_recent_travel_list,
+            "basic_travel_path":basic_travel_path,})
+
+        return HttpResponse(template.render(context))
+        pass
 
 class DetailTravelView(View):
-    def get(self,request):
+    def get(self,request,travel_id):
         template = loader.get_template('website/detail_travel.html')
-        context = RequestContext(request)
+        travel = get_object_or_404(Travel,pk=travel_id)
+
+        result = noteservice.get_all_in_travel(travel_id)
+        if result[RSP_CODE] == RC_SUCESS:
+            note_list = result['notes']
+        else:
+            return HttpResponse('获取游记出现问题')
+        print note_list
+        context = RequestContext(request,{\
+            'travel':travel,
+            'note_list':note_list,
+            })
         return HttpResponse(template.render(context))
 
+#======================note view======================================
+
+
+
+class NewNoteView(View):
+    def get(self, request,travel_id):
+        template = loader.get_template('website/new_note.html')
+        context = RequestContext(request,{'travel_id':travel_id,})
+        return HttpResponse(template.render(context))
+
+
+class AddNewNoteView(View):
+    def post(self,request):
+        token = request.session['token']
+        note = {}
+        note['user_id'] = request.session['userid']
+        note['travel_id'] = request.POST['travel_id']
+        travel_id = request.POST['travel_id']
+        #note_photo = request.FILES.get('note_photo', None)
+        note['content'] = request.POST.get('note_description','暂无描述')
+        location ={}
+        location['address'] = request.POST.get('note_location','')
+        
+        location['latitude'] = float(request.POST.get('latitude',0.0))
+        location['longitude'] = float(request.POST.get('longitude',0.0))
+        note['location'] = location
+        note['image'] = 'note_photo'
+        
+        note['create_time'] = str(datetime.now())[0:19]
+        print request.POST.get('create_time',datetime.now())
+        result = noteservice.upload(token,[note,],request.FILES)
+
+        print result
+        for key in note:
+            print '%s:%s'%(key,note[key])
+        print 'Latitude is %s'%request.POST.get('latitude',0.0)
+        template = loader.get_template('website/detail_travel.html')
+        context = RequestContext(request,{'travel_id':request.POST['travel_id'],})
+        #return HttpResponse(template.render(context))
+        return HttpResponseRedirect(reverse('detail_travel',args=(travel_id,)))

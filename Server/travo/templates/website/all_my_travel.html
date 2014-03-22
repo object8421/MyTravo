@@ -1,0 +1,47 @@
+{% extends "website/base_index.html" %}
+{% block title %}我的全部游记{% endblock %}
+{% block content %}
+{%for travel in recent_travel_list %}
+<div class="panel panel-default" style="width:350px;">
+  <div class="panel-body">
+     <img src="/medias/cover/{{travel.cover_path}}" alt="..." class="img-rounded" style="width:100%; height:250px; margin=0;">
+    
+  </div>
+  <div class="panel-footer" align="left">
+    <table class="table" style="width:300px;margin:0;padding:0;">
+              <tr style="width:300px; padding:0; margin:0;" align="left">
+                <div style="float:left;">
+
+                <h5 class="pull-left"><a href="{%url 'detail_travel' travel.id %}">{{travel.title}}</a></h5>
+                <h5 class="pull-left"><a href="{%url 'detail_travel' travel.id %}">{{travel.id}}</a></h5>
+                
+              </div>
+              
+
+              <div class="btn-group " style="float:right; margin－top:0;" >
+                    <button type="button" class="btn btn-link btn-sm" >标签1</button>
+                    <button type="button" class="btn btn-link btn-sm" >标签2</button>
+                </div>
+
+              <div style="clear:both;">
+                <h6 > {{travel.description}} </h6>
+              </div>
+               
+                   
+              </tr>
+              
+              <div style="clear:both; float:left;"><h6>2014-03-13</h6>
+              </div>
+              <div style="float:right; padding-right:10px;"><h6>
+                <span class="glyphicon glyphicon-heart"></span> {{ travel.vote_qty}}
+                <span class="glyphicon glyphicon-list-alt"></span>{{ travel.favorite_qty}}</h6>
+              </div>
+
+              </tr>
+            
+             </table>
+</div>
+</div>
+</div><!--  这是三分之一的span (1)end-->
+{% endfor %}
+{% endblock %}
