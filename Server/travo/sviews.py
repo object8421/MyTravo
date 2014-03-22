@@ -119,11 +119,15 @@ class ChangePasswordView(View):
         print original_password
         print new_password
         result = userservice.change_password(token,original_password,new_password)
-
+        response = HttpResponse()
+        response['Content-Type']="text/javascript"
+        ret = "0"
         if result[RSP_CODE] == RC_SUCESS:
-            return HttpResponse('修改成功！')
+            ret = "1"
         else:
-            return HttpResponse('对不起，您的原密码有误。')
+            ret = "2"
+        response.write(ret)
+        return response
 
 class ChangeEmailView(View):
     def post(self,request):
