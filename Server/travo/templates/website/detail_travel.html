@@ -3,9 +3,11 @@
 
 {% block content %}
 
-<div class="container" style="padding-top:20px;background-color:#efefef;">
+<div class="container" style="padding-top:20px;background-color:#ffffff;">
  <div class="row">
- <div style="margin-left:50px;">
+ <div class="col-md-8">
+    <div class="row">
+      <div class="col-md-4 col-md-offset-1">
         <table class="table" style="float:left;width:250px;margin-right:50px;">
           <tr>
             <td style="padding:0;">
@@ -15,17 +17,28 @@
           </tr>
           
           </table>
-     </div> 
+      </div>
+      <div class="col-md-6 col-md-offset-1">
+        <div class="col-md-8">
+          <div>
+
+            <h1>{{travel.title}}</h1><!-- h1这里放的应该是个游记title -->
+            <p>{{travel.create_time | date:"Y-m-d"}}</p>
+            <h4><small>{{travel.description}}</small></h4>
+            <li type="button"  class="btn btn-info btn-lg" onclick="javascript:location.href='{%url 'new_note' travel.id%}'">＋添加新足迹</li>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <button  type="button" class="btn btn-small btn-info">编辑</button>
+        </div>
+       
+      </div>
+    </div>
+  </div> 
      
 
 
-  <div style="float:left;margin-top:50px;">
-
-        <h1>游记名称：{{travel.title}}</h1><!-- h1这里放的应该是个游记title -->
-        <h3>{{travel.create_time}}</h3>
-        <h4>{{travel.description}}</h4>
-        <li type="button"  class="btn btn-success btn-lg" ><a href="{%url 'new_note' travel.id %}">＋添加新足迹</a></li>
-  </div>
+  
 
 
 
@@ -45,31 +58,36 @@
 
 
 <!-- note 1 -->
-<div class="row" style="margin-bottom:20px;">
+<div class="row" >
 
-<div class="col-md-3" style="margin-right:55px;margin-left:55px;">
-<table class="table" style="width:300px;">
-              <tr style="width:300px; padding:0; margin:0;" align="left">
-                <div style="float:left;">
-                <h4 class="pull-left">{{note.create_time}}</h4>
-                </div>
-              <div class="btn-group " style="float:right; margin－top:0;" >
-                    <button type="button" class="btn btn-link" >{{note.location.address}}</button>
-            
-                </div>
-
-              <div style="clear:both;">
-                <h5 >{{note.content}}</h5>
-              </div>
+<div class="col-md-4" >
+    
+              
+                <div class="alert alert-info">
+                <p>{{note.create_time | date:"Y-m-d"}}</p>
+                
+                <p >
+                
+                <span class="label label-success">{{note.location.address}}</button>
                
+                </p>
+               
+                <h3 >{{note.content}}</h3>
+                </div>
+              
                    
   
             
-             </table>
-         </div>
+    
+</div>
 
-<div>
-		<img src="/medias/{{note.image_path}}" style="width:60%; height:350px; margin=0;">
+<div class="col-md-8">
+    <div class="col-md-10">
+		<img src="/medias/{{note.image_path}}" class="travel_detail_img">
+    </div>
+    <div class="col-md-2">
+    <button  type="button" class="btn btn-small btn-info">编辑</button>
+    </div>
 	</div>
 
 </div>

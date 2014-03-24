@@ -19,6 +19,12 @@ body {
 
 /* CUSTOMIZE THE NAVBAR
 -------------------------------------------------- */
+.travel_detail_img{ 
+  max-width:500px; 
+  myimg:expression(onload=function(){ 
+    this.style.width=(this.offsetWidth > 500)?"500px":"auto"}); 
+}
+
 .map_canvas { 
  
  width: 300px;
