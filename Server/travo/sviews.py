@@ -188,6 +188,20 @@ class NewTravelView(View):
         return HttpResponse('添加成功!')
 
 
+class EditTravelView(View):
+    def get(self,request):
+        template = loader.get_template('website/edit_travel.html')
+        context = RequestContext(request)
+        return HttpResponse(template.render(context))
+
+
+class EditNoteView(View):
+    def get(self,request):
+        template = loader.get_template('website/edit_note.html')
+        context = RequestContext(request)
+        return HttpResponse(template.render(context))
+
+
 
 class ShowMyTravel(View):
     def get(self,request):
