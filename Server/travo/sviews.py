@@ -202,6 +202,12 @@ class EditNoteView(View):
         return HttpResponse(template.render(context))
 
 
+class FollowingView(View):
+    def get(self,request):
+        template = loader.get_template('website/following.html')
+        context = RequestContext(request)
+        return HttpResponse(template.render(context))
+
 
 class ShowMyTravel(View):
     def get(self,request):
@@ -234,6 +240,9 @@ class DetailTravelView(View):
             'note_list':note_list,
             })
         return HttpResponse(template.render(context))
+
+
+
 
 #======================note view======================================
 
