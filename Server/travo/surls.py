@@ -24,6 +24,8 @@ urlpatterns = patterns('travo',
 			name = 'edit_note'),
 		url(r'user/following',sviews.FollowingView.as_view(),\
 			name = 'following'),
+		url(r'user/followed',sviews.FollowedView.as_view(),\
+			name = 'followed'),
 		#显示添加note的表单
 		
 		url(r'^new_note/(?P<travel_id>\d+)/',sviews.NewNoteView.as_view(),name = 'new_note'),	

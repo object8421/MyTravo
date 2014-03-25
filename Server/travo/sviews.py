@@ -211,6 +211,12 @@ class FollowingView(View):
         context = RequestContext(request)
         return HttpResponse(template.render(context))
 
+class FollowedView(View):
+    def get(self,request):
+        template = loader.get_template('website/followed.html')
+        context = RequestContext(request)
+        return HttpResponse(template.render(context))
+
 
 class ShowMyTravel(View):
     def get(self,request):
