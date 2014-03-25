@@ -3,7 +3,7 @@ import utils
 import userservice
 
 from travo.rc import *
-from travo.models import Travel,FavoriteTravel,TravelReadLog,TravelVote,TravelComment
+from travo.models import Travel,FavoriteTravel,TravelReadLog,TravelVote,TravelComment,Follow
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
@@ -16,7 +16,7 @@ def upload(token, travels, covers={}):
 	user = userservice.get_user(token)
 	rsps = []
 	for t in travels:
-		if t.has_key('id'):
+		if t.get('id') != 0:
 			rsps.append(_update(user, t, covers.get(t.get('cover'))))
 		else:
 			rsps.append(_new(user, t, covers.get(t.get('cover'))))
@@ -53,6 +53,7 @@ def _update(user, t, cover=None):
 
 def _new(user, t, cover=None):
 	'''create a new travel for user'''
+	t.pop('id')
 	rsp = {RSP_CODE : RC_SUCESS}
 	rsp['tag'] = t.get('tag')
 	if not _check_key(t):
@@ -95,7 +96,7 @@ def sync(token, begin_time):
 		result['travels'] = list(Travel.objects.filter(user = user))
 	else:
 		begin_time = utils.strpdatetime(begin_time)
-		result['travels'] = list(Travel.objects.filter(user=user,lm_time__gte=begin_time))
+		result['travels'] = list(Travel.objects.filter(user=user,lm_time__gt=begin_time))
 	return result 
 
 #######		cover		###########
@@ -137,7 +138,7 @@ def get_travel(token,recent = False):
 
 #######		search		###########
 SO_DEFAULT = 'default'
-SO_READ_TIME = 'read_time'
+SO_READ_TIMES = 'read_times'
 SO_VOTE_QTY = 'vote_qty'
 SO_NEWEST = 'newest'
 
@@ -145,7 +146,7 @@ def search(order=SO_DEFAULT, first_idx=1, max_qty=20):
 	first_idx = int(first_idx)
 	return {
 			SO_DEFAULT	: _search_default,
-			SO_READ_TIME: _search_read_time,
+			SO_READ_TIMES: _search_read_times,
 			SO_VOTE_QTY	: _search_vote_qty,
 			SO_NEWEST	: _search_newest,
 			}[order](first_idx - 1, max_qty)
@@ -156,11 +157,11 @@ def _search_default(first_idx, max_qty):
 def _search_newest(first_idx, max_qty):
 	return list(Travel.objects.order_by('create_time').reverse()[first_idx:max_qty])
 
-def _search_read_time(first_idx, max_qty):
-	pass
+def _search_read_times(first_idx, max_qty):
+	return list(Travel.objects.order_by('read_times').reverse()[first_idx:max_qty])
 
 def _search_vote_qty(first_idx, max_qty):
-	pass
+	return list(Travel.objects.order_by('vote_qty').reverse()[first_idx:max_qty])
 
 #######		favorit ############
 def favorit(token, travel_id):
@@ -177,8 +178,9 @@ def favorit(token, travel_id):
 			try:
 				ft.save()
 			except IntegrityError:
-				#dup favorit
-				pass
+				return {RSP_CODE : RC_DUP_ACTION}
+		else:
+			return {RSP_CODE : RC_FUCK_SELF}
 
 	return {RSP_CODE : RC_SUCESS}
 
@@ -206,6 +208,8 @@ def read(token, travel_id):
 			trl.reader = user
 			trl.travel_id = travel_id
 			trl.save()
+		else:
+			return {RSP_CODE : RC_FUCK_SELF}
 	return {RSP_CODE : RC_SUCESS}
 
 ######    vote    ######
@@ -223,21 +227,26 @@ def vote(token, travel_id):
 			try:
 				tv.save()
 			except:
-				#dup vote
-				pass
+				return {RSP_CODE : RC_DUP_ACTION}
+		else:
+			return {RSP_CODE : RC_FUCK_SELF}
 	return {RSP_CODE : RC_SUCESS}
 
 ######    comment    ######
 def comment(token, travel_id, content):
 	user = userservice.get_user(token)
 	tc = TravelComment()
+	try:
+		travel = Travel.objects.get(pk=travel_id)
+	except ObjectDoesNotExist:
+		return {RSP_CODE : RC_NO_SUCH_TRAVEL}
+	else:
+		if travel.user == user:
+			return {RSP_CODE : RC_FUCK_SELF}
 	tc.travel_id = travel_id
 	tc.commenter = user
 	tc.content = content
-	try:
-		tc.save()
-	except IntegrityError:
-		return {RSP_CODE : RC_NO_SUCH_TRAVEL}
+	tc.save()
 	return {RSP_CODE : RC_SUCESS}
 
 ######    get comments    ######
@@ -245,4 +254,19 @@ def get_comments(travel_id):
 	result = {RSP_CODE : RC_SUCESS}
 	result['comments'] = list(TravelComment.objects.filter(travel_id = travel_id))
 	return result
+
+######    friend travels    ######
+def friend_travels(token, friend_id):
+	user = userservice.get_user(token)
+	friend = userservice.get_user_by_id(friend_id)
+	try:
+		f = Follow.objects.filter(active=user, passive=friend).latest('time')
+		if f.action != '1':
+			return {RSP_CODE : RC_PERMISSION_DENIED}
+	except ObjectDoesNotExist:
+		return {RSP_CODE : RC_PERMISSION_DENIED}
+	else:
+		result = {RSP_CODE : RC_SUCESS}
+		result['travels'] = list(Travel.objects.filter(user=friend, is_public=True, is_deleted=False))
+		return result
 

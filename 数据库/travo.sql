@@ -138,6 +138,7 @@ DEFAULT CHARACTER SET = utf8
 COLLATE = utf8_general_ci;
 
 CREATE  TABLE IF NOT EXISTS `travo`.`follow` (
+  `id` INT(11) NULL,
   `active` INT(11) NOT NULL ,
   `passive` INT(11) NOT NULL ,
   `time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,

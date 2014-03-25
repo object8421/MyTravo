@@ -2,12 +2,14 @@ import uuid
 import re
 import urllib2
 import utils
+import traceback
 
-from travo.exceptions import TokenError
+from travo.exceptions import TokenError, IllegalDataError
 from django.db import IntegrityError
-from travo.models import User, LoginRecord,UserInfo
+from travo.models import User, LoginRecord,UserInfo,Follow
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ValidationError
+from django.db.utils import OperationalError
 from travo.rc import * 
 from datetime import datetime
 
@@ -39,7 +41,7 @@ def get_user_by_id(user_id):
 	try:
 		return User.objects.get(pk=user_id)
 	except ObjectDoesNotExist:
-		raise tokenError('no_such_user')
+		raise TokenError('no_such_user')
 
 ########	login	###############
 def travo_login(email, password):
@@ -57,25 +59,26 @@ def travo_login(email, password):
 			result[RSP_CODE] = RC_WRONG_PASSWORD
 	return result 
 
-def qq_login():
-	pass
-
-def sina_login():
-	pass
+def qq_login(qq_token):
+	try:
+		qq_id = _ge_qq_id(qq_token)
+	except AuthError:
+		return {RSP_CODE : RC_AUTH_FAIL}
+	else:
+		try:
+			u = User.objects.get(qq_user_id=qq_id)
+		except ObjectDoesNotExist:
+			return {RSP_CODE : RC_NO_SUCH_USER}
+		else:
+			result = {RSP_CODE : RC_SUCESS}
+			result['user'] = u
+			return result
 
 def _update_token(u):
 	u.token = _build_token()
 	u.save()
 
-def check_qq_data(self, u):
-	qq_token = self.get_required_data('qq_token')
-	u.qq_user_id = self._get_qq_user_id(qq_token)
-
-def check_sina_data(self):
-	sina_token = self.get_required_data('sina_token')
-	u.sina_user_id = self._get_sina_user_id(sina_token)
-
-def _get_qq_user_id(self, qq_token):
+def _get_qq_id(qq_token):
 	r = urllib2.urlopen('https://graph.z.qq.com/moc2/me?access_token=' + qq_token)
 	response = r.read()
 	if response.startswith('code'):
@@ -96,6 +99,18 @@ def travo_register(nickname, email, password):
 		return {RSP_CODE : RC_ILLEGAL_EMAIL}
 	u = User(nickname=nickname, email=email, password=password)
 	u.token = _build_token()
+	return register(u)
+
+def qq_register(nickname, qq_token):
+	try:
+		qq_id = _ge_qq_id(qq_token)
+	except AuthError:
+		return {RSP_CODE : RC_AUTH_FAIL}
+	else:
+		u = User(qq_user_id=qq_id, token=_build_token())
+		return register(u)
+
+def register(u):
 	try:
 		u.save()
 	except IntegrityError, e:
@@ -105,19 +120,13 @@ def travo_register(nickname, email, password):
 		elif 'nickname_UNIQUE' in str(e):
 			#nickname duplicate
 			return {RSP_CODE : RC_DUP_NICKNAME}
-		elif 'qq_user_id_UNIQUE' in str(e) or 'sina_user_id_UNIQUE' in str(e):
+		elif 'qq_user_id_UNIQUE' in str(e): 
 			return {RSP_CODE : RC_DUP_BIND}
 
 	result = {RSP_CODE : RC_SUCESS}
 	result['token'] = u.token
 	result['user_id'] = u.id
 	return result
-
-def qq_register():
-	pass
-
-def sina_register():
-	pass
 
 #########	update	################
 def update(token, **kwargs):
@@ -178,4 +187,50 @@ def change_password(token, original_password, new_password):
 	else:
 		result = result = {RSP_CODE:RC_WRONG_PASSWORD}
 		return result
+
+######    follow      ######
+def follow(token, passive_id, action):
+	activer = get_user(token)
+	if activer.id == int(passive_id):
+		return {RSP_CODE : RC_FUCK_SELF}
+	passiver = get_user_by_id(passive_id)
+	f = Follow()
+	f.active = activer
+	f.passive = passiver
+	f.action = action
+	try:
+		f.save()
+	except OperationalError,e:
+		if e.args[1] == 'can not insert same action continuously':
+			return {RSP_CODE : RC_DUP_ACTION}
+		else:
+			raise IllegalDataError
+	return {RSP_CODE : RC_SUCESS}
+
+######    follow list    ######
+def follow_list(token):
+	user = get_user(token)
+	fl = list(Follow.objects.filter(active=user).order_by('time').reverse())
+	unique_passive = []
+	result = {RSP_CODE : RC_SUCESS}
+	result['users'] = []
+	for f in fl:
+		if not f.passive in unique_passive:
+			unique_passive.append(f.passive)
+			result['users'].append(f.passive.public_dict())
+	return result
+
+######    get user info    ########
+def get_user_info(token, friend_id):
+	try:
+		u = User.objects.get(pk=friend_id)
+	except ObjectDoesNotExist:
+		return {RSP_CODE : RC_NO_SUCH_USER}
+	else:
+		if not u.is_info_public and u.token != token:
+			return {RSP_CODE : RC_PERMISSION_DENIED}
+		else:
+			result = {RSP_CODE : RC_SUCESS}
+			result['user_info'] = UserInfo.objects.get(pk=u.id)
+			return result
 
