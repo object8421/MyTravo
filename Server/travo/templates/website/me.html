@@ -41,8 +41,8 @@
 
   <div style="float:left;margin-top:70px;">
         <h1>{{request.session.username}}</h1>
-        <h3>男</h3>
-        <h4>我的个性签名是不是菜鸡</h4>
+        <h3>{{user.sex | default:"男"}}</h3>
+        <h4>{{user.signature | default:"个性签名:暂无"}}</h4>
         <li type="button"  class="btn btn-primary btn-lg" onclick="javascript:location.href='{%url 'new_travel'%}'" value="创建新游记">＋创建新游记</li>
   </div>
 
@@ -88,7 +88,6 @@
                 <div style="float:left;">
 
                 <h5 class="pull-left"><a href="{%url 'detail_travel' travel.id %}">{{travel.title}}</a></h5>
-                <h5 class="pull-left"><a href="{%url 'detail_travel' travel.id %}">{{travel.id}}</a></h5>
                 
               </div>
               

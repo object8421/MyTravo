@@ -292,7 +292,9 @@
         {%for note in note_list %}
         tlat = tlat + parseFloat({{note.location.latitude | floatformat:"6"}});
         tlng = tlng + parseFloat({{note.location.longitude | floatformat:"6"}});
+        {%if note.location%}
         number = number + 1;
+        {% endif %}
         {% endfor %}
         
         var infoWindow = new google.maps.InfoWindow;

@@ -66,6 +66,9 @@ class RegisterSuccessView(View):
 class DetailInfoView(View):
     def get(self, request):
         template = loader.get_template('website/detail_info.html')
+        token  = request.session['token']
+        user = get_object_or_404(User, token=token)
+        
         context = RequestContext(request)
         return HttpResponse(template.render(context))
 
