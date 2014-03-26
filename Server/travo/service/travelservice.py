@@ -127,13 +127,13 @@ def get_travel(token,recent = False):
 	user_id = user.id
 	result = {RSP_CODE : RC_SUCESS}
 	try:
+		travel_list = Travel.objects.filter(user=user_id).order_by('-create_time')
+		result['travel_list_length'] = len(travel_list)
 		if recent == False:
-			travel_list = Travel.objects.filter(user=user_id).order_by('-create_time')
 			result['travel_list'] = travel_list
 			return result
 		else:
-			travel_list = Travel.objects.filter(user=user_id).order_by('-create_time')[:recent]
-			result['travel_list'] = travel_list
+			result['travel_list'] = travel_list[:recent]
 			return result
 	except ObjectDoesNotExist:
 		return {RSP_CODE : RC_NO_SUCH_TRAVEL}

@@ -49,11 +49,13 @@ class MyInfoView(View):
         token = request.session['token']
         user = get_object_or_404(User, token=token)
         followers_list = userservice.follow_list(token)['users']
-        my_recent_travel_list = travelservice.get_travel(token,3)['travel_list']
+        result = travelservice.get_travel(token,3)
+        
         basic_travel_path = settings.COVER_PATH
         context =  RequestContext(request,{\
             "user":user,
-            "recent_travel_list":my_recent_travel_list,
+            "travel_list_length":result['travel_list_length'],
+            "recent_travel_list":result['travel_list'],
             "basic_travel_path":basic_travel_path,
             "followers_list":followers_list})
 
