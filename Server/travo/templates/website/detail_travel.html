@@ -21,7 +21,7 @@
 
   <div style="float:left;margin-top:50px;">
 
-        <h1>游记名称：{{travel.title}}</h1><!-- h1这里放的应该是个游记title -->
+        <h1>游记名称：{{travel.title}}</h1>
         <h3>{{travel.create_time}}</h3>
         <h4>{{travel.description}}</h4>
         <li type="button"  class="btn btn-success btn-lg" ><a href="{%url 'new_note' travel.id %}">＋添加新足迹</a></li>
@@ -55,16 +55,10 @@
                 </div>
               <div class="btn-group " style="float:right; margin－top:0;" >
                     <button type="button" class="btn btn-link" >{{note.location.address}}</button>
-            
                 </div>
-
               <div style="clear:both;">
                 <h5 >{{note.content}}</h5>
               </div>
-               
-                   
-  
-            
              </table>
          </div>
 
