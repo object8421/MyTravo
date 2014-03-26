@@ -76,12 +76,12 @@ class DetailInfoView(View):
     def get(self, request):
         template = loader.get_template('website/detail_info.html')
         token  = request.session['token']
-        user = get_object_or_404(User, token=token)
-        user_info = userservice.get_user_info(token, user.id)['user_info']
-        context = RequestContext(request,{\
-            "user":user,
-            "user_info":user_info})
-        return HttpResponse(template.render(context))
+        user = userservice.get_user(token)
+        print user.email
+        #user_info = userservice.get_user_info(token, user.id)['user_info']
+
+        context = RequestContext(request)
+        return HttpResponse(template.render(context),{'user':user} )
 
 class LoginView(View):
 

@@ -22,7 +22,7 @@
   <form class="form-horizontal" role="form" style="margin-top:20px;">
   
 <div class="form-group">
-    <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">邮箱</label>
+    <label class="col-sm-2 control-label" style="color: #104e8b;">邮箱</label>
     <div class="col-sm-6">
       {{user.email}}
     </div>
@@ -31,7 +31,7 @@
   <div class="form-group">
     <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">昵称</label>
     <div class="col-sm-6">
-      {{request.session.username}}
+      {{user.email}} {{request.session.username}}
     </div>
   </div>
 
@@ -63,7 +63,7 @@
 <div class="form-group">
     <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">年龄</label>
     <div class="col-sm-2">
-      {{userinfo.age}}}
+      {{userinfo.age}}
     </div>
   </div>
 
