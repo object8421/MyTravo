@@ -48,12 +48,14 @@ class MyInfoView(View):
         template = loader.get_template('website/me.html')
         token = request.session['token']
         user = get_object_or_404(User, token=token)
+        followers_list = userservice.follow_list(token)['users']
         my_recent_travel_list = travelservice.get_travel(token,3)['travel_list']
         basic_travel_path = settings.COVER_PATH
         context =  RequestContext(request,{\
             "user":user,
             "recent_travel_list":my_recent_travel_list,
-            "basic_travel_path":basic_travel_path,})
+            "basic_travel_path":basic_travel_path,
+            "followers_list":followers_list})
 
         return HttpResponse(template.render(context))
 
@@ -68,8 +70,10 @@ class DetailInfoView(View):
         template = loader.get_template('website/detail_info.html')
         token  = request.session['token']
         user = get_object_or_404(User, token=token)
-        
-        context = RequestContext(request)
+        user_info = userservice.get_user_info(token, user.id)['user_info']
+        context = RequestContext(request,{\
+            "user":user,
+            "user_info":user_info})
         return HttpResponse(template.render(context))
 
 class LoginView(View):
