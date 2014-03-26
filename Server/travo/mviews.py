@@ -258,6 +258,28 @@ class UserInfoView(BaseView):
 				self._user_id
 				)
 
+class UpdateEmailView(BaseView):
+	def put(self, request):
+		self._request = request
+		return JsonResponse(self.handle())
+
+	def do(self):
+		return userservice.update_email(
+				self.get_token(),
+				self.get_required_arg('email'),
+				self.get_required_arg('password')
+				)
+
+class BindView(BaseView):
+	def put(self, request):
+		self._request = request
+		return JsonResponse(self.handle())
+	def do(self):
+		return userservice.bind(
+				self.get_token(),
+				self.get_required_arg('qq_token')
+				)
+
 ##############################################
 ########	TRAVEL MOUDLE	##################
 ##############################################

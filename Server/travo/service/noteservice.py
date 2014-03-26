@@ -6,6 +6,7 @@ import traceback
 from travo.rc import *
 from travo.models import Note, Location, Travel
 from django.core.exceptions import ValidationError
+from datetime import datetime
 
 
 def _build_image_path():
@@ -16,12 +17,13 @@ def upload(token, notes, images={}):
 	user = userservice.get_user(token)
 	rsps = []
 	for n in notes:
-		if n.get('id') != 0:
-			rsps.append(_update(user, n, images.get(n.get('image'))))
-		else:
+		if n.get('id') is None or n.get('id') == 0:
 			rsps.append(_new(user, n, images.get(n.get('image'))))
+		else:
+			rsps.append(_update(user, n, images.get(n.get('image'))))
 	result = {RSP_CODE : RC_SUCESS}
 	result['rsps'] = rsps
+	result['lm_time'] = utils.datetimepstr(datetime.now())
 	return result
 
 def _update(user, n, image=None):

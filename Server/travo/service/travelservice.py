@@ -7,6 +7,7 @@ from travo.models import Travel,FavoriteTravel,TravelReadLog,TravelVote,TravelCo
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
+from datetime import datetime
 
 def _build_cover_path():
 	return uuid.uuid4().hex[0:16]
@@ -16,12 +17,13 @@ def upload(token, travels, covers={}):
 	user = userservice.get_user(token)
 	rsps = []
 	for t in travels:
-		if t.get('id') != 0:
-			rsps.append(_update(user, t, covers.get(t.get('cover'))))
-		else:
+		if t.get('id') is None or t.get('id') == 0:
 			rsps.append(_new(user, t, covers.get(t.get('cover'))))
+		else:
+			rsps.append(_update(user, t, covers.get(t.get('cover'))))
 	result = {RSP_CODE : RC_SUCESS}
 	result['rsps'] = rsps
+	result['lm_time'] = utils.datetimepstr(datetime.now())
 	return result
 
 def _update(user, t, cover=None):

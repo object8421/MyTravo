@@ -20,6 +20,8 @@ def strpdate(s):
 	if s is not None:
 		return datetime.strptime(s, '%Y-%m-%d').date()
 
+def datetimepstr(d):
+	return str(d)[0:-7]
 ######    get image    ######
 def _get_image(path):
 	ftp = get_ftp()

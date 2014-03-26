@@ -4,7 +4,7 @@ import urllib2
 import utils
 import traceback
 
-from travo.exceptions import TokenError, IllegalDataError
+from travo.exceptions import TokenError, IllegalDataError,AuthError
 from django.db import IntegrityError
 from travo.models import User, LoginRecord,UserInfo,Follow
 from django.core.exceptions import ObjectDoesNotExist
@@ -103,7 +103,7 @@ def travo_register(nickname, email, password):
 
 def qq_register(nickname, qq_token):
 	try:
-		qq_id = _ge_qq_id(qq_token)
+		qq_id = _get_qq_id(qq_token)
 	except AuthError:
 		return {RSP_CODE : RC_AUTH_FAIL}
 	else:
@@ -233,4 +233,44 @@ def get_user_info(token, friend_id):
 			result = {RSP_CODE : RC_SUCESS}
 			result['user_info'] = UserInfo.objects.get(pk=u.id)
 			return result
+
+######    update email    ######
+def update_email(token, email, password):
+	if not _check_email(email):
+		return {RSP_CODE : RC_ILLEGAL_EMAIL}
+	user = get_user(token)
+	if user.email is None:
+		#add email
+		user.email = email
+		user.password = password
+	else:
+		#change email
+		if user.password != password:
+			return {RSP_CODE : RC_WRONG_PASSWORD}
+		else:
+			user.email = email
+	try:
+		user.save()
+	except IntegrityError, e:
+		if 'email_UNIQUE' in str(e):
+			#email duplicate
+			return {RSP_CODE : RC_DUP_EMAIL}
+
+	return {RSP_CODE : RC_SUCESS}
+
+######    bind QQ    ######
+def bind(token, qq_token):
+	user = get_user(boken)
+	try:
+		qq_id = _get_qq_user_id(qq_token)
+	except AuthError:
+		return {RSP_CODE : RC_AUTH_FAIL}
+	else:
+		user.qq_user_id = qq_id
+		try:
+			user.save()
+		except IntegrityError, e:
+			if 'qq_user_id_UNIQUE' in str(e): 
+				return {RSP_CODE : RC_DUP_BIND}
+	return {RSP_CODE : RC_SUCESS}
 
