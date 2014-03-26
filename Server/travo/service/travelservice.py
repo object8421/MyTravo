@@ -55,7 +55,8 @@ def _update(user, t, cover=None):
 
 def _new(user, t, cover=None):
 	'''create a new travel for user'''
-	t.pop('id')
+	if t.has_key('id'):
+		t.pop('id')
 	rsp = {RSP_CODE : RC_SUCESS}
 	rsp['tag'] = t.get('tag')
 	if not _check_key(t):

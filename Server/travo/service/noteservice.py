@@ -54,7 +54,8 @@ def _update(user, n, image=None):
 
 def _new(user, n, image=None):
 	'''create a new note for user'''
-	n.pop('id')
+	if n.has_key('id'):
+		n.pop('id')
 	rsp = {RSP_CODE : RC_SUCESS}
 	rsp['tag'] = n.get('tag')
 	if not _check_key(n):
