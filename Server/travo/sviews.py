@@ -48,12 +48,16 @@ class MyInfoView(View):
         template = loader.get_template('website/me.html')
         token = request.session['token']
         user = get_object_or_404(User, token=token)
-        my_recent_travel_list = travelservice.get_travel(token,3)['travel_list']
+        followers_list = userservice.follow_list(token)['users']
+        result = travelservice.get_travel(token,3)
+        
         basic_travel_path = settings.COVER_PATH
         context =  RequestContext(request,{\
             "user":user,
-            "recent_travel_list":my_recent_travel_list,
-            "basic_travel_path":basic_travel_path,})
+            "travel_list_length":result['travel_list_length'],
+            "recent_travel_list":result['travel_list'],
+            "basic_travel_path":basic_travel_path,
+            "followers_list":followers_list})
 
         return HttpResponse(template.render(context))
 
@@ -66,7 +70,12 @@ class RegisterSuccessView(View):
 class DetailInfoView(View):
     def get(self, request):
         template = loader.get_template('website/detail_info.html')
-        context = RequestContext(request)
+        token  = request.session['token']
+        user = get_object_or_404(User, token=token)
+        user_info = userservice.get_user_info(token, user.id)['user_info']
+        context = RequestContext(request,{\
+            "user":user,
+            "user_info":user_info})
         return HttpResponse(template.render(context))
 
 class LoginView(View):
@@ -188,6 +197,32 @@ class NewTravelView(View):
         return HttpResponse('添加成功!')
 
 
+class EditTravelView(View):
+    def get(self,request):
+        template = loader.get_template('website/edit_travel.html')
+        context = RequestContext(request)
+        return HttpResponse(template.render(context))
+
+
+class EditNoteView(View):
+    def get(self,request):
+        template = loader.get_template('website/edit_note.html')
+        context = RequestContext(request)
+        return HttpResponse(template.render(context))
+
+
+class FollowingView(View):
+    def get(self,request):
+        template = loader.get_template('website/following.html')
+        context = RequestContext(request)
+        return HttpResponse(template.render(context))
+
+class FollowedView(View):
+    def get(self,request):
+        template = loader.get_template('website/followed.html')
+        context = RequestContext(request)
+        return HttpResponse(template.render(context))
+
 
 class ShowMyTravel(View):
     def get(self,request):
@@ -220,6 +255,9 @@ class DetailTravelView(View):
             'note_list':note_list,
             })
         return HttpResponse(template.render(context))
+
+
+
 
 #======================note view======================================
 

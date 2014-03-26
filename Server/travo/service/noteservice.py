@@ -1,10 +1,12 @@
 import utils
 import uuid
 import userservice
+import traceback
 
 from travo.rc import *
 from travo.models import Note, Location, Travel
 from django.core.exceptions import ValidationError
+from datetime import datetime
 
 
 def _build_image_path():
@@ -15,12 +17,13 @@ def upload(token, notes, images={}):
 	user = userservice.get_user(token)
 	rsps = []
 	for n in notes:
-		if n.has_key('id'):
-			rsps.append(_update(user, n, images.get(n.get('image'))))
-		else:
+		if n.get('id') is None or n.get('id') == 0:
 			rsps.append(_new(user, n, images.get(n.get('image'))))
+		else:
+			rsps.append(_update(user, n, images.get(n.get('image'))))
 	result = {RSP_CODE : RC_SUCESS}
 	result['rsps'] = rsps
+	result['lm_time'] = utils.datetimepstr(datetime.now())
 	return result
 
 def _update(user, n, image=None):
@@ -41,16 +44,17 @@ def _update(user, n, image=None):
 		else:
 			note.update(n)
 			if image is not None: 
-				note.image_path = _build_image_path() 
-				utils.save_image(note.image_path, image)
+				_save_image(note, image)
 			try:
 				note.save()
 			except ValidationError, e:
+				print traceback.format_exc()
 				rsp[RSP_CODE] = RC_ILLEGAL_DATA
 	return rsp
 
 def _new(user, n, image=None):
 	'''create a new note for user'''
+	n.pop('id')
 	rsp = {RSP_CODE : RC_SUCESS}
 	rsp['tag'] = n.get('tag')
 	if not _check_key(n):
@@ -73,8 +77,7 @@ def _new(user, n, image=None):
 			if not _exists_note(user.id, n['travel_id'], note.create_time):
 				#do not found any same note 
 				if image is not None: 
-					note.image_path = _build_image_path()
-					utils.save_image(note.image_path, image)
+					_save_image(note, image)
 				try:
 					if location is not None:
 						location.save()
@@ -89,6 +92,14 @@ def _new(user, n, image=None):
 				#found same travel
 				rsp[RSP_CODE] = RC_DUP_DATA
 	return rsp
+
+def _save_image(note, image):
+	print type(image)
+	note.image_path = _build_image_path()
+	note.photo_time = utils.get_photo_time(image)
+	if note.photo_time is None:
+		note.photo_time = note.create_time
+	utils.save_image(note.image_path, image)
 
 def _exists_note(user_id, travel_id, create_time):
 	return Note.objects.filter(user_id=user_id, travel_id=travel_id, create_time=create_time).exists()
@@ -108,7 +119,7 @@ def sync(token, begin_time):
 		result['notes'] = list(Note.objects.filter(user = user))
 	else:
 		begin_time = utils.strpdatetime(begin_time)
-		result['notes'] = list(Note.objects.filter(user=user,lm_time__gte=begin_time))
+		result['notes'] = list(Note.objects.filter(user=user,lm_time__gt=begin_time))
 	return result 
 
 ########	image	##########

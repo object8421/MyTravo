@@ -34,10 +34,10 @@ class BaseView(View):
 
 	def handle(self):
 		print
-		print('===========request==========')
+		print('************request************')
 		print('host:' + self._request.META['REMOTE_ADDR'])
 		print('arg:' + str(self._request.GET))
-		print('body:' + self._request.body)
+		#print('body:' + self._request.body)
 		'''
 		print('post:' + str(self._request.POST))
 		print('FILES:' + str(self._request.FILES))
@@ -46,7 +46,7 @@ class BaseView(View):
 		try:
 			result = self.do()
 			print('==========response==========')
-			print result
+			#print result
 			return result
 		except IllegalDataError:
 			print('======caught exception======')
@@ -123,9 +123,8 @@ class BaseView(View):
 ###############################################
 class UserView(BaseView):
 	_request = None
-	def record_login(self, u):
-		lr = LoginRecord(user=u, time=datetime.now(), ip=self._request.META['REMOTE_ADDR'])
-		print lr.dict()
+	def record_login(self, user_id):
+		lr = LoginRecord(user_id=user_id, time=datetime.now(), ip=self._request.META['REMOTE_ADDR'])
 		lr.save()
 
 class LoginView(UserView):
@@ -135,16 +134,20 @@ class LoginView(UserView):
 	
 	def do(self):
 		result = {
-			'travo' : userservice.travo_login(self.get_required_arg('email'), self.get_required_arg('password')),
-			'qq'	: userservice.qq_login(),
-			'sina'	: userservice.sina_login() 
-		}[self.get_required_arg('user_type')]
+			'travo' : self.travo_login,
+			'qq'	: self.qq_login
+		}[self.get_required_arg('user_type')]()
 
 		if result[RSP_CODE] == RC_SUCESS:
 			#record login
-			pass
-			#self.record_login(result['user'])
+			self.record_login(result['user'].id)
 		return result
+	
+	def travo_login(self):
+		return userservice.travo_login(self.get_required_arg('email'), self.get_required_arg('password'))
+
+	def qq_login(self):
+		return userservice.qq_login(self.get_required_arg('qq_token'))
 
 class RegisterView(UserView):
 	def post(self, request):
@@ -152,15 +155,28 @@ class RegisterView(UserView):
 		return JsonResponse(self.handle())
 
 	def do(self):
-		return {
-			'travo' : userservice.travo_register(
+		result = {
+			'travo' : self.travo_register,
+			'qq'	: self.qq_register
+		}[self.get_required_arg('user_type')]()
+
+		if result[RSP_CODE] == RC_SUCESS:
+			#record login
+			self.record_login(result['user_id'])
+		return result
+
+
+	def travo_register(self):
+		return userservice.travo_register(
 						self.get_required_data('nickname'),
 						self.get_required_data('email'),
 						self.get_required_data('password')
-					),
-			'qq'	: userservice.qq_register(), 
-			'sina'	: userservice.sina_register() 
-		}[self.get_required_arg('user_type')]
+						)
+	def qq_register(self):
+		return userservice.qq_register(
+						self.get_required_data('nickname'),
+						self.get_required_data('qq_token')
+						)
 
 class UpdateUserView(BaseView):
 	def put(self, request):
@@ -199,6 +215,70 @@ class GetFaceView(BaseView):
 
 	def do(self):
 		return travelservice.get_face(self._user_id)
+
+class FollowView(BaseView):
+	def put(self, request, user_id):
+		self. _request = request
+		self._user_id = user_id
+		return JsonResponse(self.handle())
+
+	def do(self):
+		return userservice.follow(
+				self.get_token(),
+				self._user_id,
+				self.action
+				)
+
+class FollowUserView(FollowView):
+	def put(self, request, user_id):
+		self.action = 1
+		return super(FollowUserView, self).put(request, user_id)
+	
+class UnfollowUserView(FollowView):
+	def put(self, request, user_id):
+		self.action = 0
+		return super(UnfollowUserView, self).put(request, user_id)
+
+class FollowListView(BaseView):
+	def get(self, request):
+		self._request = request
+		return JsonResponse(self.handle())
+
+	def do(self):
+		return userservice.follow_list(self.get_token())
+
+class UserInfoView(BaseView):
+	def get(self, request, user_id):
+		self._request = request
+		self._user_id = user_id
+		return JsonResponse(self.handle())
+	def do(self):
+		return userservice.get_user_info(
+				self.get_arg('token'),
+				self._user_id
+				)
+
+class UpdateEmailView(BaseView):
+	def put(self, request):
+		self._request = request
+		return JsonResponse(self.handle())
+
+	def do(self):
+		return userservice.update_email(
+				self.get_token(),
+				self.get_required_arg('email'),
+				self.get_required_arg('password')
+				)
+
+class BindView(BaseView):
+	def put(self, request):
+		self._request = request
+		return JsonResponse(self.handle())
+	def do(self):
+		return userservice.bind(
+				self.get_token(),
+				self.get_required_arg('qq_token')
+				)
 
 ##############################################
 ########	TRAVEL MOUDLE	##################
@@ -324,6 +404,7 @@ class CommentTravelView(BaseView):
 				self._travel_id,
 				self.get_required_data('content')
 				)
+
 class GetCommentsView(BaseView):
 	def get(self, request, travel_id):
 		self._request = request
@@ -332,6 +413,18 @@ class GetCommentsView(BaseView):
 
 	def do(self):
 		return travelservice.get_comments(self._travel_id)
+
+class FriendTravelsView(BaseView):
+	def get(self, request, user_id):
+		self._request = request
+		self._user_id = user_id
+		return JsonResponse(self.handle())
+
+	def do(self):
+		return travelservice.friend_travels(
+				self.get_token(),
+				self._user_id
+				)
 
 #############################################
 ########	Note MOUDLE		#################

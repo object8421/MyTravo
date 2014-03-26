@@ -137,6 +137,7 @@ class Note(models.Model, SyncModel):
 	travel = models.ForeignKey('Travel')
 	location = models.OneToOneField('Location', null=True)
 	create_time = models.DateTimeField()
+	photo_time = models.DateTimeField(null=True)
 	content = models.CharField(max_length=2048, blank=True)
 	image_path = models.CharField(max_length=24, null=True)
 	is_deleted = models.IntegerField(default=False)
@@ -231,7 +232,7 @@ class FavoriteTravel(models.Model):
 class Follow(models.Model):
 	active = models.ForeignKey('User', db_column='active', related_name='active_follow')
 	passive = models.ForeignKey('User', db_column='passive', related_name='passive_follow')
-	time = models.DateTimeField()
+	time = models.DateTimeField(auto_now=True)
 	action = models.CharField(max_length=1)
 	class Meta:
 		managed = False

@@ -64,11 +64,28 @@
                 <li><a href={%url 'me'%}>个人主页</a></li>
                 {% endif %}
                 <li><a href="#contact">客户端下载</a></li>
-                
+
               </ul>
+              <form class="navbar-form navbar-left" role="search">
+      <div class="form-group">
+        <input type="text" class="form-control" placeholder="Search">
+      </div>
+      <button type="submit" class="btn btn-primary">搜索</button>
+    </form>
+
+            <!-- search form -->
+              
+       
+
+
+
+ 
+             
+       
+
               <ul class="nav navbar-nav navbar-right">
                     <!--<li><a href="#">注册</a></li>-->
-                    <div class="btn-group" style="float:left; margin-top: 9%;">
+                    <div class="btn-group" style="float:left;margin-top:9%;">
                     {%block user_info%}
                     
                     {% if 'token' in request.session %}
@@ -76,7 +93,7 @@
                       欢迎你：{{request.session.username}}<span class="caret"></span>
                       </button>
                        <ul class="dropdown-menu">
-                       <li ><a href="{%url 'me'%}" >个人信息</a></li>
+                       <li ><a href={%url 'detail_info'%} >个人信息</a></li>
                        <li><a href={%url 'set_account'%}>设置</a></li>
                        <li><a href={%url 'logout'%}>退出</a></li>
 
@@ -348,5 +365,7 @@ $(document).ready(function(){
 });
 </script>
 
+    {% block myscript %}
+    {% endblock %}
 </body>
 </html>

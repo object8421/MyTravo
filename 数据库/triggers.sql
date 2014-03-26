@@ -174,7 +174,7 @@ BEGIN
 	IF _action IS NOT NULL AND _action = new.action THEN
 		SIGNAL SQLSTATE '45000'
 			SET MESSAGE_TEXT = 'can not insert same action continuously';
-	end if;
+	end IF;
 end
 $$
 DROP TRIGGER IF EXISTS ains_follow;

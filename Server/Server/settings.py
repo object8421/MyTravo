@@ -12,10 +12,14 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-WEB_ROOT = '/usr/travo/'
-IMAGE_PATH = WEB_ROOT + 'image/'
+FTP_SERVER = '172.16.12.125'
+FTP_PORT = 21
+FTP_USER = 'rew'
+
+IMAGE_PATH = 'image/'
 FACE_PATH = IMAGE_PATH + 'face/'
 COVER_PATH = IMAGE_PATH + 'cover/'
+
 MEDIA_ROOT = IMAGE_PATH
 MEDIA_URL = '/media/'
 
@@ -26,11 +30,12 @@ MEDIA_URL = '/media/'
 SECRET_KEY = '6(r+_%23s=ho7zoy$u#o@+p%$%ykayj%egdq9mb@7yirhv#)@e'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True 
 
 TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
+		#'*',]
 
 TOKEN_VALID_DAY = 60
 
@@ -100,6 +105,15 @@ USE_I18N = True
 
 USE_TZ = False 
 
+ADMINS = (
+		('Boozer', 'mingyuan1240@gmail.com'),
+		('rew', '1135172071@qq.com'),
+		('Ethon' 'wlj0427@gmail.com')
+		)
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'cobra.travo@gmail.com'
+EMAIL_HOST_PASSWORD = 'www.cobra.com'
+EMAIL_USE_TLS = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.6/howto/static-files/

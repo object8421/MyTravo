@@ -17,6 +17,15 @@ urlpatterns = patterns('travo',
 			name = 'register_success'),
 		url(r'^user/new_travel',sviews.NewTravelView.as_view(),\
 			name = 'new_travel'),
+
+		url(r'^user/edit_travel',sviews.EditTravelView.as_view(),\
+			name = 'edit_travel'),
+		url(r'^user/edit_note',sviews.EditNoteView.as_view(),\
+			name = 'edit_note'),
+		url(r'user/following',sviews.FollowingView.as_view(),\
+			name = 'following'),
+		url(r'user/followed',sviews.FollowedView.as_view(),\
+			name = 'followed'),
 		#显示添加note的表单
 		
 		url(r'^new_note/(?P<travel_id>\d+)/',sviews.NewNoteView.as_view(),name = 'new_note'),	

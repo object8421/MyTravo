@@ -3,9 +3,11 @@
 
 {% block content %}
 
-<div class="container" style="padding-top:20px;background-color:#efefef;">
+<div class="container" style="padding-top:20px;background-color:#ffffff;">
  <div class="row">
- <div style="margin-left:50px;">
+ <div class="col-md-8">
+    <div class="row">
+      <div class="col-md-4 col-md-offset-1">
         <table class="table" style="float:left;width:250px;margin-right:50px;">
           <tr>
             <td style="padding:0;">
@@ -15,25 +17,28 @@
           </tr>
           
           </table>
-     </div> 
-     
+      </div>
+      <div class="col-md-6 col-md-offset-1">
+        <div class="col-md-8">
+          <div>
 
-
-  <div style="float:left;margin-top:50px;">
-
-        <h1>游记名称：{{travel.title}}</h1>
-        <h3>{{travel.create_time}}</h3>
-        <h4>{{travel.description}}</h4>
-        <li type="button"  class="btn btn-success btn-lg" ><a href="{%url 'new_note' travel.id %}">＋添加新足迹</a></li>
-  </div>
-
-
-
-
-
-
-
- 
+            <h3>{{travel.title}}</h3><!-- h1这里放的应该是个游记title -->
+            <p>{{travel.create_time | date:"Y-m-d"}}</p>
+            <h4><small>{{travel.description}}</small></h4>
+            <li type="button"  class="btn btn-info btn-lg" onclick="javascript:location.href='{%url 'new_note' travel.id%}'">＋添加新足迹</li>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <!--<button  type="button" class="btn btn-small btn-info">编辑</button>-->
+        </div>
+       
+      </div>
+    </div>
+  </div> 
+  <div class="col-md-4">
+    <div id="map_notes" style="height:300px; width:300px;">
+    </div>
+  </div>   
 
  </div><!-- row end -->
 
@@ -45,6 +50,7 @@
 
 
 <!-- note 1 -->
+
 <div class="row" style="margin-bottom:20px;">
 
 <div class="col-md-3" style="margin-right:55px;margin-left:55px;">
@@ -62,8 +68,37 @@
              </table>
          </div>
 
-<div>
-		<img src="/medias/{{note.image_path}}" style="width:60%; height:350px; margin=0;">
+<div class="row" >
+
+<div class="col-md-4" >
+    
+              
+                <div class="alert " style= "background-color:#eeeeee;">
+                <p>{{note.create_time | date:"Y-m-d"}}</p>
+                
+                <p >
+                
+                <span class="label label-success">{{note.location.address}}</button>
+               
+                </p>
+               
+                <h3 >{{note.content}}</h3>
+                </div>
+              
+                   
+  
+            
+    
+</div>
+
+
+<div class="col-md-8">
+    <div class="col-md-10">
+		<img src="/medias/{{note.image_path}}" class="travel_detail_img">
+    </div>
+    <div class="col-md-2">
+    <!--<button  type="button" class="btn btn-small btn-info">编辑</button>-->
+    </div>
 	</div>
 
 </div>
@@ -241,4 +276,95 @@
                 </div><!-- /.modal-dialog -->
               </div><!-- /.modal -->
 
+{% endblock %}
+{% block myscript %}
+<script>
+  // Set the Map variable
+        var map;
+        function initialize() { 
+            var myOptions = {
+            zoom: 9,
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var all = [
+            ["Location 1", "Summerdale Rd", "Elon", "NC", "27253", "36.150491", "-79.5470544"], 
+            ["Location 2", "7205 Olmstead Dr", "Burlington", "NC", "27215", "36.069974", "-79.548101"],
+            ["Location 3", "W Market St", "Graham", "NC", "27253", "36.0722225", "-79.4016207"],
+            ["Location 4", "Mt Hermon Rock Creek Rd", "Graham", "NC", "27253", "35.9826328", "-79.4165216"],
+            ["Location 5", "415 Spring Garden St", "Greensboro", "NC", "27401", "36.06761", "-79.794984"]
+        ];
+        var tlat = 0.0;
+        var tlng = 0.0;
+        var number = 0;
+        
+        {%for note in note_list %}
+        tlat = tlat + parseFloat({{note.location.latitude | floatformat:"6"}});
+        tlng = tlng + parseFloat({{note.location.longitude | floatformat:"6"}});
+        {%if note.location%}
+        number = number + 1;
+        {% endif %}
+        {% endfor %}
+        
+        var infoWindow = new google.maps.InfoWindow;
+        map = new google.maps.Map(document.getElementById('map_notes'), myOptions);
+        // Set the center of the map
+        var pos = new google.maps.LatLng(tlat/number, tlng/number);
+        map.setCenter(pos);
+        function infoCallback(infowindow, marker) { 
+            return function() {
+            infowindow.open(map, marker);
+        };
+   }      
+   function setQKYMarkers(map, all) {
+    {%for note in note_list %}
+
+            //var name = {{note.location.address}};
+            var latlngset;
+            var lat = parseFloat({{note.location.latitude | floatformat:"6"}});
+            var lng = parseFloat({{note.location.longitude | floatformat:"6"}});
+            
+            latlngset = new google.maps.LatLng(lat, lng);
+            var marker = new google.maps.Marker({
+              map: map, title: '{{note.location.address}}', position: latlngset
+            });
+            var content = '<div><h5>' + '{{note.location.address}}' + '</h5></div>';         
+                    var infowindow = new google.maps.InfoWindow();
+                      infowindow.setContent(content);
+                      google.maps.event.addListener(
+                        marker, 
+                        'click', 
+                        infoCallback(infowindow, marker)
+                      );
+            
+    {% endfor %}
+    // for (var i in all) {                    
+    //         var name  = all[i][0];
+    //         var address = all[i][1];
+    //         var city  = all[i][2];
+    //         var state   = all[i][3];
+    //         var zip   = all[i][4];
+    //         var lat   = all[i][5];
+    //         var lng   = all[i][6];
+    //         var latlngset;
+    //         latlngset = new google.maps.LatLng(lat, lng);
+    //         var marker = new google.maps.Marker({  
+    //           map: map,  title: city,  position: latlngset  
+    //         });
+    //         alert(lat);
+    //         // var content = '<div class="map-content"><h3>' + name + '</h3>' + address + '<br />' + city + ', ' + state + ' ' + zip + '<br /><a href="http://maps.google.com/?daddr=' + address + ' ' + city + ', ' + state + ' ' + zip + '" target="_blank">Get Directions</a></div>';         
+    //         // var infowindow = new google.maps.InfoWindow();
+    //         //   infowindow.setContent(content);
+    //         //   google.maps.event.addListener(
+    //         //     marker, 
+    //         //     'click', 
+    //         //     infoCallback(infowindow, marker)
+    //         //   );
+    //       }
+        }     
+        // Set all markers in the all variable
+        setQKYMarkers(map, all);
+      };
+      // Initializes the Google Map
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
 {% endblock %}

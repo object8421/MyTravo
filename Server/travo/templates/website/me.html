@@ -4,55 +4,71 @@
 
 {% block content %}
 
-<div class="container" style="padding-top:20px;background-color:#efefef;">
- <div class="row">
- 
+<div class="container" style="background-color:#ffffff;">
+  <!-- 个人信息条 -->
+ <div class="row" style="background-color:#f5f5f5;margin-bottom:0;">
+ <!-- 头像信息框 -->
+ <div style="margin-left:20px;margin-top:20px;">
         <table class="table" style="float:left;width:250px;margin-right:50px;">
           <tr>
             <td style="padding:0;">
-            <img src="../../static/travo/image/me_avatar0.jpg" alt="..." class="img-rounded" style="width:100%; height:250px; margin=0;">
+            <img src="../../static/travo/image/me_avatar0.jpg" alt="Responsive image" class="img-rounded img-responsive" style="width:100%; height:250px; margin:0;padding:0;border-radius:0;">
              </td>
           </tr>
           <tr style="padding:0;">     
           <td align="center" style="padding:0; margin:0;">      
-        <table class="table table-bordered" style="width:250px;margin:0;padding:0;">
-          <tr style="width:250px; padding:0; margin:0;" align="center">
-          <td style="margin:0;"><button class="button btn-link btn-default"><b>游记</b></button></td>
-          <td style="margin:0;"><button class="button btn-link btn-default"><b>想去</b></button></td>
-          <td style="margin:0;"><button class="button btn-link btn-default"><b>喜欢</b></button></td>
-        </tr>
-        </table>
+      
+        <div style="width:250px;margin:0;padding:0;">
+        <div class="btn-group btn-group-justified" style="padding-top:0;padding-bottom:0;">
+          
+          <a type="button" class="btn btn-primary"  style="border-radius:0;"><p style="font-size:22px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">{{travel_list_length}}</p><p style="font-size:8px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">游记</p></a>
+          
+          <a type="button" class="btn btn-primary" style="border-radius:0;"><p style="font-size:22px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">5</p><p style="font-size:8px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">想去</p></a>
+          <a type="button" class="btn btn-primary"  style="border-radius:0;"><p style="font-size:22px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">24</p><p style="font-size:8px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">喜欢</p></a>
+          
+        </div>
+        </div>
+  
+
+
+
         </td>
             </tr>
           </table>
       
-     
+     </div><!-- 头像 end -->
 
 
   <div style="float:left;margin-top:70px;">
         <h1>{{request.session.username}}</h1>
-        <h3>女</h3>
-        <h4>我的个性签名是不是菜鸡</h4>
-        <li type="button"  class="btn btn-success btn-lg" ><a href="{%url 'new_travel'%}">＋创建新游记</a></li>
+        <h3>{{userinfo.sex | default:"男"}}</h3>
+        <h4>{{user.signature | default:"个性签名:暂无"}}</h4>
+        <li type="button"  class="btn btn-primary btn-lg" onclick="javascript:location.href='{%url 'new_travel'%}'" value="创建新游记">＋创建新游记</li>
   </div>
 
 
-  <div style="float:right;">
+  <div style="float:right; margin-right:20px;">
       <h6>我的足迹</h6>
             <img alt="140x140" src="http://lorempixel.com/140/140/" class="img-rounded"style="width:250px;" />
   </div>
  
 
- </div>
+ </div><!-- row end -->
 
 
 <!-- Here comes the divider -->
 
-<hr class="featurette-divider">
+
+<hr class="featurette-divider " style="margin-top:0;">
 <div style="padding-bottom:20px;">
   <!-- 游记条题目 -->
-<button type="button" onclick="javascript:window.location.href='{%url 'show_my_travel'%}' " class="btn btn-primary btn-lg"><我的游记<span class="badge">3</span></button>  
 
+
+<div class="col-md-12" style=" padding-left:5px;margin-bottom:20px;">
+<div class="col-md-2" style="padding:0;">
+<button type="button" onclick="javascript:window.location.href='{%url 'show_my_travel'%}' " class="btn btn-info btn-lg btn-block" style="border-radius:2px;">我的游记   <span class="badge"> 3</span></button>  
+ 
+</div>
 </div>
 <!-- 我的游记 条 从这里开始-->
 <div class="row clearfix" align="center">
@@ -72,7 +88,6 @@
                 <div style="float:left;">
 
                 <h5 class="pull-left"><a href="{%url 'detail_travel' travel.id %}">{{travel.title}}</a></h5>
-                <h5 class="pull-left"><a href="{%url 'detail_travel' travel.id %}">{{travel.id}}</a></h5>
                 
               </div>
               
@@ -108,8 +123,10 @@
 
 
 <hr class="featurette-divider">
-<div>
-<button type="button" class="btn btn-primary btn-lg">想去的地方<span class="badge">1</span> </button>
+<div class="col-md-12" style=" padding-left:5px;margin-bottom:20px;">
+<div class="col-md-2" style="padding:0;">
+<button type="button" class="btn btn-info btn-lg btn-block" style="border-radius:2px;">想去的地方   <span class="badge"> 3</span></button>  
+</div>
 </div>
 
 </div><!-- end of container -->
