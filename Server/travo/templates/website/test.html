@@ -1,14 +1,8 @@
-<form enctype="multipart/form-data" method="POST" action="/test" target="_self">
-<br />
-<br />
-<br />
-<table id=control width="100%" border="0" cellspacing="0" cellpadding="0" class="borderon">
-<input type="text" name="title" value = "{{ cfn.columnid}}-{{ cfi.columnid }}"></p>
+{% extends "website/base_index.html" %}
+{% block title %}获取view数据{% endblock %}
+{% block content %}
 
-<td align="center">
-<input type="file" name="cover"/>选择文件的按钮<br/>
-<br />
-<input type="submit" value="上传图片">
-</td>
-</table>
-</form>
+
+{{user.email}}
+
+{% endblock %}

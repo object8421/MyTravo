@@ -16,7 +16,7 @@ FTP_SERVER = '172.16.12.125'
 FTP_PORT = 21
 FTP_USER = 'rew'
 
-IMAGE_PATH = 'image/'
+IMAGE_PATH = 'ftp://rew@172.16.12.125/image'
 FACE_PATH = IMAGE_PATH + 'face/'
 COVER_PATH = IMAGE_PATH + 'cover/'
 

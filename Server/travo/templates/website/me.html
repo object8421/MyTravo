@@ -40,10 +40,14 @@
 
 
   <div style="float:left;margin-top:70px;">
+  {%if user %}
         <h1>{{request.session.username}}</h1>
         <h3>{{userinfo.sex | default:"男"}}</h3>
+          <h3>{{user.email}}</h3>
+        
         <h4>{{user.signature | default:"个性签名:暂无"}}</h4>
         <li type="button"  class="btn btn-primary btn-lg" onclick="javascript:location.href='{%url 'new_travel'%}'" value="创建新游记">＋创建新游记</li>
+  {% endif %}
   </div>
 
 

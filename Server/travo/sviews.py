@@ -53,14 +53,19 @@ class MyInfoView(View):
         
         basic_travel_path = settings.COVER_PATH
         context =  RequestContext(request,{\
-            "user":user,
+            'user':user,
             "travel_list_length":result['travel_list_length'],
             "recent_travel_list":result['travel_list'],
             "basic_travel_path":basic_travel_path,
             "followers_list":followers_list})
 
-        return HttpResponse(template.render(context))
-
+        #return HttpResponse(template.render(context))
+        return render(request,'website/me.html',{'user':user,
+            "travel_list_length":result['travel_list_length'],
+            "recent_travel_list":result['travel_list'],
+            "basic_travel_path":basic_travel_path,
+            "followers_list":followers_list,
+            })
 class RegisterSuccessView(View):
     def get(self,request):
         template = loader.get_template('website/register_successful.html')
@@ -162,20 +167,14 @@ class ContactView(View):
 class TestView(View):
     def get(self,request):
         template = loader.get_template('website/test.html')
-        context = RequestContext(request)
-        return HttpResponse(template.render(context))
+        me = get_object_or_404(User,token=request.session['token'])
+        print me.email
+        context = RequestContext(request,{'user':me})
+        return render(request,'website/test.html',{
+            'user':me,
+            })
     def post(self, request):
-        buf = request.FILES.get('cover',None)
-        title = request.POST.get('title',None)
-        content = buf.name
-        print title
-        for attr in request.POST:
-
-            print "%s : %s"%(attr,request.POST.get('attr'))
-        print content
-        with open('haha.jpg','wb') as image:
-            image.write(buf.read())
-        return HttpResponse('添加成功!')
+        pass
 
 
 #===================travel view=====================================
