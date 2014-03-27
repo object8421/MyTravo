@@ -60,7 +60,7 @@ class MyInfoView(View):
             "followers_list":followers_list})
 
         #return HttpResponse(template.render(context))
-        return render(request,'website/me.html',{'user':user,
+        return render(request,'website/me.html',{"user":user,
             "travel_list_length":result['travel_list_length'],
             "recent_travel_list":result['travel_list'],
             "basic_travel_path":basic_travel_path,
@@ -78,10 +78,11 @@ class DetailInfoView(View):
         token  = request.session['token']
         user = userservice.get_user(token)
         print user.email
-        #user_info = userservice.get_user_info(token, user.id)['user_info']
-
+        user_info = userservice.get_user_info(token, user.id)['user_info']
         context = RequestContext(request)
-        return HttpResponse(template.render(context),{'user':user} )
+        return render(request,'website/detail_info.html',{"user":user,
+            "userinfo":user_info
+            })
 
 class LoginView(View):
 
@@ -117,15 +118,21 @@ class PersonalInfoSetView(View):
     def get(self, request):
         template = loader.get_template('website/set.html')
         context = RequestContext(request)
+        token  = request.session['token']
         user = get_object_or_404(User,token=request.session['token'])
-        return HttpResponse(template.render(context),{'user':user})
+        user_info = userservice.get_user_info(token, user.id)['user_info']
+        return render(request,'website/set.html',{"user":user,
+            "userinfo":user_info
+            })
     def post(self, request):
         attr_dict = request.POST
-        userservice.change_self_info(request.session['token'],attr_dict)
-        template = loader.get_template('website/me.html')
-        context = RequestContext(request)
-        user = request.get_object_or_404(User,token=token)
-        return HttpResponse(template.render(context),{'user':user})
+        for key in attr_dict.keys():
+            print key
+            print attr_dict[key]
+        userservice.update_info(request.session['token'],attr_dict)
+        response = HttpResponse()
+        response['Content-Type']="text/javascript"
+        return response;
 
 class ChangePasswordView(View):
     def post(self,request):
