@@ -79,13 +79,24 @@ public class PhotoUtils {
 		 File file = new File(AppData.TRAVO_PATH, photoPath);	       
 	      return Uri.fromFile(file);
 	}
+	
+	public static void makeDir()
+	{
+		String saveDir = Environment.getExternalStorageDirectory() + "/";
+		
+		File dir = new File(saveDir + "Travo");
+		if(!dir.exists())
+		{
+			Log.v(TAG, "dir is not exist!");
+			Log.v(TAG, String.valueOf(dir.mkdir()));
+		}
+	}
+	
 	public static  String  saveImage(String photoTimeString, Bitmap bitmap){
 		FileOutputStream fileOutputStream = null;
 	    try {
-	        // 获取 SD 卡根目录
 	        String saveDir = Environment.getExternalStorageDirectory() + "/";
 	        		
-	        // 新建目录
 	        File dir = new File(saveDir + "Travo");
 	        if (! dir.exists()){
 	        	Log.v(TAG, "dir is not exist!");

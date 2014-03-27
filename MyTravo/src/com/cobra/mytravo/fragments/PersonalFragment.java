@@ -1,13 +1,11 @@
 package com.cobra.mytravo.fragments;
 
-
 import java.util.Dictionary;
 import java.util.Hashtable;
 
 import com.cobra.mytravo.R;
 import com.cobra.mytravo.activities.MainActivity;
 import com.cobra.mytravo.activities.PersonalTravelDetailActivity;
-import com.cobra.mytravo.activities.PersonalTravelEditActivity;
 import com.cobra.mytravo.adapters.MeTravelAdapter;
 import com.cobra.mytravo.data.AppData;
 import com.cobra.mytravo.data.TravelsDataHelper;
@@ -43,14 +41,11 @@ public class PersonalFragment extends BaseFragment implements LoaderCallbacks<Cu
 		// TODO Auto-generated method stub
 		View view = inflater.inflate(R.layout.fragment_me, null);
 		mListView = (ListView) view.findViewById(R.id.me_listview);
-		
-		
 		mDataHelper = new TravelsDataHelper(getActivity(), AppData.getUserId());
 		mAdapter = new MeTravelAdapter(getActivity(), mListView);
 		mListView.setAdapter(mAdapter);
 		getLoaderManager().initLoader(0, null, this);
 		mListView.setOnItemClickListener(new OnItemClickListener() {
-
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int postion,
 					long id) {

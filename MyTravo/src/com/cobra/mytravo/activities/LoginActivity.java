@@ -4,10 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -15,19 +13,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.android.volley.RequestQueue;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.cobra.mytravo.R;
-import com.cobra.mytravo.R.layout;
-import com.cobra.mytravo.R.menu;
 import com.cobra.mytravo.data.AppData;
-import com.cobra.mytravo.data.GsonRequest;
 import com.cobra.mytravo.data.MyHandlerMessage;
 import com.cobra.mytravo.data.MyServerMessage;
+import com.cobra.mytravo.data.UserSyncDataHelper;
+import com.cobra.mytravo.data.UsersDataHelper;
+import com.cobra.mytravo.internet.SyncService;
 import com.cobra.mytravo.models.User;
-import com.cobra.mytravo.models.User.UserLoginResponse;
+import com.cobra.mytravo.models.UserSync;
+import com.google.gson.Gson;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.auth.WeiboAuth;
 import com.sina.weibo.sdk.auth.WeiboAuthListener;
@@ -66,11 +62,11 @@ public class LoginActivity extends Activity {
 	private Button loginbysina;
 	
 	private String user_type = "travo";
+	private User user;
 	
 	String access_token = null;
 	
 	SsoHandler mSsoHandler = null;
-	
 	
 	private Handler handler = new Handler(){
 		public void handleMessage(Message msg) 
@@ -79,10 +75,13 @@ public class LoginActivity extends Activity {
 			switch(msg.what)
 			{
 			case MyHandlerMessage.LOGIN_SUCCESS:
+				Intent syncService = new Intent(LoginActivity.this, SyncService.class);
+				syncService.putExtra("token", user.getToken());
+				startService(syncService);
 				Toast.makeText(LoginActivity.this, "您已成功登陆", Toast.LENGTH_SHORT).show();
 				Intent intent1 = new Intent(LoginActivity.this, MainActivity.class);
 				startActivity(intent1);
-				break;
+				break; 
 			case MyHandlerMessage.LOGIN_FAIL_EMAIL:
 				Toast.makeText(LoginActivity.this, "邮箱不存在", Toast.LENGTH_SHORT).show();
 				break;
@@ -112,10 +111,8 @@ public class LoginActivity extends Activity {
 		setContentView(R.layout.activity_login);
 		registerTextView = (TextView) findViewById(R.id.login_register);
 		registerTextView.setOnClickListener(new OnClickListener() {
-			
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 				Intent registerIntent = new Intent(LoginActivity.this, RegisterActivity.class);
 				registerIntent.putExtra("user_type", "travo");
 				startActivity(registerIntent);
@@ -177,7 +174,7 @@ public class LoginActivity extends Activity {
 		AppData.setIdToken(user.getToken());
 		AppData.setIsLogin(true);
 		AppData.setNickname(user.getNickname());
-		AppData.setUserId(user.getUser_id());
+		AppData.setUserId(user.getId());
 		AppData.setEmail(user.getEmail());
 	}
 	
@@ -204,9 +201,7 @@ public class LoginActivity extends Activity {
 				login();
 				
 			}
-			
 		}
-		
 		return super.onOptionsItemSelected(item);
 	}
 	
@@ -218,16 +213,16 @@ public class LoginActivity extends Activity {
 			String url = null;
 			if("travo".equals(user_type))
 			{
-				url = "http://172.16.12.26:8000/" + "user/login?user_type=travo&email="
+				url = AppData.HOST_IP + "user/login?user_type=travo&email="
 						+ email.getText().toString() + "&password=" + password.getText().toString();
 			}
 			else if("qq".equals(user_type))
 			{
-				url = "http://172.16.12.26:8000/" + "user/login?user_type=qq&qq_token=" + access_token;
+				url = AppData.HOST_IP + "user/login?user_type=qq&qq_token=" + access_token;
 			}
 			else if("sina".equals(user_type))
 			{
-				url = "http://172.16.12.26:8000/" + "user/login?user_type=sina&sina_token=" + access_token;
+				url = AppData.HOST_IP + "user/login?user_type=sina&sina_token=" + access_token;
 			}
 			
 			BufferedReader reader = null;
@@ -248,16 +243,18 @@ public class LoginActivity extends Activity {
 				result = strBuffer.toString();
 				JSONObject jsonObject = new JSONObject(result);
 				int rsp_code = jsonObject.getInt("rsp_code");
-				if(rsp_code == MyServerMessage.SUCCESS)
+				switch(rsp_code)
 				{
+				case MyServerMessage.SUCCESS:
 					AppData.setIsLogin(true);
-					AppData.setNickname(jsonObject.getString("nickname"));
-					AppData.setIdToken(jsonObject.getString("token"));
-					AppData.setEmail(jsonObject.getString("email"));
-//					AppData.setQQIdToken(jsonObject.getString("qq_user_id"));
-					AppData.setUserId(jsonObject.getInt("user_id"));
+					Gson gson = new Gson();
+					user = gson.fromJson(jsonObject.getJSONObject("user").toString() , User.class);
+					save_user(user);
 					msg.what = MyHandlerMessage.LOGIN_SUCCESS;
-					
+					break;
+				case MyServerMessage.NO_SUCH_USER:
+					msg.what = MyHandlerMessage.LOGIN_NO_SUCH_USRE;
+					break;
 				}
 				handler.sendMessage(msg);
 			} catch (Exception e)
@@ -298,6 +295,7 @@ public class LoginActivity extends Activity {
 			if(mAccessToken.isSessionValid())
 			{
 				access_token = mAccessToken.getToken();
+				Log.i("qq_token", access_token);
 				login();
 			}
 			else
@@ -335,20 +333,16 @@ public class LoginActivity extends Activity {
 				e.printStackTrace();
 			}
 		}
-
 		@Override
 		public void onError(UiError arg0)
 		{
 			Toast.makeText(LoginActivity.this, "error", Toast.LENGTH_LONG).show();
 		}
 
-
-
 		@Override
-		public void onComplete(JSONObject arg0) {
-			// TODO Auto-generated method stub
-Toast.makeText(LoginActivity.this, "complete", Toast.LENGTH_LONG).show();
-			
+		public void onComplete(Object arg0)
+		{
+			Toast.makeText(LoginActivity.this, "complete", Toast.LENGTH_LONG).show();
 			doComplete((JSONObject)arg0);
 		}
 	}

@@ -17,4 +17,14 @@
         android:orderInCategory="300" 
         android:title="记录足迹" 
         android:showAsAction="always"></item>
+    
+    <item 
+        android:id="@+id/logout"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="退出登录"/>
+    <item android:id="@+id/uploadnote"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="上传note"/>
 </menu>

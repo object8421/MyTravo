@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import com.cobra.mytravo.R;
 import com.cobra.mytravo.data.AppData;
@@ -16,11 +17,11 @@ import com.cobra.mytravo.helpers.MyImageUtil;
 import com.cobra.mytravo.helpers.PhotoUtils;
 import com.cobra.mytravo.helpers.ScreenUtil;
 import com.cobra.mytravo.helpers.TimeUtils;
+import com.cobra.mytravo.internet.UploadTravelCover;
 import com.cobra.mytravo.models.Travel;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
@@ -35,7 +36,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -116,6 +116,9 @@ public class AddTravelActivity extends Activity implements OnMenuItemClickListen
 						progressDialog.dismiss();
 					Toast.makeText(AddTravelActivity.this, "添加游记成功", Toast.LENGTH_SHORT).show();
 				}
+				Intent intent = new Intent(AddTravelActivity.this, UploadTravelCover.class);
+				intent.putExtra("type", "dirty");
+				startService(intent);
 				
 				AddTravelActivity.this.finish();
 				break;
@@ -123,7 +126,6 @@ public class AddTravelActivity extends Activity implements OnMenuItemClickListen
 				Toast.makeText(AddTravelActivity.this, "Oops! 游记未添加成功", Toast.LENGTH_SHORT).show();
 				break;
 			case MyHandlerMessage.SET_START_TIME_FINISH:
-				
 				break;
 			case MyHandlerMessage.SET_END_TIME_FINISH:
 				break;
@@ -150,7 +152,6 @@ public class AddTravelActivity extends Activity implements OnMenuItemClickListen
          // TODO Auto-generated method stub
          
          Calendar c = Calendar.getInstance() ;
-         
 
          int year = c.get(Calendar.YEAR);
 
@@ -217,7 +218,7 @@ public class AddTravelActivity extends Activity implements OnMenuItemClickListen
 				if(editTravel.getCover_url() != null){
 					
 					coverImageView.setImageBitmap(BitmapUtil.getRoundBitmap(BitmapUtil.createScaleBitmap
-		        			(AppData.TRAVO_PATH+"/"+editTravel.getCover_url()+".jpg", ScreenUtil.dip2px(this, coverImageView.getWidth()), 
+		        			(editTravel.getCover_url(), ScreenUtil.dip2px(this, coverImageView.getWidth()), 
 		        					ScreenUtil.dip2px(this, coverImageView.getHeight())), 10));
 					deleteButton.setVisibility(View.VISIBLE);
 					coverImageView.setVisibility(View.VISIBLE);
@@ -450,8 +451,9 @@ public class AddTravelActivity extends Activity implements OnMenuItemClickListen
 					travel.setEnd_date(endString);
 				
 				travel.setDescription(edtDescription.getText().toString());
-				travel.setCreated_time(TimeUtils.getTime().toString());
+				travel.setCreate_time(TimeUtils.getTime().toString());
 				travel.setUser_id(AppData.getUserId());
+				travel.setIs_sync(1);
 				//if imageExist means we add the photo or change the photo
 				if(imageExist){
 					Log.v("image", "image exist!");
@@ -462,7 +464,7 @@ public class AddTravelActivity extends Activity implements OnMenuItemClickListen
 								coverPathString = PhotoUtils.saveImage(photoTimeString, coverBitmap);
 								if(coverPathString != null){
 									Log.v("coverPath", coverPathString);
-									travel.setCover_url(photoTimeString);
+									travel.setCover_url(AppData.TRAVO_PATH + "/" + photoTimeString + ".jpg");
 								}
 								else{
 									Log.v("coverPath", "null");
@@ -473,15 +475,13 @@ public class AddTravelActivity extends Activity implements OnMenuItemClickListen
 					}
 					else{
 						if(photoTimeString != null)
-						travel.setCover_url(photoTimeString);
+						travel.setCover_url(AppData.TRAVO_PATH + "/" + photoTimeString + ".jpg");
 						
 					}
 				}
 				mDataHelper.insert(travel);
-				//only for testing, later we will move user_id to the moment 
-				//we successfully login
 				
-				AppData.setTravel_time(travel.getCreated_time());
+				AppData.setTravel_time(travel.getCreate_time());
 			}
 			else{
 				editTravel.setTitle(edtTitle.getText().toString());
@@ -494,6 +494,7 @@ public class AddTravelActivity extends Activity implements OnMenuItemClickListen
 					editTravel.setEnd_date(endString);
 				
 				editTravel.setDescription(edtDescription.getText().toString());
+				editTravel.setIs_sync(1);
 				if(imageExist){
 					//if is null that means we have changed the imageurl
 					if(coverPathString == null){
@@ -501,11 +502,11 @@ public class AddTravelActivity extends Activity implements OnMenuItemClickListen
 							coverPathString = PhotoUtils.saveImage(photoTimeString, coverBitmap);
 							if(coverPathString != null)
 								Log.v("coverPath is:", coverPathString);
-								editTravel.setCover_url(photoTimeString);
+								editTravel.setCover_url(AppData.TRAVO_PATH + "/" + photoTimeString + ".jpg");
 						}
 					}
 					else{
-						editTravel.setCover_url(photoTimeString);
+						editTravel.setCover_url(AppData.TRAVO_PATH + "/" + photoTimeString + ".jpg");
 					}
 				}
 				Travel.clearCache();

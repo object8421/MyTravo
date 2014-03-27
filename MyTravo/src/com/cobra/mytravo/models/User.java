@@ -1,14 +1,13 @@
 package com.cobra.mytravo.models;
 
-import java.util.HashMap;
-
 import android.database.Cursor;
 
 
+import com.cobra.mytravo.data.UsersDataHelper.UserInfoDB;
 import com.google.gson.Gson;
 
 public class User extends BaseType{
-	private int user_id;
+	private int id;
 	private String token;
 	private String qq_user_id;
 	private String sina_user_id;
@@ -21,11 +20,15 @@ public class User extends BaseType{
 	private int travel_note_qty;
 	private int achievement_qty;
 	
-	public int getUser_id() {
-		return user_id;
+	private String last_travel_motified;
+	
+	public int getId()
+	{
+		return id;
 	}
-	public void setUser_id(int user_id) {
-		this.user_id = user_id;
+	public void setId(int id)
+	{
+		this.id = id;
 	}
 	public String getToken() {
 		return token;
@@ -94,7 +97,23 @@ public class User extends BaseType{
 	public void setAchievement_qty(int achievement_qty) {
 		this.achievement_qty = achievement_qty;
 	}
+	public String getLast_travel_motified()
+	{
+		return last_travel_motified;
+	}
+	public void setLast_travel_motified(String last_travel_motified)
+	{
+		this.last_travel_motified = last_travel_motified;
+	}
 	
+	
+	public static User fromCursor(Cursor cursor)
+	{
+		User user;
+		user = new Gson().fromJson(cursor.getString(cursor.getColumnIndex(UserInfoDB.JSON)), User.class);
+		return user;
+	}
+
 	public class UserRegisterResponse
 	{
 		private int rsp_code;

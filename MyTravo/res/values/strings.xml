@@ -53,6 +53,7 @@
     <string name="action_edit">编辑</string>
     <string name="action_finish">结束游记</string>
     <string name="picture_description">写下你的游记或者图片描述</string>
+    <string name="action_formroute">路线图</string>
 
     <string-array name="actionbar_spinner_sort">
         <item>按人气</item>
@@ -93,5 +94,6 @@
     <string name="title_activity_note_detail">NoteDetailActivity</string>
     <string name="title_activity_edit_nickname">EditNicknameActivity</string>
     <string name="title_activity_edit_gender">EditGenderActivity</string>
+    <string name="title_activity_route">RouteActivity</string>
 
 </resources>

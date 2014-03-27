@@ -13,7 +13,7 @@ public class TimeUtils {
 	public static CharSequence getTime(){
 		Date date = null;
         SimpleDateFormat srcDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss 格林尼治标准时间+0800 yyyy",Locale.ENGLISH);
-        SimpleDateFormat dstDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat dstDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         try {
         	date = srcDateFormat.parse(new Date().toString());
         } catch (Exception e) {
@@ -46,13 +46,13 @@ public class TimeUtils {
         return dstDateFormat.format(date);
     }
     public static String getCalendarTime(Calendar c){
-    	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     	String formattedDate = df.format(c.getTime());
     	return formattedDate;
     }
     public static Date CalendarStringToDate(String s){
     	Date date = null;
-    	SimpleDateFormat df = new SimpleDateFormat("yyyy.MM.dd");
+    	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     	try {
         	date = df.parse(s);
         } catch (Exception e) {

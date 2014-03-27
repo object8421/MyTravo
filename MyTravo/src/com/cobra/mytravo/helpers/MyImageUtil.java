@@ -27,16 +27,16 @@ public class MyImageUtil {
 		return null;
 	}
 	public static void setBitmap(ImageView imageView, String url){
-		String pathString = AppData.TRAVO_PATH+"/"+url+".jpg";
+		
 		BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 2;
-        imageView.setImageBitmap(BitmapFactory.decodeFile(pathString, options));
+        imageView.setImageBitmap(BitmapFactory.decodeFile(url, options));
 	}
 	public static void setBitmap(ImageButton imageButton, String url){
-		String pathString = AppData.TRAVO_PATH+"/"+url+".jpg";
+		
 		BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 2;
-        imageButton.setImageBitmap(BitmapFactory.decodeFile(pathString, options));
+        imageButton.setImageBitmap(BitmapFactory.decodeFile(url, options));
 	}
 	public static void setBitmapResize(final Context context, final ImageView imageView, final String url){
 		
@@ -84,7 +84,7 @@ public class MyImageUtil {
 	private static Bitmap fetch(String urlString) throws MalformedURLException, IOException {
 		BitmapFactory.Options o = new BitmapFactory.Options();
         o.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(AppData.TRAVO_PATH + "/" + urlString + ".jpg", o);
+        BitmapFactory.decodeFile(urlString, o);
         // Find the correct scale value. It should be the power of 2.
         final int REQUIRED_SIZE = 140;
         int width_tmp = o.outWidth, height_tmp = o.outHeight;
@@ -101,10 +101,10 @@ public class MyImageUtil {
         // decode with inSampleSize
         BitmapFactory.Options o2 = new BitmapFactory.Options();
         o2.inSampleSize = scale;
-        Bitmap bm = BitmapFactory.decodeFile(AppData.TRAVO_PATH + "/" + urlString + ".jpg", o2);
+        Bitmap bm = BitmapFactory.decodeFile(urlString, o2);
         Bitmap bitmap = bm;
 
-        ExifInterface exif = new ExifInterface(AppData.TRAVO_PATH + "/" + urlString + ".jpg");
+        ExifInterface exif = new ExifInterface(urlString);
 
         int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
 
