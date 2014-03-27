@@ -28,40 +28,27 @@
 <div class="tab-content">
  <!-- tab0 starts here -->
  <div class="tab-pane fade  in active" id="editinfo">
-    <form class="form-horizontal" role="form" style="margin-top:20px;">
+    <form class="form-horizontal" role="form" style="margin-top:20px;" id="PersonalInfoForm">
   
   <div class="form-group">
-    <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">昵称</label>
+    <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">姓名</label>
     <div class="col-sm-6">
-      <input type="email" class="form-control" id="inputTravelName" value={{request.session.username}} name="nickname">
+      <input type="text" name="name" class="form-control" id="inputTravelName" value={{userinfo.name}} >
     </div>
   </div>
 
   
- <div class="form-group">
-      <label for="cover_picker" class="col-sm-2 control-label" style="color: #104e8b;">上传新头像</label>
-      <div class="col-sm-4">
-      <div id="cover_picker" class="fileinput fileinput-new" data-provides="fileinput">
-
-        <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 192px; height: 150px; padding:0;"></div>
-        <div>
-          <span class="btn btn-default btn-file btn-success btn-sm"><span class="fileinput-new">选择照片上传</span>
-          <span class="fileinput-exists">重新选择照片</span><input type="file" name="..."></span>
-          <a href="#" class="btn btn-default btn-danger fileinput-exists btn-sm" data-dismiss="fileinput">移除当前照片</a>
-        </div>
-      </div>
-    </div>
-  </div>
+ 
 
 
    <div class="form-group control-group">
     <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">性别</label>
     <div class="controls col-sm-2">
             <label class="radio inline col-sm-6" style="float:left;">
-              <input type="radio" value="男" name="single" checked="checked"> 男
+              <input type="radio" value="男" name="sex" checked="checked"> 男
             </label>
             <label class="radio inline" style="float:left;">
-              <input type="radio" value="女" name="single"> 女
+              <input type="radio" value="女" name="sex"> 女
             </label>
 
           </div>
@@ -71,7 +58,7 @@
 <div class="form-group">
     <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">年龄</label>
     <div class="col-sm-2">
-      <input type="email" class="form-control" id="inputAge" value={{request.session.age}}>
+      <input type="text" name="age" class="form-control" id="inputAge" value={{userinfo.age}} >
     </div>
   </div>
 
@@ -79,7 +66,7 @@
 <div class="form-group">
     <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">职业</label>
     <div class="col-sm-3">
-      <input type="email" class="form-control" id="inputJob" value={{request.session.job}}>
+      <input type="text" name="job" class="form-control" id="inputJob" value={{userinfo.job}} >
     </div>
   </div>
 
@@ -87,7 +74,7 @@
   <div class="form-group">
     <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">地址</label>
     <div class="col-sm-6">
-      <input type="email" class="form-control" id="inputAddress" value={{request.session.address}}>
+      <input type="text" name="address" class="form-control" id="inputAddress" value={{userinfo.address}} >
     </div>
   </div>
 
@@ -98,14 +85,14 @@
   <div class="form-group">
     <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">个性签名</label>
     <div class="col-sm-9">
-      <textarea class="form-control" rows="3" placeholder="请在这里添加游记描述"></textarea>
+      <textarea class="form-control" rows="3" placeholder="请在这里添加游记描述" id="inputSignature"></textarea>
     </div>
   </div>
 
  
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">  
-      <button type="submit" class="btn btn-primary" >确认修改</button>
+      <button id="btnChangeInfo" type="submit" class="btn btn-primary" >确认修改</button>
    </div>
 </div>
   
@@ -197,11 +184,11 @@
                   <div class="modal-content">
                     <div class="modal-header">
                       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                      <h4 class="modal-title" id="myModalLabel" style="color: #104e8b;">修改密码</h4>
+                      <h4 class="modal-title" id="myModalLabel" style="color: #104e8b;">修改信息</h4>
                      </div>
                      <div class="modal-body">
                       
-                        <h6 class="modal-title" id="myModalLabel" style="color: #104e8b;">修改密码成功</h6>
+                        <h6 class="modal-title" id="myModalLabel" style="color: #104e8b;">修改成功</h6>
                           
                           
                           </div>
@@ -224,11 +211,11 @@
                   <div class="modal-content">
                     <div class="modal-header">
                       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                      <h4 class="modal-title" id="myModalLabel" style="color: #104e8b;">修改密码</h4>
+                      <h4 class="modal-title" id="myModalLabel" style="color: #104e8b;">修改信息</h4>
                      </div>
                      <div class="modal-body">
                       
-                        <h6 class="modal-title" id="myModalLabel" style="color: #104e8b;">修改密码失败</h6>
+                        <h6 class="modal-title" id="myModalLabel" style="color: #104e8b;">修改失败</h6>
                           
                           
                           </div>
@@ -246,4 +233,23 @@
               </div><!-- /.modal -->
 
 
+{% endblock %}
+{% block myscript %}
+<script type="text/javascript">
+var frm = $('#PersonalInfoForm');
+    frm.submit(function () {
+        $.ajax({
+            type: 'post',
+            url: frm.attr('/user/set_account'),
+            data: frm.serialize(),
+            success: function (data) {
+                $('#changePasswordSuccessModal').modal('show');
+            },
+            error: function(data) {
+                $('#changePasswordFailModal').modal('show');
+            }
+        });
+        return false;
+    });
+</script>
 {% endblock %}
