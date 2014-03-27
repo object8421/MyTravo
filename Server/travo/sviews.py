@@ -176,7 +176,17 @@ class TestView(View):
     def post(self, request):
         pass
 
+class SearchResultView(View):
+    def get(self,request):
+        template = loader.get_template('website/search_result.html')
+        context = RequestContext(request)
+        return HttpResponse(template.render(context))
 
+class HotTravelView(View):
+    def get(self,request):
+        template = loader.get_template('website/hot_travel.html')
+        context = RequestContext(request)
+        return HttpResponse(template.render(context))
 #===================travel view=====================================
 
 class NewTravelView(View):

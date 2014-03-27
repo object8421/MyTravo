@@ -66,9 +66,9 @@
                 <li><a href="#contact">客户端下载</a></li>
 
               </ul>
-              <form class="navbar-form navbar-left" role="search">
+              <form class="navbar-form navbar-left navbar-search" role="search">
       <div class="form-group">
-        <input type="text" class="form-control" placeholder="Search">
+        <input type="text" class="form-control search-query" placeholder="Search">
       </div>
       <button type="submit" class="btn btn-primary">搜索</button>
     </form>
@@ -91,7 +91,7 @@
                     {% if 'token' in request.session %}
                       <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
                       欢迎你：{{request.session.username}}<span class="caret"></span>
-                      </button>
+                      </button> 
                        <ul class="dropdown-menu">
                        <li ><a href={%url 'detail_info'%} >个人信息</a></li>
                        <li><a href={%url 'set_account'%}>设置</a></li>
@@ -364,6 +364,8 @@ $(document).ready(function(){
   });
 });
 </script>
+
+
 
     {% block myscript %}
     {% endblock %}

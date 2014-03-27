@@ -1,0 +1,350 @@
+{% extends "website/base_index.html" %}
+{% block title %}搜索结果{% endblock %}
+{% block content %}
+
+
+<div class="container" style="background-color:#ffffff;">
+
+
+	<div class="row">
+
+
+<div class="col-lg-6" style="margin-left:10px;">
+    <div class="input-group" style="margin-top:20px;">
+      <input type="text" class="form-control">
+      <span class="input-group-btn">
+        <button class="btn btn-primary" type="button">搜索</button>
+      </span>
+    </div><!-- /input-group -->
+  </div><!-- /.col-lg-6 -->
+
+</div><!-- end another row -->
+
+<div class="row" align="center">
+
+
+
+<!-- Nav tabs -->
+<ul class="nav nav-pills " style="margin-top:20px; margin-bottom:20px; margin-right:9%; margin-left:20px;">
+  <li class="active"><a href="#searchtravel" data-toggle="tab">相关游记</a></li>
+  <li ><a href="#searchuser" data-toggle="tab">相关用户</a></li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+<!-- tab0 stars here -->
+  <div class="tab-pane fade in active" id="searchtravel">
+
+<!-- 游记 -->
+<!-- 1st travel -->
+ <div  class="col-md-4 column" style="margin-bottom:50px;">
+
+<div class="panel panel-default" style="width:350px;">
+  <div class="panel-body">
+     <img src="/medias/cover/{{travel.cover_path}}" alt="..." class="img-rounded" style="width:100%; height:250px; margin=0;">
+    
+  </div>
+  <div class="panel-footer" align="left">
+    <table class="table" style="width:300px;margin:0;padding:0;">
+              <tr style="width:300px; padding:0; margin:0;" align="left">
+                <div style="float:left;">
+
+                <h5 class="pull-left">游记标题</h5>
+                
+              </div>
+              
+
+              <div class="btn-group " style="float:right; margin－top:0;" >
+                    <button type="button" class="btn btn-link btn-sm" >标签1</button>
+                    <button type="button" class="btn btn-link btn-sm" >标签2</button>
+                </div>
+
+              <div style="clear:both;">
+                <h6 >我是游记描述 </h6>
+              </div>
+               
+                   
+              </tr>
+              <tr>
+              <div style="clear:both; float:left;"><h6>2014-03-13</h6>
+              </div>
+              <div style="float:right; padding-right:10px;"><h6>
+                <span class="glyphicon glyphicon-heart"></span> 3
+                <span class="glyphicon glyphicon-list-alt"></span> 8</h6>
+              </div>
+
+              </tr>
+            
+             </table>
+</div>
+</div>
+</div><!--  这是三分之一的span (1)end-->
+
+<!-- 1st travel -->
+ <div  class="col-md-4 column" style="margin-bottom:50px;">
+
+<div class="panel panel-default" style="width:350px;">
+  <div class="panel-body">
+     <img src="/medias/cover/{{travel.cover_path}}" alt="..." class="img-rounded" style="width:100%; height:250px; margin=0;">
+    
+  </div>
+  <div class="panel-footer" align="left">
+    <table class="table" style="width:300px;margin:0;padding:0;">
+              <tr style="width:300px; padding:0; margin:0;" align="left">
+                <div style="float:left;">
+
+                <h5 class="pull-left">游记标题</h5>
+                
+              </div>
+              
+
+              <div class="btn-group " style="float:right; margin－top:0;" >
+                    <button type="button" class="btn btn-link btn-sm" >标签1</button>
+                    <button type="button" class="btn btn-link btn-sm" >标签2</button>
+                </div>
+
+              <div style="clear:both;">
+                <h6 >我是游记描述 </h6>
+              </div>
+               
+                   
+              </tr>
+              
+              <div style="clear:both; float:left;"><h6>2014-03-13</h6>
+              </div>
+              <div style="float:right; padding-right:10px;"><h6>
+                <span class="glyphicon glyphicon-heart"></span> 3
+                <span class="glyphicon glyphicon-list-alt"></span> 8</h6>
+              </div>
+
+              </tr>
+            
+             </table>
+</div>
+</div>
+</div><!--  这是三分之一的span (1)end-->
+
+<!-- 1st travel -->
+ <div  class="col-md-4 column" style="margin-bottom:50px;">
+
+<div class="panel panel-default" style="width:350px;">
+  <div class="panel-body">
+     <img src="/medias/cover/{{travel.cover_path}}" alt="..." class="img-rounded" style="width:100%; height:250px; margin=0;">
+    
+  </div>
+  <div class="panel-footer" align="left">
+    <table class="table" style="width:300px;margin:0;padding:0;">
+              <tr style="width:300px; padding:0; margin:0;" align="left">
+                <div style="float:left;">
+
+                <h5 class="pull-left">游记标题</h5>
+                
+              </div>
+              
+
+              <div class="btn-group " style="float:right; margin－top:0;" >
+                    <button type="button" class="btn btn-link btn-sm" >标签1</button>
+                    <button type="button" class="btn btn-link btn-sm" >标签2</button>
+                </div>
+
+              <div style="clear:both;">
+                <h6 >我是游记描述 </h6>
+              </div>
+               
+                   
+              </tr>
+              
+              <div style="clear:both; float:left;"><h6>2014-03-13</h6>
+              </div>
+              <div style="float:right; padding-right:10px;"><h6>
+                <span class="glyphicon glyphicon-heart"></span> 3
+                <span class="glyphicon glyphicon-list-alt"></span> 8</h6>
+              </div>
+
+              </tr>
+            
+             </table>
+</div>
+</div>
+</div><!--  这是三分之一的span (1)end-->
+
+<!-- 1st travel -->
+ <div  class="col-md-4 column" style="margin-bottom:50px;">
+
+<div class="panel panel-default" style="width:350px;">
+  <div class="panel-body">
+     <img src="/medias/cover/{{travel.cover_path}}" alt="..." class="img-rounded" style="width:100%; height:250px; margin=0;">
+    
+  </div>
+  <div class="panel-footer" align="left">
+    <table class="table" style="width:300px;margin:0;padding:0;">
+              <tr style="width:300px; padding:0; margin:0;" align="left">
+                <div style="float:left;">
+
+                <h5 class="pull-left">游记标题</h5>
+                
+              </div>
+              
+
+              <div class="btn-group " style="float:right; margin－top:0;" >
+                    <button type="button" class="btn btn-link btn-sm" >标签1</button>
+                    <button type="button" class="btn btn-link btn-sm" >标签2</button>
+                </div>
+
+              <div style="clear:both;">
+                <h6 >我是游记描述 </h6>
+              </div>
+               
+                   
+              </tr>
+              
+              <div style="clear:both; float:left;"><h6>2014-03-13</h6>
+              </div>
+              <div style="float:right; padding-right:10px;"><h6>
+                <span class="glyphicon glyphicon-heart"></span> 3
+                <span class="glyphicon glyphicon-list-alt"></span> 8</h6>
+              </div>
+
+              </tr>
+            
+             </table>
+</div>
+</div>
+</div><!--  这是三分之一的span (1)end-->
+
+
+
+
+
+  </div><!-- tab0 end-->
+
+  <!-- tab1 stars here -->
+  <div class="tab-pane fade col-md-12" id="searchuser" style="margin-bottom:50px; padding-right:50px;">
+
+<table class="table table-hover" style=" margin-bottom:20px;margin-left:15px;margin">
+                        <!-- 一个tr显示一个用户 -->
+                        <tr class="active"><td ><img src="../../static/travo/image/me_avatar0.jpg" alt="..." class="img-rounded" style="height:50px; margin=0;width:50px;border-radius:2px;">
+                        </td>
+                        <td>
+                          <div class="col-md-12" style="padding-bottom:0;"><p ><b>我是小昵称</b>
+                            </p>
+                         </div>
+                         <div class="col-md-12">
+                          <lable>现在这里是个性签名。如果很长很长呢!如果很长很长呢！</lable>
+                          </div>
+                        </td>
+                        </tr>
+                        <tr class="active"><td ><img src="../../static/travo/image/me_avatar0.jpg" alt="..." class="img-rounded" style="height:50px; margin=0;width:50px;border-radius:2px;">
+                        </td>
+                        <td>
+                          <div class="col-md-12" style="padding-bottom:0;"><p ><b>我是小昵称</b>
+                            </p>
+                         </div>
+                         <div class="col-md-12">
+                          <lable>现在这里是个性签名。如果</lable>
+                          </div>
+                        </td>
+                        </tr>
+                        <tr class="active"><td ><img src="../../static/travo/image/me_avatar0.jpg" alt="..." class="img-rounded" style="height:50px; margin=0;width:50px;border-radius:2px;">
+                        </td>
+                        <td>
+                          <div class="col-md-12" style="padding-bottom:0;"><p ><b>我是小昵称</b>
+                            </p>
+                         </div>
+                         <div class="col-md-12">
+                          <lable>现在这里是个性签名。如果很长很长呢!如果很长很长呢如果很长很长呢如果很长很长呢如果很长很长呢如果很长很长呢如果很长很长呢！</lable>
+                          </div>
+                        </td>
+                        </tr>
+                        <tr class="active"><td ><img src="../../static/travo/image/me_avatar0.jpg" alt="..." class="img-rounded" style="height:50px; margin=0;width:50px;border-radius:2px;">
+                        </td>
+                        <td>
+                          <div class="col-md-12" style="padding-bottom:0;"><p ><b>我是小昵称</b>
+                            </p>
+                         </div>
+                         <div class="col-md-12">
+                          <lable>现在这里是个性签名。如果很长很长呢!如果很长很长呢如果很长很长呢如果很长很长呢如果很长很长呢如果很长很长呢如果很长很长呢！</lable>
+                          </div>
+                        </td>
+                        </tr>
+                        <tr class="active"><td ><img src="../../static/travo/image/me_avatar0.jpg" alt="..." class="img-rounded" style="height:50px; margin=0;width:50px;border-radius:2px;">
+                        </td>
+                        <td>
+                          <div class="col-md-12" style="padding-bottom:0;"><p ><b>我是小昵称</b>
+                            </p>
+                         </div>
+                         <div class="col-md-12">
+                          <lable>现在这里是个性签名。如果很长很长呢!</lable>
+                          </div>
+                        </td>
+                        </tr>
+                        <tr class="active"><td ><img src="../../static/travo/image/me_avatar0.jpg" alt="..." class="img-rounded" style="height:50px; margin=0;width:50px;border-radius:2px;">
+                        </td>
+                        <td>
+                          <div class="col-md-12" style="padding-bottom:0;"><p ><b>我是小昵称</b>
+                            </p>
+                         </div>
+                         <div class="col-md-12">
+                          <lable>现在这里是个性签名。如果很长很长呢!如果很长很长呢</lable>
+                          </div>
+                        </td>
+                        </tr>
+                        <tr class="active"><td ><img src="../../static/travo/image/me_avatar0.jpg" alt="..." class="img-rounded" style="height:50px; margin=0;width:50px;border-radius:2px;">
+                        </td>
+                        <td>
+                          <div class="col-md-12" style="padding-bottom:0;"><p ><b>我是小昵称</b>
+                            </p>
+                         </div>
+                         <div class="col-md-12">
+                          <lable>现在这里是个性签名。如果很长很长呢!如果很长很长呢如果很长很长呢如果很长很长呢如果很长很长呢如果很长很长呢如果很长很长呢！</lable>
+                          </div>
+                        </td>
+                        </tr>
+                        <tr class="active"><td ><img src="../../static/travo/image/me_avatar0.jpg" alt="..." class="img-rounded" style="height:50px; margin=0;width:50px;border-radius:2px;">
+                        </td>
+                        <td>
+                          <div class="col-md-12" style="padding-bottom:0;"><p ><b>我是小昵称</b>
+                            </p>
+                         </div>
+                         <div class="col-md-12">
+                          <lable>现在这里是个性签名。</lable>
+                          </div>
+                        </td>
+                        </tr>
+                     
+                    
+         
+                      </table>
+
+
+  </div><!-- tab1 end-->
+
+</div><!-- end tab panes -->
+
+
+
+
+
+</div><!-- end row -->
+
+<div class="row">
+
+
+<div class="col-lg-6"  style="margin-left:10px;">
+    <div class="input-group" style="margin-bottom:20px;">
+      <input type="text" class="form-control">
+      <span class="input-group-btn">
+        <button class="btn btn-primary" type="button">搜索</button>
+      </span>
+    </div><!-- /input-group -->
+  </div><!-- /.col-lg-6 -->
+
+</div><!-- end another row -->
+
+
+
+</div>
+
+
+
+{% endblock %}

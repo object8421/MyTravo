@@ -26,6 +26,10 @@ urlpatterns = patterns('travo',
 			name = 'following'),
 		url(r'user/followed',sviews.FollowedView.as_view(),\
 			name = 'followed'),
+		url(r'search_result',sviews.SearchResultView.as_view(),\
+			name = 'search_result'),
+		url(r'hot_travel',sviews.HotTravelView.as_view(),\
+			name = 'hot_travel'),
 		#显示添加note的表单
 		
 		url(r'^new_note/(?P<travel_id>\d+)/',sviews.NewNoteView.as_view(),name = 'new_note'),	
