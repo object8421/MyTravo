@@ -1,0 +1,105 @@
+{% extends "website/base_index.html" %}
+{% block title %}用户登录{% endblock %}
+{% block content %}
+
+
+
+
+<div class="container" align="center" >
+
+<!--  表单从这里开始 -->
+<div class="panel panel-info" style="margin-top:100px; width:60%; text-align:left;">
+
+
+<div class="panel-heading">
+    <h3 class="panel-title">登录账户——欢迎回来</h3>
+  </div>
+
+  <div class="panel-body">
+    <form class="form-horizontal" role="form" method="post" action="/user/login" style="margin-top:20px;">
+  
+
+
+            <div class="form-group">
+                            <label  class="col-sm-2 control-label" style="color: #104e8b;">用户名</label>
+                            <div class="col-sm-8">
+                            <input type="text" class="form-control" id="email" placeholder="Email">
+                           </div>
+                          </div> 
+                          <div class="form-group" style="margin-top:20px;">
+                            <label  class="col-sm-2 control-label" style="color: #104e8b;">密码</label>
+                            <div class="col-sm-8">
+                            <input type="password"  class="form-control" id="password" placeholder="Password">
+                           </div>
+                          </div>
+
+ 
+  
+
+    
+  </div><!--表单end, panel body end-->
+
+<!-- 在表单后加footer脚注，因为是在panel里，表单放在panel body里 -->
+
+<div class="panel-footer" style="clear:both;text-align:right; background-color:#ffffff; border-top-color:#bce8f1;">
+ <!-- <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-9">  -->
+      <button id="btnLogin" type="button" class="btn btn-primary" style="margin-right:50px;">登录</button>
+  <!--  </div>
+  </div>
+--></div>
+
+
+</div>
+
+</form>
+<div id="cover_view" style="width:50px;height:50px;display:block;"></div>  
+</div><!-- container end-->
+
+<div class="modal fade" id="LoginFailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                      <h4 class="modal-title" id="myModalLabel" style="color: #104e8b;">登录信息</h4>
+                     </div>
+                     <div class="modal-body">
+                      
+                        <h6 class="modal-title" id="myModalLabel" style="color: #104e8b;">登录失败</h6>
+                          
+                          
+                          </div>
+                          <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">确认</button>
+                    
+                   </div>
+                        </form>
+                      
+
+                    </div>
+                   
+                  </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+              </div><!-- /.modal -->
+
+
+
+
+{% endblock %}
+{% block myscript%}
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#btnLogin').click(function(){
+  var email = $("#email").val();
+  var password = $("#password").val();
+  $.post("/user/login",{'email':email,'password':password}, function(ret){
+    if(ret == '1')
+      window.location.href="/me"
+    else
+      $('#LoginFailModal').modal('show');
+  });
+  });
+});
+</script>
+
+{% endblock %}

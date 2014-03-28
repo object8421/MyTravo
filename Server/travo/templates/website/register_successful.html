@@ -1,5 +1,8 @@
 {% extends "website/base_index.html" %}
 {% block title %}注册成功{% endblock %}
+{% block jump %}
+<meta http-equiv="refresh" content="5;url=../index">
+{% endblock %}
 {% block content %}
 
 
@@ -8,13 +11,16 @@
 	<div class="container" style="margin-top:50px;background-color:#eeeeee">
   <h1>注册成功！</h1>
   <p>欢迎加入Travo大家庭！在这里，你可以记录自己的旅行足迹，生成漂亮的游记，搜索、查看热门游记。发现、记录变得如此简单、漂亮！</p>
+  <p>页面将在5秒后跳转</p>
   <div class="btn-group" style="margin-top:50px;">
-		<button class="button btn-success btn-lg">立即登录</button>
-		<button class="button btn-primary btn-lg">返回首页</button>
+		<button class="button btn-success btn-lg" onclick="javascript:location.href='../user/login_page'">立即登录</button>
+		<button class="button btn-primary btn-lg" onclick="javascript:location.href='../index'">返回首页</button>
 	</div>
 </div>
 </div>
 </div>
 
 
+{% endblock %}
+{% block myscript %}
 {% endblock %}

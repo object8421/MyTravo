@@ -3,7 +3,7 @@
 <head>
     <link rel="stylesheet" href="style.css" />
     <title>{% block title %}My Travo{% endblock %}</title><meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    {% block jump %}<meta http-equiv="X-UA-Compatible" content="IE=edge">{% endblock %}
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -70,7 +70,7 @@
       <div class="form-group">
         <input type="text" class="form-control search-query" placeholder="Search">
       </div>
-      <button type="submit" class="btn btn-primary">搜索</button>
+      <button type="submit" class="btn btn-primary"  onclick="javascript:window.location.href='{%url 'search_result'%}' ">搜索</button>
     </form>
 
             <!-- search form -->
@@ -226,18 +226,18 @@
                           <div class="form-group">
                             <label for="inputUsername" class="col-sm-2 control-label" style="color: #104e8b;">用户名</label>
                             <div class="col-sm-10">
-                            <input type="text" name="email" class="form-control" id="inputUsername" placeholder="Email">
+                            <input type="text"  class="form-control" id="loginEmail" placeholder="Email">
                            </div>
                           </div> 
                           <div class="form-group">
                             <label for="inputPassword" class="col-sm-2 control-label" style="color: #104e8b;">密码</label>
                             <div class="col-sm-10">
-                            <input type="password"name="password" class="form-control" id="inputPassword" placeholder="Password">
+                            <input type="password" class="form-control" id="loginPassword" placeholder="Password">
                            </div>
                           </div>
                           <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="submit" class="btn btn-primary">登录</button>
+                    <button id="btnlogin" type="button" class="btn btn-primary">登录</button>
                    </div>
                         </form>
                       
@@ -248,6 +248,34 @@
                 </div><!-- /.modal-dialog -->
               </div><!-- /.modal -->
 
+
+
+<!-- 提醒登录失败模态框 -->
+<div class="modal fade" id="LoginFailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                      <h4 class="modal-title" id="myModalLabel" style="color: #104e8b;">登录信息</h4>
+                     </div>
+                     <div class="modal-body">
+                      
+                        <h6 class="modal-title" id="myModalLabel" style="color: #104e8b;">登录失败</h6>
+                          
+                          
+                          </div>
+                          <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">确认</button>
+                    
+                   </div>
+                        </form>
+                      
+
+                    </div>
+                   
+                  </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+              </div><!-- /.modal -->
 
 
         {% endblock %}
@@ -266,6 +294,9 @@
     <script type="text/javascript" src="../../static/travo/js/bootstrap-datetimepicker.zh-CN.js" charset="UTF-8"></script>
     <script type="text/javascript" src="../../static/travo/js/jasny-bootstrap.min.js" charset="UTF-8"></script>
     <script type="text/javascript" src="../../static/travo/js/jquery.geocomplete.min.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="../../static/travo/js/jquery.bootpag.min.js" charset="UTF-8"></script>   
+    
+    
     
 <script>
       $(function(){
@@ -350,6 +381,23 @@ $('#datetimepicker').datetimepicker({
     forceParse: 0
     });
 </script>
+
+
+    <script type="text/javascript">
+$(document).ready(function(){
+  $('#btnlogin').click(function(){
+  var email = $("#loginEmail").val();
+  var password = $("#loginPassword").val();
+  $.post("/user/login",{'email':email,'password':password}, function(ret){
+    if(ret == '1')
+      window.location.href="/me"
+    else
+      $('#LoginFailModal').modal('show');
+  });
+  });
+});
+</script>
+
 
 
 

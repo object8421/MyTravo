@@ -21,7 +21,8 @@
         <div style="width:250px;margin:0;padding:0;">
         <div class="btn-group btn-group-justified" style="padding-top:0;padding-bottom:0;">
           
-          <a type="button" class="btn btn-primary"  style="border-radius:0;"><p style="font-size:22px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">{{travel_list_length | default:"0"}}</p><p style="font-size:8px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">游记</p></a>
+
+          <a type="button" class="btn btn-primary"  style="border-radius:0;" onclick="javascript:window.location.href='{%url 'show_my_travel'%}' "><p style="font-size:22px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">{{travel_list_length | default:"0"}}</p><p style="font-size:8px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">游记</p></a>
           
           <a type="button" class="btn btn-primary" style="border-radius:0;"><p style="font-size:22px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">{{want_list_length | default:"0"}}</p><p style="font-size:8px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">想去</p></a>
           <a type="button" class="btn btn-primary"  style="border-radius:0;"><p style="font-size:22px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">{{favorite_list_length | default:"0"}}</p><p style="font-size:8px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">喜欢</p></a>
@@ -69,6 +70,7 @@
 <div class="col-md-12" style=" padding-left:5px;margin-bottom:20px;">
 <div class="col-md-2" style="padding:0;">
 <button type="button" onclick="javascript:window.location.href='{%url 'show_my_travel'%}' " class="btn btn-info btn-lg btn-block" style="border-radius:2px;">我的游记   <span class="badge"> {{travel_list_length | default:"0"}}</span></button>  
+
  
 </div>
 </div>
@@ -135,3 +137,4 @@
 </div><!-- end of container -->
 
     {% endblock %}
+
