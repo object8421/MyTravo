@@ -122,13 +122,8 @@ class BaseView(View):
 ###############################################
 ########	USER MOUDLE		###################
 ###############################################
-class UserView(BaseView):
-	_request = None
-	def record_login(self, user_id):
-		lr = LoginRecord(user_id=user_id, time=datetime.now(), ip=self._request.META['REMOTE_ADDR'])
-		lr.save()
 
-class LoginView(UserView):
+class LoginView(BaseView):
 	def get(self, request, *args):
 		self._request = request
 		return JsonResponse(self.handle())
@@ -139,18 +134,20 @@ class LoginView(UserView):
 			'qq'	: self.qq_login
 		}[self.get_required_arg('user_type')]()
 
-		if result[RSP_CODE] == RC_SUCESS:
-			#record login
-			self.record_login(result['user'].id)
 		return result
 	
 	def travo_login(self):
-		return userservice.travo_login(self.get_required_arg('email'), self.get_required_arg('password'))
+		return userservice.travo_login(
+				self.get_required_arg('email'),
+				self.get_required_arg('password'),
+				self._request.META['REMOTE_ADDR'])
 
 	def qq_login(self):
-		return userservice.qq_login(self.get_required_arg('qq_token'))
+		return userservice.qq_login(
+				self.get_required_arg('qq_token'),
+				self._request.META['REMOTE_ADDR'])
 
-class RegisterView(UserView):
+class RegisterView(BaseView):
 	def post(self, request):
 		self._request = request
 		return JsonResponse(self.handle())
@@ -161,9 +158,6 @@ class RegisterView(UserView):
 			'qq'	: self.qq_register
 		}[self.get_required_arg('user_type')]()
 
-		if result[RSP_CODE] == RC_SUCESS:
-			#record login
-			self.record_login(result['user_id'])
 		return result
 
 
@@ -171,12 +165,15 @@ class RegisterView(UserView):
 		return userservice.travo_register(
 						self.get_required_data('nickname'),
 						self.get_required_data('email'),
-						self.get_required_data('password')
+						self.get_required_data('password'),
+						self._request.META['REMOTE_ADDR']
 						)
+
 	def qq_register(self):
 		return userservice.qq_register(
 						self.get_required_data('nickname'),
-						self.get_required_data('qq_token')
+						self.get_required_data('qq_token'),
+						self._request.META['REMOTE_ADDR']
 						)
 
 class UpdateUserView(BaseView):

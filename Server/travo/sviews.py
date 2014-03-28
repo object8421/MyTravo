@@ -27,7 +27,7 @@ class RegisterView(View):
         nickname = request.POST.get('nickname','')
         password = request.POST.get('password','')
         email = request.POST.get('email','')
-        res = userservice.travo_register(nickname, email, password)
+        res = userservice.travo_register(nickname, email, password, request.META['REMOTE_ADDR'])
         for key in request.POST:
             print "%s : %s"%(key,request.POST.get(key))
 
@@ -66,6 +66,7 @@ class MyInfoView(View):
             "basic_travel_path":basic_travel_path,
             "followers_list":followers_list,
             })
+
 class RegisterSuccessView(View):
     def get(self,request):
         template = loader.get_template('website/register_successful.html')
@@ -85,7 +86,6 @@ class DetailInfoView(View):
             })
 
 class LoginView(View):
-
     def get(self,request):
         template = loader.get_template('website/login_page.html')
         context = RequestContext(request)
@@ -95,7 +95,7 @@ class LoginView(View):
         password = request.POST.get('password')
         print email
         print password
-        res = userservice.travo_login(email,password)
+        res = userservice.travo_login(email,password, request.META['REMOTE_ADDR'])
         ret = "0"
         response = HttpResponse()
         response['Content-Type']="text/javascript"

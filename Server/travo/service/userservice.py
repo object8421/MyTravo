@@ -42,8 +42,12 @@ def get_user_by_id(user_id):
 	except ObjectDoesNotExist:
 		raise TokenError('no_such_user')
 
+def record_login(user, ip):
+	lr = LoginRecord(user=user, time=datetime.now(), ip=ip)
+	lr.save()
+
 ########	login	###############
-def travo_login(email, password):
+def travo_login(email, password, ip):
 	result = {}
 	try:
 		u = User.objects.get(email=email)
@@ -54,11 +58,12 @@ def travo_login(email, password):
 			_update_token(u)
 			result[RSP_CODE] = RC_SUCESS
 			result['user'] = u
+			record_login(u, ip)
 		else:
 			result[RSP_CODE] = RC_WRONG_PASSWORD
 	return result 
 
-def qq_login(qq_token):
+def qq_login(qq_token, ip):
 	try:
 		qq_id = _get_qq_id(qq_token)
 	except AuthError:
@@ -72,6 +77,7 @@ def qq_login(qq_token):
 			result = {RSP_CODE : RC_SUCESS}
 			_update_token(u)
 			result['user'] = u
+			record_login(u, ip)
 			return result
 
 def _update_token(u):
@@ -94,23 +100,23 @@ def _get_sina_user_id(self, sina_token):
 		raise AuthError('sina auth fail')
 
 ##########	register ################
-def travo_register(nickname, email, password):
+def travo_register(nickname, email, password, ip):
 	if not _check_email(email):
 		return {RSP_CODE : RC_ILLEGAL_EMAIL}
 	u = User(nickname=nickname, email=email, password=password)
 	u.token = _build_token()
-	return register(u)
+	return register(u, ip)
 
-def qq_register(nickname, qq_token):
+def qq_register(nickname, qq_token, ip):
 	try:
 		qq_id = _get_qq_id(qq_token)
 	except AuthError:
 		return {RSP_CODE : RC_AUTH_FAIL}
 	else:
 		u = User(qq_user_id=qq_id, token=_build_token())
-		return register(u)
+		return register(u, ip)
 
-def register(u):
+def register(u, ip):
 	try:
 		u.save()
 	except IntegrityError, e:
@@ -126,6 +132,7 @@ def register(u):
 	result = {RSP_CODE : RC_SUCESS}
 	result['token'] = u.token
 	result['user_id'] = u.id
+	record_login(u, ip)
 	return result
 
 #########	update	################
@@ -179,6 +186,7 @@ def change_self_info(token,attr_dict):
 	user.save()
 	result = {RSP_CODE:RC_SUCESS}
 	return result
+
 ##add by L!ar for changing avatar or adding avatar if there's no one #####
 def change_self_avatar(user,image=None):
 	if image is not None: 
