@@ -190,9 +190,10 @@ def _save_image(user, image):
 	utils.save_image(user.face_path, image)	
 ##add end ###
 ##add by L!ar for changing signature
-def change_signature(token, signature):
+def change_signature_authority(token, signature, is_info_public):
 	user = User.objects.get(token=token)
 	user.signature = signature
+	user.is_info_public = is_info_public
 	user.save()
 	result = {RSP_CODE:RC_SUCESS}
 	return result

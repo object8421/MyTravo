@@ -1,4 +1,5 @@
 #-*- coding: utf-8 -*-
+import traceback
 from django.shortcuts import render, render_to_response,get_object_or_404
 from django.views.generic.edit import FormView
 from django.core.mail import send_mail
@@ -134,17 +135,19 @@ class PersonalInfoSetView(View):
             })
     def post(self, request):
         attr_dict = request.POST
-        signature = request.POST.get('signature','')
         is_info_public = request.POST.get('is_info_public','1')
+        signature = request.POST.get('signature','')
         for key in attr_dict.keys():
             print key
             print attr_dict[key]
-        userservice.update_info(request.session['token'],attr_dict)
-        userservice.change_signature(request.session['token'],signature)
-        userservice.change_authority(request.session['token'],is_info_public)
-        response = HttpResponse()
-        response['Content-Type']="text/javascript"
-        return response;
+        try:
+            userservice.update_info(request.session['token'],attr_dict)
+            userservice.change_signature_authority(request.session['token'],signature,is_info_public)
+            response = HttpResponse()
+            response['Content-Type']="text/javascript"
+            return response
+        except:
+           print traceback.format_exc()
 
 class ChangePasswordView(View):
     def post(self,request):
