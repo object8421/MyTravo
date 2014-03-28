@@ -10,6 +10,7 @@ from travo.models import User, LoginRecord,UserInfo,Follow
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ValidationError
 from django.db.utils import OperationalError
+from django.conf import settings
 from travo.rc import * 
 from datetime import datetime
 
@@ -30,11 +31,9 @@ def get_user(t):
 		u = User.objects.get(token=t)
 	except ObjectDoesNotExist:
 		raise TokenError('no_such_user')
-	'''
 	lr = LoginRecord.objects.filter(user=u).latest('time')
-	if (datetime.now() - lr.time).days >= 60:
+	if (datetime.now() - lr.time).days >= settings.TOKEN_VALID_DAY:
 		raise TokenError('token_overdate')
-	'''
 	return u
 
 def get_user_by_id(user_id):
@@ -52,7 +51,7 @@ def travo_login(email, password):
 		result[RSP_CODE] = RC_NO_SUCH_USER
 	else:
 		if u.password == password: 
-			#_update_token(u)
+			_update_token(u)
 			result[RSP_CODE] = RC_SUCESS
 			result['user'] = u
 		else:
@@ -61,7 +60,7 @@ def travo_login(email, password):
 
 def qq_login(qq_token):
 	try:
-		qq_id = _ge_qq_id(qq_token)
+		qq_id = _get_qq_id(qq_token)
 	except AuthError:
 		return {RSP_CODE : RC_AUTH_FAIL}
 	else:
@@ -71,6 +70,7 @@ def qq_login(qq_token):
 			return {RSP_CODE : RC_NO_SUCH_USER}
 		else:
 			result = {RSP_CODE : RC_SUCESS}
+			_update_token(u)
 			result['user'] = u
 			return result
 
@@ -137,7 +137,8 @@ def update(token, **kwargs):
 		user.signature = kwargs['signature']
 	if kwargs['is_info_public'] is not None:
 		user.is_info_public = kwargs['is_info_public']
-	if kwargs['face']:
+
+	if kwargs['face'] != None:
 		face_path = _build_face_path()
 		user.face_path = face_path
 		utils.save_face(face_path, kwargs['face'])
@@ -227,7 +228,7 @@ def get_user_info(token, friend_id):
 	except ObjectDoesNotExist:
 		return {RSP_CODE : RC_NO_SUCH_USER}
 	else:
-		if not u.is_info_public and u.token != token:
+		if u.is_info_public == 0 and u.token != token:
 			return {RSP_CODE : RC_PERMISSION_DENIED}
 		else:
 			result = {RSP_CODE : RC_SUCESS}
@@ -260,9 +261,9 @@ def update_email(token, email, password):
 
 ######    bind QQ    ######
 def bind(token, qq_token):
-	user = get_user(boken)
+	user = get_user(token)
 	try:
-		qq_id = _get_qq_user_id(qq_token)
+		qq_id = _get_qq_id(qq_token)
 	except AuthError:
 		return {RSP_CODE : RC_AUTH_FAIL}
 	else:
@@ -273,4 +274,22 @@ def bind(token, qq_token):
 			if 'qq_user_id_UNIQUE' in str(e): 
 				return {RSP_CODE : RC_DUP_BIND}
 	return {RSP_CODE : RC_SUCESS}
+
+######    update pass    ######
+def update_pass(email, old_pass, new_pass):
+	try:
+		u = User.objects.get(email=email)
+	except ObjectDoesNotExist:
+		return {RSP_CODE : RC_NO_SUCH_USER}
+	else:
+		if u.password != old_pass:
+			return {RSP_CODE : RC_WRONG_PASSWORD}
+		else:
+			u.password = new_pass
+			u.token = _build_token()
+			u.save()
+			result = {RSP_CODE : RC_SUCESS}
+			result['token'] = u.token
+			return result
+
 
