@@ -13,6 +13,7 @@ urlpatterns = patterns('travo',
 		url(r'^contact', sviews.ContactView.as_view(), name = 'contact'),
 		url(r'^me', sviews.MyInfoView.as_view(),name = 'me'),
 		url(r'user/change_password',sviews.ChangePasswordView.as_view(),name='change_password'),
+		url(r'user/change_avatar',sviews.ChangeAvatarView.as_view(),name='change_avatar'),
 		url(r'^user/register_success', sviews.RegisterSuccessView.as_view(), \
 			name = 'register_success'),
 		url(r'^user/new_travel',sviews.NewTravelView.as_view(),\
@@ -45,6 +46,8 @@ urlpatterns = patterns('travo',
 		url(r'^test', sviews.TestView.as_view(),name='test'),
 		url(r'^user/detail_info', sviews.DetailInfoView.as_view(),\
 			name = 'detail_info'),
+		url(r'^user/login_page',sviews.LoginView.as_view(),\
+			name='login_page'),
 
 	)
 

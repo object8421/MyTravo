@@ -1,5 +1,5 @@
 {% extends "website/base_index.html" %}
-{% block title %}注册成功{% endblock %}
+{% block title %}修改信息{% endblock %}
 {% block content %}
 
 
@@ -21,7 +21,7 @@
   <li class="active"><a href="#editinfo" data-toggle="tab">修改个人信息</a></li>
   <li ><a href="#setpassword" data-toggle="tab">更改密码</a></li>
   <li><a href="#changemail" data-toggle="tab">修改邮箱</a></li>
-
+  <li><a href="#changeauthority" data-toggle="tab">travo设置</a></li>
 </ul>
 
 <!-- Tab panes -->
@@ -36,6 +36,7 @@
       <input type="text" name="name" class="form-control" id="inputTravelName" value={{userinfo.name}} >
     </div>
   </div>
+
 
   
  
@@ -85,7 +86,7 @@
   <div class="form-group">
     <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">个性签名</label>
     <div class="col-sm-9">
-      <textarea class="form-control" rows="3" placeholder="请在这里添加游记描述" id="inputSignature"></textarea>
+      <textarea name="signature" class="form-control" rows="3" placeholder="请在这里添加游记描述" id="inputSignature"></textarea>
     </div>
   </div>
 
@@ -171,6 +172,39 @@
 
   </div><!-- tab2 end-->
 
+  <!-- tab3 stars here -->
+  <div class="tab-pane fade" id="changeauthority">
+
+ <form id="ChangeAuthorityForm" class="form-horizontal" role="form" style="margin-top:20px;">
+  
+  
+<div class="form-group control-group">
+    <label  class="col-sm-2 control-label" style="color: #104e8b;">信息公开</label>
+    <div class="controls col-sm-2">
+            <label class="radio inline col-sm-6" style="float:left;">
+              <input type="radio" value="1" name="is_info_public" checked="checked"> 是
+            </label>
+            <label class="radio inline" style="float:left;">
+              <input type="radio" value="0" name="is_info_public"> 否
+            </label>
+
+          </div>
+  </div>
+
+  
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">  
+      <button type="submit" class="btn btn-primary" >确认修改</button>
+   </div>
+</div>
+
+
+
+</form>
+
+
+  </div><!-- tab3 end-->
+
 </div><!-- tab content end -->
 </div><!--  panel body end-->
 </div><!--  panel end-->
@@ -236,7 +270,38 @@
 {% endblock %}
 {% block myscript %}
 <script type="text/javascript">
+$(document).ready(function(){
+  $('#btnChangePassword').click(function(){
+  var original_password = $("#inputOringinPassword").val();
+  var new_password = $("#inputNewPassword").val();
+  $.post("/user/change_password",{'original_password':original_password,'new_password':new_password}, function(ret){
+    if(ret == '1')
+      $('#changePasswordSuccessModal').modal('show');
+    else
+      $('#changePasswordFailModal').modal('show');
+  });
+  });
+});
+</script>
+<script type="text/javascript">
 var frm = $('#PersonalInfoForm');
+    frm.submit(function () {
+        $.ajax({
+            type: 'post',
+            url: frm.attr('/user/set_account'),
+            data: frm.serialize(),
+            success: function (data) {
+                $('#changePasswordSuccessModal').modal('show');
+            },
+            error: function(data) {
+                $('#changePasswordFailModal').modal('show');
+            }
+        });
+        return false;
+    });
+</script>
+<script type="text/javascript">
+var frm = $('#ChangeAuthorityForm');
     frm.submit(function () {
         $.ajax({
             type: 'post',

@@ -9,7 +9,7 @@
 
 <div class="col-md-12" style=" padding-left:5px;margin-bottom:50px;margin-top:50px;">
 <div class="col-md-4 col-md-offset-1" style="padding:0;">
-<button type="button" onclick="javascript:window.location.href='{%url 'show_my_travel'%}' " class="btn btn-info btn-lg btn-block" style="border-radius:2px;">热门游记   <span class="badge"> 3</span></button>  
+<button type="button" onclick="javascript:window.location.href='{%url 'hot_travel'%}' " class="btn btn-info btn-lg btn-block" style="border-radius:2px;">热    门    游    记</button>  
  
 </div>
 </div>
@@ -20,12 +20,18 @@
 
 <div class="col-md-8 column col-md-offset-1" style="margin-bottom:20px;">
 <div class="panel panel-default">
-  <div class="panel-body">
-     <img src="../../static/travo/image/welcome_bg6.jpg" alt="..." class="img-rounded" style="width:100%; height:400px; margin:0; border-radius:2px;">
+  <div class="panel-body" style="padding:0;border:0;">
+     <!--<img src="../../static/travo/image/welcome_bg6.jpg" alt="..." class="img-rounded" style="width:100%; height:400px; margin:0; border-radius:2px;">-->
+     <div class="cobra-image" style="width:100%; height:400px; background:url(../../static/travo/image/welcome_bg6.jpg) no-repeat center;background-size:cover;border:0;">
+        <div class="cobra-image-content" vertical-align="middle">
+        <h2>这里是标题</h2>
+        <h4>内容描述不够长怎么能叫描述呢好好学语文吧少年</h4>
+        </div>
+      </div>
     
   </div>
-  <div class="panel-footer" align="left">
-    <table class="table" style="margin:0;padding:0;">
+  <div class="panel-footer" align="left" style="border:0;">
+    <table class="table" style="margin:0;padding:0;border:0;">
               <tr style="padding:0; margin:0;" align="left">
                 <div style="clear:both;">
                 	<div style="float:left;">
@@ -73,9 +79,54 @@
 
 
 
+<div class="row col-md-12">
+<p id="content1">Dynamic page content</p>
+<p id="pagination-here"></p>
+</div>
+
+
+
+
+
+
+
 
 
 
 </div><!-- end container -->
+
+{% endblock %}
+{% block myscript%}
+
+<script>
+    $('.cobra-image-content').hide()
+$('.cobra-image').hover(
+  
+  // Over
+  function(){     
+    $('.cobra-image-content').fadeIn();
+  }
+  ,  
+  // Out
+  function(){
+   $('.cobra-image-content').fadeOut();
+  }
+);
+   
+    </script>
+
+<script type="text/javascript">
+$('#pagination-here').bootpag({
+    total: 7,          // total pages
+    page: 1,            // default page
+    maxVisible: 5,     // visible pagination
+    leaps: true         // next/prev leaps through maxVisible
+}).on("page", function(event, num){
+    $("#content1").html("Page " + num); // or some ajax content loading...
+    // ... after content load -> change total to 10
+    $(this).bootpag({total: 7, maxVisible: 10});
+}); 
+
+</script>
 
 {% endblock %}

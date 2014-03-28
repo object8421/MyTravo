@@ -16,6 +16,24 @@ body {
   margin-bottom: 0;
   vertical-align: middle;
 }
+.cobra-image{
+  width: 300px;
+  height:300px;
+  
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  margin: 0px auto;
+  border: 2px solid #fff;
+  cursor: pointer;
+}
+.cobra-image-content{
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 5px 15px 10px 15px;
+  box-sizing: border-box;  
+}
 
 /* CUSTOMIZE THE NAVBAR
 -------------------------------------------------- */

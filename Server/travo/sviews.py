@@ -87,21 +87,29 @@ class DetailInfoView(View):
 class LoginView(View):
 
     def get(self,request):
-        pass
+        template = loader.get_template('website/login_page.html')
+        context = RequestContext(request)
+        return HttpResponse(template.render(context))
     def post(self,request):
-        email = request.POST.get('email','')
-        password = request.POST.get('password','')
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        print email
+        print password
         res = userservice.travo_login(email,password)
+        ret = "0"
+        response = HttpResponse()
+        response['Content-Type']="text/javascript"
         if res[RSP_CODE] == RC_SUCESS:
             logging.debug('user %s login successful',res['user'].nickname)
             request.session['username'] = res['user'].nickname
             request.session['token'] = res['user'].token
             request.session['userid'] = res['user'].id
-            return render_to_response('website/welcome.html',context_instance=RequestContext(request))
+            ret = "1"
         else:
-            return render(request,'website/login_fail.html')
-
-        pass
+            ret = "-1"
+        response.write(ret)
+        return response   
+        
 
 class LogoutView(View):
     def get(self,request):
@@ -126,10 +134,14 @@ class PersonalInfoSetView(View):
             })
     def post(self, request):
         attr_dict = request.POST
+        signature = request.POST.get('signature','')
+        is_info_public = request.POST.get('is_info_public','1')
         for key in attr_dict.keys():
             print key
             print attr_dict[key]
         userservice.update_info(request.session['token'],attr_dict)
+        userservice.change_signature(request.session['token'],signature)
+        userservice.change_authority(request.session['token'],is_info_public)
         response = HttpResponse()
         response['Content-Type']="text/javascript"
         return response;
@@ -151,10 +163,43 @@ class ChangePasswordView(View):
             ret = "2"
         response.write(ret)
         return response
-
+class ChangeAvatarView(View):
+    def post(self,request):
+        
+        user = get_object_or_404(User,token=request.session['token'])
+        result = userservice.change_self_avatar(user,request.FILES)
+        response = HttpResponse()
+        response['Content-Type']="text/javascript"
+        return response;
 class ChangeEmailView(View):
     def post(self,request):
         pass
+
+class LoginPageView(View):
+    def get(self,request):
+        template = loader.get_template('website/login_page.html')
+        context = RequestContext(request)
+        return HttpResponse(template.render(context))
+    def post(self,request):
+        email = request.POST.get('email','')
+        password = request.POST.get('password','')
+        print email
+        print password
+        res = userservice.travo_login(email,password)
+        ret = "0"
+        response = HttpResponse()
+        response['Content-Type']="text/javascript"
+        if res[RSP_CODE] == RC_SUCESS:
+            logging.debug('user %s login successful',res['user'].nickname)
+            request.session['username'] = res['user'].nickname
+            request.session['token'] = res['user'].token
+            request.session['userid'] = res['user'].id
+            return render_to_response('website/welcome.html',context_instance=RequestContext(request))
+        else:
+            ret = "-1"
+            response.write(ret)
+            return response
+        
 
 #===================generic view=====================================
 
