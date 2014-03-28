@@ -27,13 +27,13 @@
   </div>
 
   <div class="form-group">
-    <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">昵称</label>
+    <label class="col-sm-2 control-label" style="color: #104e8b;">昵称</label>
     <label class="col-sm-4 control-label" style="text-align:left">{{request.session.username}}</label>
   </div>
 
   
  <div class="form-group">
-  <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">头像</label>
+  <label class="col-sm-2 control-label" style="color: #104e8b;">头像</label>
   <div class="fileinput fileinput-new" name="face" data-provides="fileinput">
   <div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
     <img data-src="holder.js/100%x100%" alt="...">
@@ -50,7 +50,7 @@
 
 
    <div class="form-group control-group">
-    <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">性别</label>
+    <label class="col-sm-2 control-label" style="color: #104e8b;">性别</label>
     
             <label class="col-sm-4 control-label" style="text-align:left">
               {{userinfo.sex | default:"男"}}
@@ -62,7 +62,7 @@
 
 
 <div class="form-group">
-    <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">年龄</label>
+    <label class="col-sm-2 control-label" style="color: #104e8b;">年龄</label>
     <label class="col-sm-4 control-label" style="text-align:left">
       {{userinfo.age | default:""}}
     </label>
@@ -70,7 +70,7 @@
 
 
 <div class="form-group">
-    <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">职业</label>
+    <label class="col-sm-2 control-label" style="color: #104e8b;">职业</label>
     <label class="col-sm-4 control-label" style="text-align:left">
       {{userinfo.job | default:""}}
     </label>
@@ -78,7 +78,7 @@
 
 
   <div class="form-group">
-    <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">地址</label>
+    <label class="col-sm-2 control-label" style="color: #104e8b;">地址</label>
     <label class="col-sm-4 control-label" style="text-align:left">
       {{userinfo.address | default:""}}
     </label>
@@ -89,7 +89,7 @@
  
   
   <div class="form-group">
-    <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">个性签名</label>
+    <label class="col-sm-2 control-label" style="color: #104e8b;">个性签名</label>
     <label class="col-sm-4 control-label" style="text-align:left">
       {{user.signature | default:""}}
     </label>
@@ -123,30 +123,30 @@
 {% endblock %}
 {% block myscript%}
 <script type="text/javascript">
-$('#AvatarForm').ajaxForm({
+// $('#AvatarForm').ajaxForm({
     
-    success: function(data) {
-       $('#changePasswordSuccessModal').modal('show');
-    }
-});
-// var frm = $('#AvatarForm');
-// var data = new FormData($('#AvatarForm').get(0));
-//     frm.submit(function () {
-//         $.ajax({
-//             type: 'post',
-//             url: '/user/change_avatar',
-//             cache: false,
-//             processData: false,
-//             contentType: false,
-//             data: data,
-//             success: function (data) {
-//                 $('#changePasswordSuccessModal').modal('show');
-//             },
-//             error: function(data) {
-//                 $('#changePasswordFailModal').modal('show');
-//             }
-//         });
-//         return false;
-//     });
+//     success: function(data) {
+//        $('#changePasswordSuccessModal').modal('show');
+//     }
+// });
+var frm = $('#AvatarForm');
+var data = new FormData($('#AvatarForm').get(0));
+    frm.submit(function () {
+        $.ajax({
+            type: 'post',
+            url: '/user/change_avatar',
+            cache: false,
+            processData: false,
+            contentType: false,
+            data: data,
+            success: function (data) {
+                $('#changePasswordSuccessModal').modal('show');
+            },
+            error: function(data) {
+                $('#changePasswordFailModal').modal('show');
+            }
+        });
+        return false;
+    });
 </script>
 {% endblock %}
