@@ -45,6 +45,8 @@ urlpatterns = patterns('travo',
 		url(r'^test', sviews.TestView.as_view(),name='test'),
 		url(r'^user/detail_info', sviews.DetailInfoView.as_view(),\
 			name = 'detail_info'),
+		url(r'^user/login_page',sviews.LoginView.as_view(),\
+			name='login_page'),
 
 	)
 

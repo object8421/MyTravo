@@ -1,7 +1,23 @@
 {% extends "website/base_index.html" %}
 {% block title %}我的全部游记{% endblock %}
 {% block content %}
+
+<div class="container" style="background-color:#ffffff;">
+
+   <!-- my游记 -->
+
+
+<div class="col-md-12" style=" padding-left:5px;margin-bottom:50px;margin-top:50px;">
+<div class="col-md-4" style="padding:0;">
+<button type="button" onclick="javascript:window.location.href='{%url 'show_my_travel'%}' " class="btn btn-info btn-lg btn-block" style="border-radius:2px;">我    的    游    记</button>  
+ 
+</div>
+</div>
+
+
+
 {%for travel in recent_travel_list %}
+<div  class="col-md-4 column" >
 <div class="panel panel-default" style="width:350px;">
   <div class="panel-body">
      <img src="/medias/cover/{{travel.cover_path}}" alt="..." class="img-rounded" style="width:100%; height:250px; margin=0;">
@@ -42,6 +58,9 @@
              </table>
 </div>
 </div>
-</div><!--  这是三分之一的span (1)end-->
+</div>
+
 {% endfor %}
+
+</div><!-- end container -->
 {% endblock %}
