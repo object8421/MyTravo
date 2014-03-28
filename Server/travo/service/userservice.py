@@ -163,6 +163,8 @@ def get_face(user_id):
 def update_info(token, info):
 	user = get_user(token)
 	ui = UserInfo.from_dict(info)
+	
+
 	ui.user = user
 	ui.save()
 	return {RSP_CODE : RC_SUCESS}
@@ -176,7 +178,31 @@ def change_self_info(token,attr_dict):
 	user.save()
 	result = {RSP_CODE:RC_SUCESS}
 	return result
-
+##add by L!ar for changing avatar or adding avatar if there's no one #####
+def change_self_avatar(user,image=None):
+	if image is not None: 
+		_save_image(user, image)
+def _save_image(user, image):
+	
+	user.face_path = _build_face_path()
+	user.save()
+	utils.save_image(user.face_path, image)	
+##add end ###
+##add by L!ar for changing signature
+def change_signature(token, signature):
+	user = User.objects.get(token=token)
+	user.signature = signature
+	user.save()
+	result = {RSP_CODE:RC_SUCESS}
+	return result
+##end add
+def change_authority(token, authority):
+	user = User.objects.get(token=token)
+	user.is_info_public = authority
+	user.save()
+	result = {RSP_CODE:RC_SUCESS}
+	return result
+##end add
 def change_password(token, original_password, new_password):
 	user = User.objects.get(token=token)
 	if user.password == original_password:

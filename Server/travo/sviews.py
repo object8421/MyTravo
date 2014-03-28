@@ -126,10 +126,14 @@ class PersonalInfoSetView(View):
             })
     def post(self, request):
         attr_dict = request.POST
+        signature = request.POST.get('signature','')
+        is_info_public = request.POST.get('is_info_public','1')
         for key in attr_dict.keys():
             print key
             print attr_dict[key]
         userservice.update_info(request.session['token'],attr_dict)
+        userservice.change_signature(request.session['token'],signature)
+        userservice.change_authority(request.session['token'],is_info_public)
         response = HttpResponse()
         response['Content-Type']="text/javascript"
         return response;
@@ -151,7 +155,14 @@ class ChangePasswordView(View):
             ret = "2"
         response.write(ret)
         return response
-
+class ChangeAvatarView(View):
+    def post(self,request):
+        
+        user = get_object_or_404(User,token=request.session['token'])
+        result = userservice.change_self_avatar(user,request.FILES)
+        response = HttpResponse()
+        response['Content-Type']="text/javascript"
+        return response;
 class ChangeEmailView(View):
     def post(self,request):
         pass

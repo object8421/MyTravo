@@ -58,7 +58,7 @@
             <div class="navbar-collapse collapse">
               <ul class="nav navbar-nav">
                 <li class="active"><a href={%url 'index' %}>首页</a></li>
-                <li><a href="#about">热门游记</a></li>
+                <li><a href={%url 'hot_travel' %}>热门游记</a></li>
                 <li><a href="#contact">目的地</a></li>
                 {% if 'token' in request.session %}
                 <li><a href={%url 'me'%}>个人主页</a></li>
@@ -350,20 +350,7 @@ $('#datetimepicker').datetimepicker({
     forceParse: 0
     });
 </script>
-<script type="text/javascript">
-$(document).ready(function(){
-  $('#btnChangePassword').click(function(){
-  var original_password = $("#inputOringinPassword").val();
-  var new_password = $("#inputNewPassword").val();
-  $.post("/user/change_password",{'original_password':original_password,'new_password':new_password}, function(ret){
-    if(ret == '1')
-      $('#changePasswordSuccessModal').modal('show');
-    else
-      $('#changePasswordFailModal').modal('show');
-  });
-  });
-});
-</script>
+
 
 
 
