@@ -122,7 +122,6 @@ class BaseView(View):
 ###############################################
 ########	USER MOUDLE		###################
 ###############################################
-
 class LoginView(BaseView):
 	def get(self, request, *args):
 		self._request = request
@@ -182,7 +181,6 @@ class UpdateUserView(BaseView):
 		return JsonResponse(self.handle())
 
 	def do(self):
-		print self._request.FILES
 		return userservice.update(
 				self.get_token(),
 				nickname = self.get_arg('nickname'),
@@ -351,11 +349,14 @@ class SearchTravelView(BaseView,UserAppender):
 
 	def do(self):
 		travels = travelservice.search(
+				self.get_arg('token'),
 				self.get_arg('order'),
 				self.get_arg('first_idx', 1),
 				self.get_arg('max_qty', 20)
 				)
-		return self.append_user(travels)
+		result = {RSP_CODE : RC_SUCESS}
+		result['travels'] = self.append_user(travels)
+		return result
 
 class FavoritTravelView(BaseView):
 	def post(self, request, travel_id):

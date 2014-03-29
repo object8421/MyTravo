@@ -9,8 +9,9 @@ from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from datetime import datetime
 
-def _build_cover_path():
-	return uuid.uuid4().hex[0:16]
+def _build_cover_path(cover):
+	suffix = cover.name.split('.')[-1]
+	return uuid.uuid4().hex[0:16] + '.' + suffix
 
 ########	upload		###########
 def upload(token, travels, covers={}):
@@ -44,7 +45,7 @@ def _update(user, t, cover=None):
 		else:
 			travel.update(t)
 			if cover is not None: 
-				travel.cover_path = _build_cover_path() 
+				travel.cover_path = _build_cover_path(cover) 
 				utils.save_cover(travel.cover_path, cover)
 			try:
 				travel.save()
@@ -70,7 +71,7 @@ def _new(user, t, cover=None):
 	else:
 		if not _exists_travel(user.id, travel.create_time):
 			if cover is not None:
-				travel.cover_path = _build_cover_path() 
+				travel.cover_path = _build_cover_path(cover) 
 				utils.save_cover(travel.cover_path, cover)
 			try:
 				travel.save()
@@ -145,17 +146,34 @@ SO_READ_TIMES = 'read_times'
 SO_VOTE_QTY = 'vote_qty'
 SO_NEWEST = 'newest'
 
-def search(order=SO_DEFAULT, first_idx=1, max_qty=20):
+FAVORIT_SCORE = 6
+COMMENT_SCORE = 3
+VOTE_SCORE = 4
+READ_SCORE = 1
+
+def search(token, order=SO_DEFAULT, first_idx=1, max_qty=20):
 	first_idx = int(first_idx)
 	return {
 			SO_DEFAULT	: _search_default,
 			SO_READ_TIMES: _search_read_times,
 			SO_VOTE_QTY	: _search_vote_qty,
 			SO_NEWEST	: _search_newest,
-			}[order](first_idx - 1, max_qty)
+			}[order](first_idx - 1, max_qty, token)
 
-def _search_default(first_idx, max_qty):
-	return _search_newest(first_idx, max_qty)
+def _search_default(first_idx, max_qty, token):
+	if token is None:
+		return _search_newest(first_idx, max_qty)
+	#search travels which related with user
+	user = userservice.get_user(token)
+	relate_T = {}
+	add_favorite(user, relate_T)
+	add_comment(user, relate_T)
+	add_vote(user, relate_T)
+	add_read(user, relate_T)
+
+	prelate_T = clear(relate_T)		#filter some useless data
+
+
 
 def _search_newest(first_idx, max_qty):
 	return list(Travel.objects.order_by('create_time').reverse()[first_idx:max_qty])
@@ -165,6 +183,46 @@ def _search_read_times(first_idx, max_qty):
 
 def _search_vote_qty(first_idx, max_qty):
 	return list(Travel.objects.order_by('vote_qty').reverse()[first_idx:max_qty])
+
+def clear(tls):
+	travels = {} 
+	for t in tls:
+		if tls[t] > 0 :
+			travels[t] = tls[t]
+	return travels 
+	
+def merge(d, t, s):
+	if t in d:
+		d[t] += s
+	else:
+		d[t] = s
+
+def positive(content):
+	'''judge weather a  comment is positive'''
+	return True
+
+def add_favorite(u, relate_T):
+	ftls = FavoriteTravel.objects.filter(user=u)
+	for ft in ftls:
+		merge(relate_T, ft.travel, FAVORIT_SCORE)
+
+def add_comment(u, relate_T):
+	tcls = TravelComment.objects.filter(commenter=u)
+	for tc in tcls:
+		if positive(tc.content):
+			merge(relate_T, tc.travel, COMMENT_SCORE)
+		else:
+			merge(relate_T, tc.travel, -COMMENT_SCORE)
+def add_vote(u, relate_T):
+	tvls = TravelVote.objects.filter(voter=u)
+	for tv in tvls:
+		merge(relate_T, tv.travel, VOTE_SCORE)
+
+def add_read(u, relate_T):
+	trlls = TravelReadLog.objects.filter(reader=u)
+	for trl in trlls:
+		merge(relate_T, trl.travel, READ_SCORE)
+
 
 #######		favorit ############
 def favorit(token, travel_id):

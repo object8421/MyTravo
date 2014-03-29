@@ -224,7 +224,7 @@ class ErrorLog(models.Model):
 class FavoriteTravel(models.Model):
 	user = models.ForeignKey('User')
 	travel = models.ForeignKey('Travel')
-	time = models.DateTimeField(auto_now=True)
+	time = models.DateTimeField(auto_now_add=True)
 	class Meta:
 		managed = False
 		db_table = 'favorite_travel'
@@ -232,7 +232,7 @@ class FavoriteTravel(models.Model):
 class Follow(models.Model):
 	active = models.ForeignKey('User', db_column='active', related_name='active_follow')
 	passive = models.ForeignKey('User', db_column='passive', related_name='passive_follow')
-	time = models.DateTimeField(auto_now=True)
+	time = models.DateTimeField(auto_now_add=True)
 	action = models.CharField(max_length=1)
 	class Meta:
 		managed = False
@@ -353,7 +353,7 @@ class TravelPlan(models.Model):
 class TravelReadLog(models.Model):
 	travel = models.ForeignKey(Travel)
 	reader = models.ForeignKey('User', db_column='reader')
-	time = models.DateTimeField(auto_now=True)
+	time = models.DateTimeField(auto_now_add=True)
 	class Meta:
 		managed = False
 		db_table = 'travel_read_log'
@@ -361,7 +361,7 @@ class TravelReadLog(models.Model):
 class TravelVote(models.Model):
 	travel = models.ForeignKey(Travel)
 	voter = models.ForeignKey(User, db_column='voter')
-	time = models.DateTimeField(auto_now=True)
+	time = models.DateTimeField(auto_now_add=True)
 	class Meta:
 		managed = False
 		db_table = 'travel_vote'

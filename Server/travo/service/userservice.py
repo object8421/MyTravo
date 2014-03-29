@@ -17,8 +17,9 @@ from datetime import datetime
 def _build_token():
 	return uuid.uuid4().hex
 
-def _build_face_path():
-	return uuid.uuid4().hex[0:16]
+def _build_face_path(face):
+	suffix = face.name.split('.')[-1]
+	return uuid.uuid4().hex[0:16] + '.' + suffix
 
 def _check_email(email):
 	format = '^[\d\w-]+\@[\d\w-]+(\.[\d\w-]+)+$'
@@ -146,7 +147,7 @@ def update(token, **kwargs):
 		user.is_info_public = kwargs['is_info_public']
 
 	if kwargs['face'] != None:
-		face_path = _build_face_path()
+		face_path = _build_face_path(kwargs['face'])
 		user.face_path = face_path
 		utils.save_face(face_path, kwargs['face'])
 	try:
@@ -192,8 +193,7 @@ def change_self_avatar(user,image=None):
 	if image is not None: 
 		_save_image(user, image)
 def _save_image(user, image):
-	
-	user.face_path = _build_face_path()
+	user.face_path = _build_face_path(image)
 	user.save()
 	utils.save_image(user.face_path, image)	
 ##add end ###
