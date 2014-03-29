@@ -1,6 +1,6 @@
 import copy
 import StringIO
-
+from oss.oss_api import *
 from datetime import datetime
 from threading import Thread
 from django.conf import settings
@@ -55,23 +55,19 @@ def get_ftp():
 	ftp.login(settings.FTP_USER)
 	return ftp
 
-def __save_image(path, image):
-	def do_save(_path, _image):
-		ftp = get_ftp()
-		ftp.storbinary('STOR ' + path, _image)
-		ftp.close()
-
-	Thread(target = do_save, kwargs = {'_path' : path,
-		'_image' : image}).start()
+def __save_image(bucket_name,file_name, image):
+	oss = OssAPI('oss.aliyuncs.com','ZtI6J33H7O9dWyP5','6XubAUt6JFWQ7yi9w5MPQkKLHtcFe3')
+	res = oss.put_object_from_string(bucket_name,file_name,str(image.read()))
+	print '%s \n %s'%(res.status,res.read())
 
 def save_cover(path, cover):
-	__save_image(settings.COVER_PATH + path, cover)
+	__save_image('travo-travel-cover', path, cover)
 
 def save_image(path, image):
-	__save_image(settings.IMAGE_PATH + path, image)
+	__save_image('travo-note-pic', path, image)
 
 def save_face(path, face):
-	__save_image(settings.FACE_PATH + path, face)
+	__save_image('travo-user-avatar', path, face)
 
 ######    other    ######
 def filter_key(d, keys):
