@@ -47,6 +47,12 @@ class ShowRegisterView(View):
         context = RequestContext(request)
         return HttpResponse(template.render(context))
 
+class OtherInfoView(View):
+    def get(self,request):
+        template = loader.get_template('website/others.html')
+        context = RequestContext(request)
+        return HttpResponse(template.render(context))
+
 class MyInfoView(View):
     '''展示个人主页'''
     def get(self, request):
