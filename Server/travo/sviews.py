@@ -141,11 +141,13 @@ class PersonalInfoSetView(View):
         attr_dict = request.POST
         is_info_public = request.POST.get('is_info_public','1')
         signature = request.POST.get('signature','')
+        user = get_object_or_404(User,token=request.session['token'])
         for key in attr_dict.keys():
             print key
             print attr_dict[key]
         try:
             userservice.update_info(request.session['token'],attr_dict)
+            result = userservice.change_self_avatar(user,request.FILES)
             userservice.change_signature_authority(request.session['token'],signature,is_info_public)
             response = HttpResponse()
             response['Content-Type']="text/javascript"
