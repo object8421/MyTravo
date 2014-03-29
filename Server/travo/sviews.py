@@ -20,6 +20,10 @@ from service import userservice,travelservice,noteservice
 from models import User,Travel,Location
 from rc import *
 
+from django.core.paginator import Paginator
+from django.core.paginator import PageNotAnInteger
+from django.core.paginator import EmptyPage
+
 # Create your views here.
 
 #===================user view=====================================
@@ -239,9 +243,22 @@ class SearchResultView(View):
 
 class HotTravelView(View):
     def get(self,request):
-        template = loader.get_template('website/hot_travel.html')
-        context = RequestContext(request)
-        return HttpResponse(template.render(context))
+        searchtype = "default"
+        travel_list = travelservice.search_web(order=searchtype)
+        page_size = 10
+        paginator = Paginator(travel_list, page_size)
+        try:
+            page = int(request.GET.get('page','1'))
+
+        except ValueError:
+            page = 1
+        try:
+            travel_results = paginator.page(page)
+        except (EmptyPage, InvalidPage):
+            travel_results = paginator.page(paginator.num_pages)
+        basic_travel_path = settings.COVER_PATH
+        return render(request,'website/hot_travel.html',{"travel_list":travel_results,
+            })
 #===================travel view=====================================
 
 class NewTravelView(View):

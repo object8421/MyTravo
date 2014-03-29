@@ -29,7 +29,7 @@
                 <div style="float:left;">
 
                 <h5 class="pull-left"><a href="{%url 'detail_travel' travel.id %}">{{travel.title}}</a></h5>
-                <h5 class="pull-left"><a href="{%url 'detail_travel' travel.id %}">{{travel.id}}</a></h5>
+                
                 
               </div>
               
@@ -49,7 +49,7 @@
               <div style="clear:both; float:left;"><h6>2014-03-13</h6>
               </div>
               <div style="float:right; padding-right:10px;"><h6>
-                <span class="glyphicon glyphicon-heart"></span> {{ travel.vote_qty}}
+                <span class="glyphicon glyphicon-heart"></span> {{travel.create_time | date:"Y-m-d"}}
                 <span class="glyphicon glyphicon-list-alt"></span>{{ travel.favorite_qty}}</h6>
               </div>
 

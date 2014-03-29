@@ -183,6 +183,24 @@ def _search_read_times(first_idx, max_qty):
 
 def _search_vote_qty(first_idx, max_qty):
 	return list(Travel.objects.order_by('vote_qty').reverse()[first_idx:max_qty])
+###add by L!ar for website travel list search
+def search_web(order=SO_DEFAULT, first_idx=1, max_qty=20):
+	first_idx = int(first_idx)
+	return {
+			SO_DEFAULT	: _search_default_web,
+			SO_READ_TIMES: _search_read_times_web,
+			SO_VOTE_QTY	: _search_vote_qty_web,
+			SO_NEWEST	: _search_newest_web,
+			}[order](first_idx - 1, max_qty)
+
+def _search_default_web(first_idx, max_qty):
+	return _search_newest_web(first_idx, max_qty)
+
+def _search_newest_web(first_idx, max_qty):
+	return list(Travel.objects.order_by('-create_time'))
+
+def _search_read_times_web(first_idx, max_qty):
+	return list(Travel.objects.order_by('-read_times'))
 
 def clear(tls):
 	travels = {} 
@@ -224,6 +242,9 @@ def add_read(u, relate_T):
 		merge(relate_T, trl.travel, READ_SCORE)
 
 
+def _search_vote_qty_web(first_idx, max_qty):
+	return list(Travel.objects.order_by('-vote_qty'))
+###add end
 #######		favorit ############
 def favorit(token, travel_id):
 	user = userservice.get_user(token)

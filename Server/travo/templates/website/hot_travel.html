@@ -16,16 +16,16 @@
 
 
 <!-- 一篇游记从这里开始 -->
-
-
+<div class="row">
+{% for travel in travel_list %}
 <div class="col-md-8 column col-md-offset-1" style="margin-bottom:20px;">
 <div class="panel panel-default">
   <div class="panel-body" style="padding:0;border:0;">
      <!--<img src="../../static/travo/image/welcome_bg6.jpg" alt="..." class="img-rounded" style="width:100%; height:400px; margin:0; border-radius:2px;">-->
-     <div class="cobra-image" style="width:100%; height:400px; background:url(../../static/travo/image/welcome_bg6.jpg) no-repeat center;background-size:cover;border:0;">
-        <div class="cobra-image-content" vertical-align="middle">
-        <h2>这里是标题</h2>
-        <h4>内容描述不够长怎么能叫描述呢好好学语文吧少年</h4>
+     <div id="cobra-image{{ forloop.counter }}" class="cobra-image" style="width:100%; height:400px; background:url(../../static/travo/image/welcome_bg6.jpg) no-repeat center;background-size:cover;border:0;">
+        <div id="cobra-image-content{{ forloop.counter }}" class="cobra-image-content" vertical-align="middle">
+        <h2>{{travel.title}}</h2>
+        <h4>{{travel.description}}</h4>
         </div>
       </div>
     
@@ -36,11 +36,11 @@
                 <div style="clear:both;">
                 	<div style="float:left;">
 
-                     <a href="#"><h4 class="pull-left">游记标题</h4></a>
+                     <a href="{%url 'detail_travel' travel.id %}"><h4 class="pull-left">{{travel.title}}</h4></a>
                     </div>
                 
                  	<div class="col-md-3 col-md-offset-1" style="float:left;padding-left:0;" vertical-align="middle" >
-                 		<a href="#" ><h5 class="pull-left"> <span class="glyphicon glyphicon-user " style="float:left;"></span> author昵称</h5></a>
+                 		<a href="#" ><h5 class="pull-left"> <span class="glyphicon glyphicon-user " style="float:left;"></span>{{travel.user.nickname}}</h5></a>
                  	</div>
               </div>
               
@@ -50,13 +50,13 @@
               
                  <h5>
                  	
-                 	<div  style="float:left;padding-left:0;"><span class="glyphicon glyphicon-calendar"></span> 2014-03-27</div>
+                 	<div  style="float:left;padding-left:0;"><span class="glyphicon glyphicon-calendar"></span>{{travel.create_time | date:"Y-m-d"}}</div>
                  	
-                 	<div  class="col-md-offset-6"style="float:left;padding-right:0;"><span class="glyphicon glyphicon-flag"></span> 20</div>
+                 	
                  
-                 	<div class="col-md-offset-1" style="float:left;padding-right:0;"><span class="glyphicon glyphicon-heart"></span> 3</div>
+                 	<div class="col-md-offset-1" style="float:left;padding-right:0;"><span class="glyphicon glyphicon-heart"></span> {{travel.favorite_qty}}</div>
             
-                	<div class="col-md-offset-1" style="float:left;padding-right:0;margin-right:0;"><span class="glyphicon glyphicon-comment "></span> 8</div>
+                	<div class="col-md-offset-1" style="float:left;padding-right:0;margin-right:0;"><span class="glyphicon glyphicon-comment "></span> {{travel.comment_qty}}</div>
                		
                 		
                  	
@@ -76,13 +76,30 @@
 </div>
 </div><!--  这是三分之一的span (1)end-->
 
-
-
-
-<div class="row col-md-12">
+{% endfor %}
+</div><!-- end of row -->
+<div class="row">
+  <div class="col-md-8 col-md-offset-1" align="center">
+    <div class="pagination">
+{% if travel_list.has_previous %}
+        <li><a class='paginator' title='上一页' href='?page={{ travel_list.previous_page_number }}'>&laquo;</a></li>
+ {% endif %}
+ {% for page in travel_list.paginator.page_range %}
+     {% if page = travel_list.number %}
+         <li><a class='paginator_current' title='当前页:{{ page }}'>{{ page }}</a></li>
+     {% else %}
+         <li><a class='paginator' href='?page={{ page }}' title='{{ page }}'>{{ page }}</a></li>
+     {% endif %}
+ {% endfor %}
+ {% if travel_list.has_next %}
+     <li><a class='paginator' title='下一页' href='?page={{ travel_list.next_page_number }}'>&raquo;</a></li>
+ {% endif %}
+</div>
+</div>
+<!--<div class="row col-md-12">
 <p id="content1">Dynamic page content</p>
 <p id="pagination-here"></p>
-</div>
+</div>-->
 
 
 
@@ -98,34 +115,139 @@
 {% endblock %}
 {% block myscript%}
 
-<script>
-    $('.cobra-image-content').hide()
-$('.cobra-image').hover(
+<script type="text/javascript">
+$(function(){
+    $(".cobra-image-content").hide();
+    $("#cobra-image1").hover(
+      
+      // Over
+      function(){     
+        $("#cobra-image-content1").fadeIn();
+      }
+      ,  
+      // Out
+      function(){
+       $("#cobra-image-content1").fadeOut();
+      }
+    );
+    $("#cobra-image2").hover(
+      
+      // Over
+      function(){     
+        $("#cobra-image-content2").fadeIn();
+      }
+      ,  
+      // Out
+      function(){
+       $("#cobra-image-content2").fadeOut();
+      }
+    );
+    $("#cobra-image3").hover(
+      
+      // Over
+      function(){     
+        $("#cobra-image-content3").fadeIn();
+      }
+      ,  
+      // Out
+      function(){
+       $("#cobra-image-content3").fadeOut();
+      }
+    );
+    $("#cobra-image4").hover(
+      
+      // Over
+      function(){     
+        $("#cobra-image-content4").fadeIn();
+      }
+      ,  
+      // Out
+      function(){
+       $("#cobra-image-content4").fadeOut();
+      }
+    );$("#cobra-image5").hover(
+      
+      // Over
+      function(){     
+        $("#cobra-image-content5").fadeIn();
+      }
+      ,  
+      // Out
+      function(){
+       $("#cobra-image-content5").fadeOut();
+      }
+    );$("#cobra-image6").hover(
+      
+      // Over
+      function(){     
+        $("#cobra-image-content6").fadeIn();
+      }
+      ,  
+      // Out
+      function(){
+       $("#cobra-image-content6").fadeOut();
+      }
+    );$("#cobra-image7").hover(
+      
+      // Over
+      function(){     
+        $("#cobra-image-content7").fadeIn();
+      }
+      ,  
+      // Out
+      function(){
+       $("#cobra-image-content7").fadeOut();
+      }
+    );$("#cobra-image8").hover(
+      
+      // Over
+      function(){     
+        $("#cobra-image-content8").fadeIn();
+      }
+      ,  
+      // Out
+      function(){
+       $("#cobra-image-content8").fadeOut();
+      }
+    );$("#cobra-image9").hover(
+      
+      // Over
+      function(){     
+        $("#cobra-image-content9").fadeIn();
+      }
+      ,  
+      // Out
+      function(){
+       $("#cobra-image-content9").fadeOut();
+      }
+    );$("#cobra-image10").hover(
+      
+      // Over
+      function(){     
+        $("#cobra-image-content10").fadeIn();
+      }
+      ,  
+      // Out
+      function(){
+       $("#cobra-image-content10").fadeOut();
+      }
+    );
+});
   
-  // Over
-  function(){     
-    $('.cobra-image-content').fadeIn();
-  }
-  ,  
-  // Out
-  function(){
-   $('.cobra-image-content').fadeOut();
-  }
-);
    
-    </script>
+</script>
 
 <script type="text/javascript">
-$('#pagination-here').bootpag({
-    total: 7,          // total pages
-    page: 1,            // default page
-    maxVisible: 5,     // visible pagination
-    leaps: true         // next/prev leaps through maxVisible
-}).on("page", function(event, num){
-    $("#content1").html("Page " + num); // or some ajax content loading...
-    // ... after content load -> change total to 10
-    $(this).bootpag({total: 7, maxVisible: 10});
-}); 
+// $('#pagination-here').bootpag({
+//     total: 7,          // total pages
+//     page: 1,            // default page
+//     maxVisible: 5,     // visible pagination
+//     leaps: true         // next/prev leaps through maxVisible
+// }).on("page", function(event, num){
+//     $("#content1").html("Page " + num); // or some ajax content loading...
+//     // ... after content load -> change total to 10
+//     $(this).bootpag({total: 7, maxVisible: 10});
+// }); 
 
 </script>
 
