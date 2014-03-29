@@ -21,6 +21,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:ems="10"
+        android:text="w@qq.com"
         android:hint="@string/email"
         android:inputType="textEmailAddress" />
 
@@ -32,6 +33,7 @@
         android:layout_below="@+id/login_email"
         android:layout_marginTop="20dp"
         android:ems="10"
+        android:text="w"
         android:hint="@string/password"
         android:inputType="textPassword" >
 

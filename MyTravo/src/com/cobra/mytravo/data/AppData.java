@@ -4,11 +4,14 @@ package com.cobra.mytravo.data;
 
 
 
+import com.cobra.mytravo.helpers.PhotoUtils;
+
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Environment;
+import android.util.Log;
 
 /**
  * app info of Travo
@@ -33,7 +36,7 @@ public class AppData extends Application {
 
    
     private static Context sContext;
-    public static final String HOST_IP = "http://172.16.12.26:8000/";
+    public static final String HOST_IP = "http://172.16.12.26:8080/mobile/";
     private static SharedPreferences sharedPreferences; 
     private static Editor editor;
     @Override

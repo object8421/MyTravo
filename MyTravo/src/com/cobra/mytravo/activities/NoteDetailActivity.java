@@ -56,7 +56,7 @@ public class NoteDetailActivity extends Activity {
 		if(getIntent() != null){
 			note = (Note) getIntent().getSerializableExtra(NOTE_STRING);
 		}
-		mDataHelper = new NotesDataHelper(this, AppData.getUserId(), AppData.getTravelTime());
+		mDataHelper = new NotesDataHelper(this, AppData.getUserId());
 		bitmapManager = new BitmapManager(this);
 	}
 	private void InitialViews(){
@@ -75,9 +75,9 @@ public class NoteDetailActivity extends Activity {
 			descriptionTextView.setText(note.getDescription());
 		}
 		if(note.getLocation() != null){
-			locationTextView.setText(note.getLocation().getNameString());
+			locationTextView.setText(note.getLocation().getAddress());
 		}
-		timeTextView.setText(TimeUtils.getListTime(note.getTime()));
+		timeTextView.setText(TimeUtils.getListTime(note.getCreate_time()));
 		
 	}
 	@Override

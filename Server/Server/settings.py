@@ -16,11 +16,11 @@ FTP_SERVER = '172.16.12.125'
 FTP_PORT = 21
 FTP_USER = 'rew'
 
-IMAGE_PATH = 'ftp://rew@172.16.12.125/image'
+IMAGE_PATH = '/image/' 
 FACE_PATH = IMAGE_PATH + 'face/'
 COVER_PATH = IMAGE_PATH + 'cover/'
 
-MEDIA_ROOT = IMAGE_PATH
+MEDIA_ROOT = 'ftp://rew@172.16.12.125/image'
 MEDIA_URL = '/media/'
 
 # Quick-start development settings - unsuitable for production
@@ -37,7 +37,7 @@ TEMPLATE_DEBUG = True
 ALLOWED_HOSTS = []
 		#'*',]
 
-TOKEN_VALID_DAY = 60
+TOKEN_VALID_DAY = 30
 
 # Application definition
 

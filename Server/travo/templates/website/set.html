@@ -1,5 +1,5 @@
 {% extends "website/base_index.html" %}
-{% block title %}注册成功{% endblock %}
+{% block title %}修改信息{% endblock %}
 {% block content %}
 
 
@@ -21,91 +21,106 @@
   <li class="active"><a href="#editinfo" data-toggle="tab">修改个人信息</a></li>
   <li ><a href="#setpassword" data-toggle="tab">更改密码</a></li>
   <li><a href="#changemail" data-toggle="tab">修改邮箱</a></li>
-
+  
 </ul>
 
 <!-- Tab panes -->
 <div class="tab-content">
  <!-- tab0 starts here -->
  <div class="tab-pane fade  in active" id="editinfo">
-    <form class="form-horizontal" role="form" style="margin-top:20px;">
+    <form class="form-horizontal" role="form" style="margin-top:20px;" id="PersonalInfoForm">
   
   <div class="form-group">
-    <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">昵称</label>
+    <label  class="col-sm-2 control-label" style="color: #104e8b;">姓名</label>
     <div class="col-sm-6">
-      <input type="email" class="form-control" id="inputTravelName" value={{request.session.username}} name="nickname">
+      <input type="text" name="name" class="form-control" value={{userinfo.name}} >
     </div>
   </div>
+
 
   
- <div class="form-group">
-      <label for="cover_picker" class="col-sm-2 control-label" style="color: #104e8b;">上传新头像</label>
-      <div class="col-sm-4">
-      <div id="cover_picker" class="fileinput fileinput-new" data-provides="fileinput">
-
-        <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 192px; height: 150px; padding:0;"></div>
-        <div>
-          <span class="btn btn-default btn-file btn-success btn-sm"><span class="fileinput-new">选择照片上传</span>
-          <span class="fileinput-exists">重新选择照片</span><input type="file" name="..."></span>
-          <a href="#" class="btn btn-default btn-danger fileinput-exists btn-sm" data-dismiss="fileinput">移除当前照片</a>
-        </div>
-      </div>
-    </div>
-  </div>
+ 
 
 
    <div class="form-group control-group">
-    <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">性别</label>
+    <label  class="col-sm-2 control-label" style="color: #104e8b;">性别</label>
     <div class="controls col-sm-2">
+            {% ifequal userinfo.sex '男' %}
             <label class="radio inline col-sm-6" style="float:left;">
-              <input type="radio" value="男" name="single" checked="checked"> 男
+              <input type="radio"  name="sex" value="男" checked="checked"> 男
             </label>
             <label class="radio inline" style="float:left;">
-              <input type="radio" value="女" name="single"> 女
+              <input type="radio" name="sex" value="女" > 女
             </label>
-
+            {% else %}
+            <label class="radio inline col-sm-6" style="float:left;">
+              <input type="radio"  name="sex" value="男" > 男
+            </label>
+            <label class="radio inline" style="float:left;">
+              <input type="radio" name="sex" value="女" checked="checked"> 女
+            </label>
+            {% endifequal %}
           </div>
   </div>
 
 
 <div class="form-group">
-    <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">年龄</label>
+    <label  class="col-sm-2 control-label" style="color: #104e8b;">年龄</label>
     <div class="col-sm-2">
-      <input type="email" class="form-control" id="inputAge" value={{request.session.age}}>
+      <input type="text" name="age" class="form-control" value={{userinfo.age}} >
     </div>
   </div>
 
 
 <div class="form-group">
-    <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">职业</label>
+    <label  class="col-sm-2 control-label" style="color: #104e8b;">职业</label>
     <div class="col-sm-3">
-      <input type="email" class="form-control" id="inputJob" value={{request.session.job}}>
+      <input type="text" name="job" class="form-control" value={{userinfo.job}} >
     </div>
   </div>
 
 
   <div class="form-group">
-    <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">地址</label>
+    <label  class="col-sm-2 control-label" style="color: #104e8b;">地址</label>
     <div class="col-sm-6">
-      <input type="email" class="form-control" id="inputAddress" value={{request.session.address}}>
+      <input type="text"  class="form-control" value={{userinfo.address}} >
     </div>
   </div>
 
 
-
+<div class="form-group control-group">
+    <label  class="col-sm-2 control-label" style="color: #104e8b;">信息公开</label>
+    <div class="controls col-sm-2">
+            {% ifequal user.is_info_public 1 %}
+            <label class="radio inline col-sm-6" style="float:left;">
+              <input type="radio" value="1" name="is_info_public" checked="checked"> 是
+            </label>
+            <label class="radio inline" style="float:left;">
+              <input type="radio" value="0" name="is_info_public"> 否
+            </label>
+            {% else %}
+             <label class="radio inline col-sm-6" style="float:left;">
+              <input type="radio" value="1" name="is_info_public" > 是
+            </label>
+            <label class="radio inline" style="float:left;">
+              <input type="radio" value="0" name="is_info_public" checked="checked"> 否
+            </label>
+            {% endifequal %}
+          </div>
+  </div>
  
   
   <div class="form-group">
-    <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">个性签名</label>
+    <label class="col-sm-2 control-label" style="color: #104e8b;">个性签名</label>
     <div class="col-sm-9">
-      <textarea class="form-control" rows="3" placeholder="请在这里添加游记描述"></textarea>
+      <input name="signature" type="text"   class="form-control" rows="3" placeholder="请在这里添加游记描述" value={{user.signature}}></input>
     </div>
   </div>
 
  
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">  
-      <button type="submit" class="btn btn-primary" >确认修改</button>
+      <button id="btnChangeInfo" type="submit" class="btn btn-primary" >确认修改</button>
    </div>
 </div>
   
@@ -113,7 +128,7 @@
 
 
 </form>
- </div><!-- tab1 end -->
+ </div><!-- tab0 end -->
 
 
 	<!-- tab1 starts here -->
@@ -184,6 +199,9 @@
 
   </div><!-- tab2 end-->
 
+  <!-- tab3 stars here -->
+ 
+
 </div><!-- tab content end -->
 </div><!--  panel body end-->
 </div><!--  panel end-->
@@ -197,11 +215,11 @@
                   <div class="modal-content">
                     <div class="modal-header">
                       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                      <h4 class="modal-title" id="myModalLabel" style="color: #104e8b;">修改密码</h4>
+                      <h4 class="modal-title" id="myModalLabel" style="color: #104e8b;">修改信息</h4>
                      </div>
                      <div class="modal-body">
                       
-                        <h6 class="modal-title" id="myModalLabel" style="color: #104e8b;">修改密码成功</h6>
+                        <h6 class="modal-title" id="myModalLabel" style="color: #104e8b;">修改成功</h6>
                           
                           
                           </div>
@@ -224,11 +242,11 @@
                   <div class="modal-content">
                     <div class="modal-header">
                       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                      <h4 class="modal-title" id="myModalLabel" style="color: #104e8b;">修改密码</h4>
+                      <h4 class="modal-title" id="myModalLabel" style="color: #104e8b;">修改信息</h4>
                      </div>
                      <div class="modal-body">
                       
-                        <h6 class="modal-title" id="myModalLabel" style="color: #104e8b;">修改密码失败</h6>
+                        <h6 class="modal-title" id="myModalLabel" style="color: #104e8b;">修改失败</h6>
                           
                           
                           </div>
@@ -245,5 +263,39 @@
                 </div><!-- /.modal-dialog -->
               </div><!-- /.modal -->
 
+
+{% endblock %}
+{% block myscript %}
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#btnChangePassword').click(function(){
+  var original_password = $("#inputOringinPassword").val();
+  var new_password = $("#inputNewPassword").val();
+  $.post("/user/change_password",{'original_password':original_password,'new_password':new_password}, function(ret){
+    if(ret == '1')
+      $('#changePasswordSuccessModal').modal('show');
+    else
+      $('#changePasswordFailModal').modal('show');
+  });
+  });
+});
+</script>
+<script type="text/javascript">
+var form = $('#PersonalInfoForm');
+    form.submit(function () {
+        $.ajax({
+            type: 'post',
+            url: '/user/set_account',
+            data: form.serialize(),
+            success: function (data) {
+                $('#changePasswordSuccessModal').modal('show');
+            },
+            error: function(data) {
+                $('#changePasswordFailModal').modal('show');
+            }
+        });
+        return false;
+    });
+</script>
 
 {% endblock %}

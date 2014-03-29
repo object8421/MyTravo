@@ -88,13 +88,11 @@ public class DrawOnMap
 		@Override
 		public View getInfoWindow(Marker arg0)
 		{
-			// TODO Auto-generated method stub
 			return null;
 		}
 		
 		private void displayView(Marker marker)
 		{
-//			((ImageView)infoWindow.findViewById(R.id.marker_image)).setImageResource(R.)
 		}
 	}
 }

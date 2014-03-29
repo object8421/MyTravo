@@ -10,6 +10,7 @@ from travo.models import User, LoginRecord,UserInfo,Follow
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ValidationError
 from django.db.utils import OperationalError
+from django.conf import settings
 from travo.rc import * 
 from datetime import datetime
 
@@ -30,11 +31,9 @@ def get_user(t):
 		u = User.objects.get(token=t)
 	except ObjectDoesNotExist:
 		raise TokenError('no_such_user')
-	'''
 	lr = LoginRecord.objects.filter(user=u).latest('time')
-	if (datetime.now() - lr.time).days >= 60:
+	if (datetime.now() - lr.time).days >= settings.TOKEN_VALID_DAY:
 		raise TokenError('token_overdate')
-	'''
 	return u
 
 def get_user_by_id(user_id):
@@ -43,8 +42,12 @@ def get_user_by_id(user_id):
 	except ObjectDoesNotExist:
 		raise TokenError('no_such_user')
 
+def record_login(user, ip):
+	lr = LoginRecord(user=user, time=datetime.now(), ip=ip)
+	lr.save()
+
 ########	login	###############
-def travo_login(email, password):
+def travo_login(email, password, ip):
 	result = {}
 	try:
 		u = User.objects.get(email=email)
@@ -52,16 +55,17 @@ def travo_login(email, password):
 		result[RSP_CODE] = RC_NO_SUCH_USER
 	else:
 		if u.password == password: 
-			#_update_token(u)
+			_update_token(u)
 			result[RSP_CODE] = RC_SUCESS
 			result['user'] = u
+			record_login(u, ip)
 		else:
 			result[RSP_CODE] = RC_WRONG_PASSWORD
 	return result 
 
-def qq_login(qq_token):
+def qq_login(qq_token, ip):
 	try:
-		qq_id = _ge_qq_id(qq_token)
+		qq_id = _get_qq_id(qq_token)
 	except AuthError:
 		return {RSP_CODE : RC_AUTH_FAIL}
 	else:
@@ -71,7 +75,9 @@ def qq_login(qq_token):
 			return {RSP_CODE : RC_NO_SUCH_USER}
 		else:
 			result = {RSP_CODE : RC_SUCESS}
+			_update_token(u)
 			result['user'] = u
+			record_login(u, ip)
 			return result
 
 def _update_token(u):
@@ -94,23 +100,23 @@ def _get_sina_user_id(self, sina_token):
 		raise AuthError('sina auth fail')
 
 ##########	register ################
-def travo_register(nickname, email, password):
+def travo_register(nickname, email, password, ip):
 	if not _check_email(email):
 		return {RSP_CODE : RC_ILLEGAL_EMAIL}
 	u = User(nickname=nickname, email=email, password=password)
 	u.token = _build_token()
-	return register(u)
+	return register(u, ip)
 
-def qq_register(nickname, qq_token):
+def qq_register(nickname, qq_token, ip):
 	try:
 		qq_id = _get_qq_id(qq_token)
 	except AuthError:
 		return {RSP_CODE : RC_AUTH_FAIL}
 	else:
 		u = User(qq_user_id=qq_id, token=_build_token())
-		return register(u)
+		return register(u, ip)
 
-def register(u):
+def register(u, ip):
 	try:
 		u.save()
 	except IntegrityError, e:
@@ -126,6 +132,7 @@ def register(u):
 	result = {RSP_CODE : RC_SUCESS}
 	result['token'] = u.token
 	result['user_id'] = u.id
+	record_login(u, ip)
 	return result
 
 #########	update	################
@@ -137,7 +144,8 @@ def update(token, **kwargs):
 		user.signature = kwargs['signature']
 	if kwargs['is_info_public'] is not None:
 		user.is_info_public = kwargs['is_info_public']
-	if kwargs['face']:
+
+	if kwargs['face'] != None:
 		face_path = _build_face_path()
 		user.face_path = face_path
 		utils.save_face(face_path, kwargs['face'])
@@ -163,6 +171,8 @@ def get_face(user_id):
 def update_info(token, info):
 	user = get_user(token)
 	ui = UserInfo.from_dict(info)
+	
+
 	ui.user = user
 	ui.save()
 	return {RSP_CODE : RC_SUCESS}
@@ -177,6 +187,32 @@ def change_self_info(token,attr_dict):
 	result = {RSP_CODE:RC_SUCESS}
 	return result
 
+##add by L!ar for changing avatar or adding avatar if there's no one #####
+def change_self_avatar(user,image=None):
+	if image is not None: 
+		_save_image(user, image)
+def _save_image(user, image):
+	
+	user.face_path = _build_face_path()
+	user.save()
+	utils.save_image(user.face_path, image)	
+##add end ###
+##add by L!ar for changing signature
+def change_signature_authority(token, signature, is_info_public):
+	user = User.objects.get(token=token)
+	user.signature = signature
+	user.is_info_public = is_info_public
+	user.save()
+	result = {RSP_CODE:RC_SUCESS}
+	return result
+##end add
+def change_authority(token, authority):
+	user = User.objects.get(token=token)
+	user.is_info_public = authority
+	user.save()
+	result = {RSP_CODE:RC_SUCESS}
+	return result
+##end add
 def change_password(token, original_password, new_password):
 	user = User.objects.get(token=token)
 	if user.password == original_password:
@@ -227,7 +263,7 @@ def get_user_info(token, friend_id):
 	except ObjectDoesNotExist:
 		return {RSP_CODE : RC_NO_SUCH_USER}
 	else:
-		if not u.is_info_public and u.token != token:
+		if u.is_info_public == 0 and u.token != token:
 			return {RSP_CODE : RC_PERMISSION_DENIED}
 		else:
 			result = {RSP_CODE : RC_SUCESS}
@@ -260,9 +296,9 @@ def update_email(token, email, password):
 
 ######    bind QQ    ######
 def bind(token, qq_token):
-	user = get_user(boken)
+	user = get_user(token)
 	try:
-		qq_id = _get_qq_user_id(qq_token)
+		qq_id = _get_qq_id(qq_token)
 	except AuthError:
 		return {RSP_CODE : RC_AUTH_FAIL}
 	else:
@@ -273,4 +309,22 @@ def bind(token, qq_token):
 			if 'qq_user_id_UNIQUE' in str(e): 
 				return {RSP_CODE : RC_DUP_BIND}
 	return {RSP_CODE : RC_SUCESS}
+
+######    update pass    ######
+def update_pass(email, old_pass, new_pass):
+	try:
+		u = User.objects.get(email=email)
+	except ObjectDoesNotExist:
+		return {RSP_CODE : RC_NO_SUCH_USER}
+	else:
+		if u.password != old_pass:
+			return {RSP_CODE : RC_WRONG_PASSWORD}
+		else:
+			u.password = new_pass
+			u.token = _build_token()
+			u.save()
+			result = {RSP_CODE : RC_SUCESS}
+			result['token'] = u.token
+			return result
+
 

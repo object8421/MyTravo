@@ -18,6 +18,7 @@ import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
+import android.os.Environment;
 import android.widget.ImageView;
 
 import java.io.File;
@@ -38,7 +39,6 @@ public class RequestManager {
     private static DiskBasedCache mDiskCache = (DiskBasedCache) mRequestQueue.getCache();
 
     private RequestManager(){
-
     }
 
     private static Cache openCache() {

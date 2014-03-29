@@ -13,6 +13,7 @@ urlpatterns = patterns('travo',
 		url(r'^contact', sviews.ContactView.as_view(), name = 'contact'),
 		url(r'^me', sviews.MyInfoView.as_view(),name = 'me'),
 		url(r'user/change_password',sviews.ChangePasswordView.as_view(),name='change_password'),
+		url(r'user/change_avatar',sviews.ChangeAvatarView.as_view(),name='change_avatar'),
 		url(r'^user/register_success', sviews.RegisterSuccessView.as_view(), \
 			name = 'register_success'),
 		url(r'^user/new_travel',sviews.NewTravelView.as_view(),\
@@ -26,6 +27,10 @@ urlpatterns = patterns('travo',
 			name = 'following'),
 		url(r'user/followed',sviews.FollowedView.as_view(),\
 			name = 'followed'),
+		url(r'search_result',sviews.SearchResultView.as_view(),\
+			name = 'search_result'),
+		url(r'hot_travel',sviews.HotTravelView.as_view(),\
+			name = 'hot_travel'),
 		#显示添加note的表单
 		
 		url(r'^new_note/(?P<travel_id>\d+)/',sviews.NewNoteView.as_view(),name = 'new_note'),	
@@ -41,6 +46,8 @@ urlpatterns = patterns('travo',
 		url(r'^test', sviews.TestView.as_view(),name='test'),
 		url(r'^user/detail_info', sviews.DetailInfoView.as_view(),\
 			name = 'detail_info'),
+		url(r'^user/login_page',sviews.LoginView.as_view(),\
+			name='login_page'),
 
 	)
 

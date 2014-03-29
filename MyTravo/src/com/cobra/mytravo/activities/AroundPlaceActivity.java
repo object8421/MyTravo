@@ -59,12 +59,12 @@ public class AroundPlaceActivity extends Activity
 					else
 						place = Tools.fromJsonToSearchPlaces(resultString).get(position);
 					String name = place.getName();
-					String lat = place.getLatitude();
-					String lng = place.getLongitude();
+					Double lat = Double.parseDouble(place.getLatitude());
+					Double lng = Double.parseDouble(place.getLongitude());
 					MyLocation mylocation = new MyLocation();
 					mylocation.setLatitude(lat);
 					mylocation.setLongitude(lng);
-					mylocation.setNameString(name);
+					mylocation.setAddress(name);
 					Intent intent = new Intent();
 					Bundle bundle = new Bundle();  
 					bundle.putSerializable(LOCATION_STRING, mylocation);

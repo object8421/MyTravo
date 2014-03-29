@@ -9,6 +9,11 @@ import com.cobra.mytravo.fragments.PersonalFragment;
 import com.cobra.mytravo.fragments.SettingFragment;
 import com.cobra.mytravo.fragments.ShotsFragment;
 import com.cobra.mytravo.helpers.ActionBarUtils;
+import com.cobra.mytravo.helpers.PhotoUtils;
+import com.cobra.mytravo.internet.GetMyTravelsService;
+import com.cobra.mytravo.internet.SyncService;
+import com.cobra.mytravo.internet.UploadNoteService;
+import com.cobra.mytravo.internet.UploadTravelService;
 import com.cobra.mytravo.util.ComposeBtnUtil;
 
 
@@ -23,6 +28,7 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -66,7 +72,6 @@ public class MainActivity extends FragmentActivity {
         rootView = ComposeBtnUtil.createLayout(this);
         composeButton = (Button) ComposeBtnUtil.addComposeBtn(rootView, this);
         composeButton.setOnClickListener(new OnClickListener() {
-			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
@@ -153,6 +158,20 @@ public class MainActivity extends FragmentActivity {
         	case R.id.add_travel:
         		Intent travelIntent = new Intent(MainActivity.this, AddTravelActivity.class);
         		startActivity(travelIntent);
+        		break;
+        	case R.id.logout:
+        		AppData.clearData();
+        		Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+        		startActivity(loginIntent);
+        	case R.id.uploadnote:
+        		/*Intent uploadnewnote = new Intent(
+						MainActivity.this,
+						UploadNoteService.class);
+				uploadnewnote.putExtra("type", "dirty");
+				startService(uploadnewnote);*/
+        		Intent syncService = new Intent(MainActivity.this, SyncService.class);
+        		syncService.putExtra("token", AppData.getIdToken());
+        		startService(syncService);
         		break;
         	}
         }

@@ -61,7 +61,7 @@ class MyModel():
 				newd.pop(key)
 				continue
 			if isinstance(d[key], datetime) or isinstance(d[key], date):
-				newd[key] = str(d[key])
+				newd[key] = str(d[key])[0:19]
 		return newd
 	class meta:
 		abstract = True
@@ -81,7 +81,7 @@ class User(models.Model, MyModel):
 	qq_user_id = models.CharField(unique=True, max_length=32, default=None)
 	sina_user_id = models.CharField(unique=True, max_length=20, default=None)
 	password = models.CharField(max_length=16, blank=True)
-	register_time = models.DateTimeField(auto_now=True)
+	register_time = models.DateTimeField(auto_now_add=True)
 	nickname = models.CharField(unique=True, max_length=16)
 	face_path = models.CharField(max_length=24, default=None)
 	signature = models.CharField(max_length=70)
@@ -402,3 +402,14 @@ class UserScenicPoint(models.Model):
 		managed = False
 		db_table = 'user_scenic_point'
 
+class Trans(models.Model):
+    user = models.ForeignKey('User')
+    time = models.DateTimeField()
+    ip = models.CharField(max_length=15)
+    method = models.CharField(max_length=8)
+    path = models.CharField(max_length=25)
+    http_agent = models.CharField(max_length=128)
+    rsp_code = models.IntegerField()
+    class Meta:
+        managed = False
+        db_table = 'trans'

@@ -16,14 +16,14 @@ public class Travel extends BaseType implements Serializable{
 	 * @param args
 	 */
 	private static final HashMap<String, Travel> CACHE = new HashMap<String, Travel>();
-	private int travel_id;
+	private int id;
 	private int user_id;
 	
 	private String title;
 	private String destination;
 	private String begin_date;
 	private String end_date;
-	private String created_time;
+	private String create_time;
 	private String cover_url;
 	private String description;
 	private double average_spend;
@@ -34,8 +34,32 @@ public class Travel extends BaseType implements Serializable{
 	private int is_public;
 	private int is_deleted;
 	private User user;
+	
+	private int is_sync;//判断客户端中游记的同步状态，1：需要上传到服务器， 0：客户端中为最新版本
+	private int TAG;//与服务器交互是辨别travel
+	
+	public int getIs_sync()
+	{
+		return is_sync;
+	}
+
+	public void setIs_sync(int is_sync)
+	{
+		this.is_sync = is_sync;
+	}
+
+	public int getTAG()
+	{
+		return TAG;
+	}
+
+	public void setTAG(int tAG)
+	{
+		TAG = tAG;
+	}
+
 	private static void addToCache(Travel travel) {
-        CACHE.put(travel.getCreated_time(), travel);
+        CACHE.put(travel.getCreate_time(), travel);
     }
 
     private static Travel getFromCache(String time) {
@@ -47,12 +71,17 @@ public class Travel extends BaseType implements Serializable{
 	public void setUser(User user) {
 		this.user = user;
 	}
-	public int getTravel_id() {
-		return travel_id;
+	
+	public int getId()
+	{
+		return id;
 	}
-	public void setTravel_id(int travel_id) {
-		this.travel_id = travel_id;
+
+	public void setId(int id)
+	{
+		this.id = id;
 	}
+
 	public int getUser_id() {
 		return user_id;
 	}
@@ -91,12 +120,17 @@ public class Travel extends BaseType implements Serializable{
 	public void setEnd_date(String end_date) {
 		this.end_date = end_date;
 	}
-	public String getCreated_time() {
-		return created_time;
+	
+	public String getCreate_time()
+	{
+		return create_time;
 	}
-	public void setCreated_time(String created_time) {
-		this.created_time = created_time;
+
+	public void setCreate_time(String create_time)
+	{
+		this.create_time = create_time;
 	}
+
 	public String getCover_url() {
 		return cover_url;
 	}

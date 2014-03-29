@@ -1,5 +1,5 @@
 {% extends "website/base_index.html" %}
-{% block title %}注册成功{% endblock %}
+{% block title %}个人信息{% endblock %}
 {% block content %}
 
 
@@ -16,71 +16,72 @@
 
   <div class="panel-body">
   	<div style="clear:both;text-align:right;">
-  	<button type="submit" class="btn btn-success btn-sm" style="margin-top:10px;">修改</button>
+  	<button type="button" onclick="javascript:window.location.href='{%url 'set_account'%}' " class="btn btn-success btn-sm" style="margin-top:10px;">修改</button>
   </div>
 
-  <form class="form-horizontal" role="form" style="margin-top:20px;">
+  <form class="form-horizontal" role="form" id="AvatarForm" action="/user/change_avatar" method="post" enctype="multipart/form-data">
   
 <div class="form-group">
-    <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">邮箱</label>
-    <div class="col-sm-6">
-      {{user.email}}
-    </div>
+    <label class="col-sm-2 control-label" style="color: #104e8b;">邮箱</label>
+    <label class="col-sm-4 control-label" style="text-align:left">{{user.email}}</label>
   </div>
 
   <div class="form-group">
-    <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">昵称</label>
-    <div class="col-sm-6">
-      {{request.session.username}}
-    </div>
+    <label class="col-sm-2 control-label" style="color: #104e8b;">昵称</label>
+    <label class="col-sm-4 control-label" style="text-align:left">{{request.session.username}}</label>
   </div>
 
   
  <div class="form-group">
-      <label for="cover_picker" class="col-sm-2 control-label" style="color: #104e8b;">头像</label>
-      <div class="col-sm-4">
-      <div id="cover_picker" class="fileinput fileinput-new" data-provides="fileinput">
-
-        <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 192px; height: 150px; padding:0;" readonly="true"></div>
-        
-      </div>
-    </div>
+  <label class="col-sm-2 control-label" style="color: #104e8b;">头像</label>
+  <div class="fileinput fileinput-new" name="face" data-provides="fileinput">
+  <div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
+    <img data-src="holder.js/100%x100%" alt="...">
   </div>
+  <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"></div>
+  <div>
+    <span class="btn btn-default btn-file"><span class="fileinput-new">Select image</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+    <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+    <button   type="submit" class="btn btn-default fileinput-exists" >Upload</button>
+  </div>
+</div>
+</div>
+  
 
 
    <div class="form-group control-group">
-    <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">性别</label>
-    <div class="controls col-sm-2">
-            <label class="radio inline col-sm-6" style="float:left;" readonly="true">
-              {{userinfo.sex}}
+    <label class="col-sm-2 control-label" style="color: #104e8b;">性别</label>
+    
+            <label class="col-sm-4 control-label" style="text-align:left">
+              {{userinfo.sex | default:"男"}}
             </label>
 
 
-          </div>
+         
   </div>
 
 
 <div class="form-group">
-    <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">年龄</label>
-    <div class="col-sm-2">
-      {{userinfo.age}}}
-    </div>
+    <label class="col-sm-2 control-label" style="color: #104e8b;">年龄</label>
+    <label class="col-sm-4 control-label" style="text-align:left">
+      {{userinfo.age | default:""}}
+    </label>
   </div>
 
 
 <div class="form-group">
-    <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">职业</label>
-    <div class="col-sm-3">
-      {{userinfo.job}}
-    </div>
+    <label class="col-sm-2 control-label" style="color: #104e8b;">职业</label>
+    <label class="col-sm-4 control-label" style="text-align:left">
+      {{userinfo.job | default:""}}
+    </label>
   </div>
 
 
   <div class="form-group">
-    <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">地址</label>
-    <div class="col-sm-6">
-      <input readonly="true" type="email" class="form-control" id="inputAddress" value={{request.session.address}}>
-    </div>
+    <label class="col-sm-2 control-label" style="color: #104e8b;">地址</label>
+    <label class="col-sm-4 control-label" style="text-align:left">
+      {{userinfo.address | default:""}}
+    </label>
   </div>
 
 
@@ -88,10 +89,10 @@
  
   
   <div class="form-group">
-    <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">个性签名</label>
-    <div class="col-sm-9">
-      {{user.signature}}
-    </div>
+    <label class="col-sm-2 control-label" style="color: #104e8b;">个性签名</label>
+    <label class="col-sm-4 control-label" style="text-align:left">
+      {{user.signature | default:""}}
+    </label>
   </div>
 
  
@@ -119,4 +120,33 @@
 </div><!-- container end -->
 
 
+{% endblock %}
+{% block myscript%}
+<script type="text/javascript">
+// $('#AvatarForm').ajaxForm({
+    
+//     success: function(data) {
+//        $('#changePasswordSuccessModal').modal('show');
+//     }
+// });
+var frm = $('#AvatarForm');
+var data = new FormData($('#AvatarForm').get(0));
+    frm.submit(function () {
+        $.ajax({
+            type: 'post',
+            url: '/user/change_avatar',
+            cache: false,
+            processData: false,
+            contentType: false,
+            data: data,
+            success: function (data) {
+                $('#changePasswordSuccessModal').modal('show');
+            },
+            error: function(data) {
+                $('#changePasswordFailModal').modal('show');
+            }
+        });
+        return false;
+    });
+</script>
 {% endblock %}

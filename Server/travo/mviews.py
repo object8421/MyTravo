@@ -37,7 +37,8 @@ class BaseView(View):
 		print('************request************')
 		print('host:' + self._request.META['REMOTE_ADDR'])
 		print('arg:' + str(self._request.GET))
-		#print('body:' + self._request.body)
+
+		print('body:' + self._request.body)
 		'''
 		print('post:' + str(self._request.POST))
 		print('FILES:' + str(self._request.FILES))
@@ -46,7 +47,7 @@ class BaseView(View):
 		try:
 			result = self.do()
 			print('==========response==========')
-			#print result
+			print result
 			return result
 		except IllegalDataError:
 			print('======caught exception======')
@@ -121,13 +122,8 @@ class BaseView(View):
 ###############################################
 ########	USER MOUDLE		###################
 ###############################################
-class UserView(BaseView):
-	_request = None
-	def record_login(self, user_id):
-		lr = LoginRecord(user_id=user_id, time=datetime.now(), ip=self._request.META['REMOTE_ADDR'])
-		lr.save()
 
-class LoginView(UserView):
+class LoginView(BaseView):
 	def get(self, request, *args):
 		self._request = request
 		return JsonResponse(self.handle())
@@ -138,18 +134,20 @@ class LoginView(UserView):
 			'qq'	: self.qq_login
 		}[self.get_required_arg('user_type')]()
 
-		if result[RSP_CODE] == RC_SUCESS:
-			#record login
-			self.record_login(result['user'].id)
 		return result
 	
 	def travo_login(self):
-		return userservice.travo_login(self.get_required_arg('email'), self.get_required_arg('password'))
+		return userservice.travo_login(
+				self.get_required_arg('email'),
+				self.get_required_arg('password'),
+				self._request.META['REMOTE_ADDR'])
 
 	def qq_login(self):
-		return userservice.qq_login(self.get_required_arg('qq_token'))
+		return userservice.qq_login(
+				self.get_required_arg('qq_token'),
+				self._request.META['REMOTE_ADDR'])
 
-class RegisterView(UserView):
+class RegisterView(BaseView):
 	def post(self, request):
 		self._request = request
 		return JsonResponse(self.handle())
@@ -160,9 +158,6 @@ class RegisterView(UserView):
 			'qq'	: self.qq_register
 		}[self.get_required_arg('user_type')]()
 
-		if result[RSP_CODE] == RC_SUCESS:
-			#record login
-			self.record_login(result['user_id'])
 		return result
 
 
@@ -170,20 +165,24 @@ class RegisterView(UserView):
 		return userservice.travo_register(
 						self.get_required_data('nickname'),
 						self.get_required_data('email'),
-						self.get_required_data('password')
+						self.get_required_data('password'),
+						self._request.META['REMOTE_ADDR']
 						)
+
 	def qq_register(self):
 		return userservice.qq_register(
 						self.get_required_data('nickname'),
-						self.get_required_data('qq_token')
+						self.get_required_data('qq_token'),
+						self._request.META['REMOTE_ADDR']
 						)
 
 class UpdateUserView(BaseView):
-	def put(self, request):
+	def post(self, request):
 		self._request = request
 		return JsonResponse(self.handle())
 
 	def do(self):
+		print self._request.FILES
 		return userservice.update(
 				self.get_token(),
 				nickname = self.get_arg('nickname'),
@@ -214,7 +213,7 @@ class GetFaceView(BaseView):
 			raise Http404
 
 	def do(self):
-		return travelservice.get_face(self._user_id)
+		return userservice.get_face(self._user_id)
 
 class FollowView(BaseView):
 	def put(self, request, user_id):
@@ -280,6 +279,18 @@ class BindView(BaseView):
 				self.get_required_arg('qq_token')
 				)
 
+class UpdatePasswordView(BaseView):
+	def put(self, request):
+		self._request = request
+		return JsonResponse(self.handle())
+
+	def do(self):
+		return userservice.update_pass(
+				self.get_required_arg('email'),
+				self.get_required_arg('old_password'),
+				self.get_required_arg('new_password')
+				)
+
 ##############################################
 ########	TRAVEL MOUDLE	##################
 ##############################################
@@ -329,6 +340,7 @@ class UserAppender():
 		for t in travels:
 			travel = t.dict()
 			travel['user'] = t.user.public_dict()
+			travel.pop('user_id')
 			d_travels.append(travel)
 		return d_travels 
 
@@ -340,8 +352,8 @@ class SearchTravelView(BaseView,UserAppender):
 	def do(self):
 		travels = travelservice.search(
 				self.get_arg('order'),
-				self.get_arg('first_idx'),
-				self.get_arg('max_qty')
+				self.get_arg('first_idx', 1),
+				self.get_arg('max_qty', 20)
 				)
 		return self.append_user(travels)
 
@@ -412,7 +424,15 @@ class GetCommentsView(BaseView):
 		return JsonResponse(self.handle())
 
 	def do(self):
-		return travelservice.get_comments(self._travel_id)
+		result = travelservice.get_comments(self._travel_id)
+		comments = []
+		for c in result['comments']:
+			comment = c.dict()
+			comment['commenter'] = c.commenter.public_dict()
+			comment.pop('commenter_id')
+			comments.append(comment)
+		result['comments'] = comments
+		return result
 
 class FriendTravelsView(BaseView):
 	def get(self, request, user_id):

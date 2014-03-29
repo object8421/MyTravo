@@ -1,4 +1,5 @@
 #-*- coding: utf-8 -*-
+import traceback
 from django.shortcuts import render, render_to_response,get_object_or_404
 from django.views.generic.edit import FormView
 from django.core.mail import send_mail
@@ -27,7 +28,7 @@ class RegisterView(View):
         nickname = request.POST.get('nickname','')
         password = request.POST.get('password','')
         email = request.POST.get('email','')
-        res = userservice.travo_register(nickname, email, password)
+        res = userservice.travo_register(nickname, email, password, request.META['REMOTE_ADDR'])
         for key in request.POST:
             print "%s : %s"%(key,request.POST.get(key))
 
@@ -60,12 +61,13 @@ class MyInfoView(View):
             "followers_list":followers_list})
 
         #return HttpResponse(template.render(context))
-        return render(request,'website/me.html',{'user':user,
+        return render(request,'website/me.html',{"user":user,
             "travel_list_length":result['travel_list_length'],
             "recent_travel_list":result['travel_list'],
             "basic_travel_path":basic_travel_path,
             "followers_list":followers_list,
             })
+
 class RegisterSuccessView(View):
     def get(self,request):
         template = loader.get_template('website/register_successful.html')
@@ -76,31 +78,39 @@ class DetailInfoView(View):
     def get(self, request):
         template = loader.get_template('website/detail_info.html')
         token  = request.session['token']
-        user = get_object_or_404(User, token=token)
+        user = userservice.get_user(token)
+        print user.email
         user_info = userservice.get_user_info(token, user.id)['user_info']
-        context = RequestContext(request,{\
-            "user":user,
-            "user_info":user_info})
-        return HttpResponse(template.render(context))
+        context = RequestContext(request)
+        return render(request,'website/detail_info.html',{"user":user,
+            "userinfo":user_info
+            })
 
 class LoginView(View):
-
     def get(self,request):
-        pass
+        template = loader.get_template('website/login_page.html')
+        context = RequestContext(request)
+        return HttpResponse(template.render(context))
     def post(self,request):
-        email = request.POST.get('email','')
-        password = request.POST.get('password','')
-        res = userservice.travo_login(email,password)
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        print email
+        print password
+        res = userservice.travo_login(email,password, request.META['REMOTE_ADDR'])
+        ret = "0"
+        response = HttpResponse()
+        response['Content-Type']="text/javascript"
         if res[RSP_CODE] == RC_SUCESS:
             logging.debug('user %s login successful',res['user'].nickname)
             request.session['username'] = res['user'].nickname
             request.session['token'] = res['user'].token
             request.session['userid'] = res['user'].id
-            return render_to_response('website/welcome.html',context_instance=RequestContext(request))
+            ret = "1"
         else:
-            return render(request,'website/login_fail.html')
-
-        pass
+            ret = "-1"
+        response.write(ret)
+        return response   
+        
 
 class LogoutView(View):
     def get(self,request):
@@ -117,15 +127,27 @@ class PersonalInfoSetView(View):
     def get(self, request):
         template = loader.get_template('website/set.html')
         context = RequestContext(request)
+        token  = request.session['token']
         user = get_object_or_404(User,token=request.session['token'])
-        return HttpResponse(template.render(context),{'user':user})
+        user_info = userservice.get_user_info(token, user.id)['user_info']
+        return render(request,'website/set.html',{"user":user,
+            "userinfo":user_info
+            })
     def post(self, request):
         attr_dict = request.POST
-        userservice.change_self_info(request.session['token'],attr_dict)
-        template = loader.get_template('website/me.html')
-        context = RequestContext(request)
-        user = request.get_object_or_404(User,token=token)
-        return HttpResponse(template.render(context),{'user':user})
+        is_info_public = request.POST.get('is_info_public','1')
+        signature = request.POST.get('signature','')
+        for key in attr_dict.keys():
+            print key
+            print attr_dict[key]
+        try:
+            userservice.update_info(request.session['token'],attr_dict)
+            userservice.change_signature_authority(request.session['token'],signature,is_info_public)
+            response = HttpResponse()
+            response['Content-Type']="text/javascript"
+            return response
+        except:
+           print traceback.format_exc()
 
 class ChangePasswordView(View):
     def post(self,request):
@@ -144,10 +166,43 @@ class ChangePasswordView(View):
             ret = "2"
         response.write(ret)
         return response
-
+class ChangeAvatarView(View):
+    def post(self,request):
+        
+        user = get_object_or_404(User,token=request.session['token'])
+        result = userservice.change_self_avatar(user,request.FILES)
+        response = HttpResponse()
+        response['Content-Type']="text/javascript"
+        return response;
 class ChangeEmailView(View):
     def post(self,request):
         pass
+
+class LoginPageView(View):
+    def get(self,request):
+        template = loader.get_template('website/login_page.html')
+        context = RequestContext(request)
+        return HttpResponse(template.render(context))
+    def post(self,request):
+        email = request.POST.get('email','')
+        password = request.POST.get('password','')
+        print email
+        print password
+        res = userservice.travo_login(email,password)
+        ret = "0"
+        response = HttpResponse()
+        response['Content-Type']="text/javascript"
+        if res[RSP_CODE] == RC_SUCESS:
+            logging.debug('user %s login successful',res['user'].nickname)
+            request.session['username'] = res['user'].nickname
+            request.session['token'] = res['user'].token
+            request.session['userid'] = res['user'].id
+            return render_to_response('website/welcome.html',context_instance=RequestContext(request))
+        else:
+            ret = "-1"
+            response.write(ret)
+            return response
+        
 
 #===================generic view=====================================
 
@@ -176,7 +231,17 @@ class TestView(View):
     def post(self, request):
         pass
 
+class SearchResultView(View):
+    def get(self,request):
+        template = loader.get_template('website/search_result.html')
+        context = RequestContext(request)
+        return HttpResponse(template.render(context))
 
+class HotTravelView(View):
+    def get(self,request):
+        template = loader.get_template('website/hot_travel.html')
+        context = RequestContext(request)
+        return HttpResponse(template.render(context))
 #===================travel view=====================================
 
 class NewTravelView(View):

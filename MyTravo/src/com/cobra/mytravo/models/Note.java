@@ -13,19 +13,37 @@ import android.database.Cursor;
 
 public class Note extends BaseType implements Serializable{
 
-	/**
-	 * Created by L!ar on 9/4/13
-	 */
 	private static final HashMap<String, Note> CACHE = new HashMap<String, Note>();
-	private int note_id;
+	private int id;
 	private int user_id;
-	private int travel_id;
+	private int travel_id;	//
 	private int is_deleted;
 	private String travel_created_time;
-	private static void addToCache(Note note) {
-        CACHE.put(note.getTime(), note);
-    }
+	private String image_url;//
+	private String description;//
+	private String create_time;
+	private int comment_qty;
+	private int vote_qty;
+	private int is_public;
+	private MyLocation location;  //
+	
+	private int is_sync;//判断客户端中游记的同步状态，1：需要上传到服务器， 0：客户端中为最新版本
+	private int TAG;//
+	
+	public int getIs_sync()
+	{
+		return is_sync;
+	}
 
+	public void setIs_sync(int is_sync)
+	{
+		this.is_sync = is_sync;
+	}
+
+	private static void addToCache(Note note) {
+        CACHE.put(note.getCreate_time(), note);
+    }
+	
     private static Note getFromCache(String time) {
         return CACHE.get(time);
     }
@@ -47,20 +65,15 @@ public class Note extends BaseType implements Serializable{
 	public void setTravel_created_time(String travel_created_time) {
 		this.travel_created_time = travel_created_time;
 	}
-	private String image_url;
-	private String description;
-	private String time;
-	private int comment_qty;
-	private int vote_qty;
-	private int is_public;
-	private MyLocation location;
-	public int getNote_id() {
-		return note_id;
-	}
-	public void setNote_id(int note_id) {
-		this.note_id = note_id;
-	}
 	
+	public int getId()
+	{
+		return id;
+	}
+	public void setId(int id)
+	{
+		this.id = id;
+	}
 	public int getTravel_id() {
 		return travel_id;
 	}
@@ -74,11 +87,13 @@ public class Note extends BaseType implements Serializable{
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public String getTime() {
-		return time;
+	public String getCreate_time()
+	{
+		return create_time;
 	}
-	public void setTime(String time) {
-		this.time = time;
+	public void setCreate_time(String create_time)
+	{
+		this.create_time = create_time;
 	}
 	public int getComment_qty() {
 		return comment_qty;
@@ -104,7 +119,16 @@ public class Note extends BaseType implements Serializable{
 	public void setIs_public(int is_public) {
 		this.is_public = is_public;
 	}
-	
+	public int getTAG()
+	{
+		return TAG;
+	}
+
+	public void setTAG(int tAG)
+	{
+		TAG = tAG;
+	}
+
 	public MyLocation getLocation() {
 		return location;
 	}

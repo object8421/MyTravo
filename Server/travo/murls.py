@@ -16,6 +16,7 @@ urlpatterns = patterns('',
 		url(r'^user/(\d+)/info$', mviews.UserInfoView.as_view(), name='user_info'),
 		url(r'^user/email/update$', mviews.UpdateEmailView.as_view(), name='update_email'),
 		url(r'^user/bind$', mviews.BindView.as_view(), name='bind'),
+		url(r'^user/password/update', mviews.UpdatePasswordView.as_view(), name='update_password'),
 
 		url(r'^travel/upload$', mviews.UploadTravelView.as_view(), name='upload_travel'),
 		url(r'^travel/sync$', mviews.SyncTravelView.as_view(), name='sync_travel'),

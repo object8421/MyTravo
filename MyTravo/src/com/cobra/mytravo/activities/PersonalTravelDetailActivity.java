@@ -1,11 +1,8 @@
 package com.cobra.mytravo.activities;
 
 import com.cobra.mytravo.R;
-import com.cobra.mytravo.R.layout;
-import com.cobra.mytravo.R.menu;
 import com.cobra.mytravo.adapters.TravelDetailAdapter;
 import com.cobra.mytravo.data.AppData;
-import com.cobra.mytravo.data.DataProvider;
 import com.cobra.mytravo.data.NotesDataHelper;
 import com.cobra.mytravo.helpers.ActionBarUtils;
 import com.cobra.mytravo.helpers.MyImageUtil;
@@ -24,7 +21,7 @@ import android.content.Loader;
 import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,7 +31,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 /**
  * 
  * @author L!ar
@@ -112,7 +108,8 @@ public class PersonalTravelDetailActivity extends Activity implements LoaderMana
 		}
 			
 		titleTextView.setText(travel.getTitle());
-		timeTextView.setText(TimeUtils.getListTime(travel.getCreated_time()));
+		
+		timeTextView.setText(TimeUtils.getListTime(travel.getCreate_time()));
 		descriptionTextView.setText(travel.getDescription());
 		if(noteCount > 0){
 			noteCountTextView.setText(String.valueOf(noteCount));
@@ -126,22 +123,24 @@ public class PersonalTravelDetailActivity extends Activity implements LoaderMana
 		if(intent != null){
 			travel = (Travel) intent.getSerializableExtra(TRAVEL_STRING);
 		}
-		mDataHelper = new NotesDataHelper(this, AppData.getUserId(), travel.getCreated_time());
-		noteCount = mDataHelper.getCount();
+		mDataHelper = new NotesDataHelper(this, AppData.getUserId());
+		noteCount = mDataHelper.getCountByTravel(travel.getCreate_time());
 	}
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
 		// TODO Auto-generated method stub
-		return mDataHelper.getCursorLoader();
+		Log.i("travel.getid", String.valueOf(travel.getId()));
+		Log.i("travel.getcreatetime", String.valueOf(travel.getCreate_time()));
+		return mDataHelper.getCursorLoader(travel.getId(),travel.getCreate_time());
 	}
-
+	
 	@Override
 	public void onLoadFinished(Loader<Cursor> arg0, Cursor data) {
 		// TODO Auto-generated method stub
 		mAdapter.changeCursor(data);
 		if(noteCountTextView != null){
-			noteCount = mDataHelper.getCount();
+			noteCount = mDataHelper.getCountByTravel(travel.getCreate_time());
 			if(noteCount > 0){
 				noteCountTextView.setText(String.valueOf(noteCount));
 			}
@@ -156,7 +155,7 @@ public class PersonalTravelDetailActivity extends Activity implements LoaderMana
 		// TODO Auto-generated method stub
 		mAdapter.changeCursor(null);
 	}
-
+	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
@@ -171,7 +170,7 @@ public class PersonalTravelDetailActivity extends Activity implements LoaderMana
 			break;
 		case R.id.action_edit:
 			Intent intent = new Intent();
-			intent.setClass(this, AddTravelActivity.class);		
+			intent.setClass(this, PersonalTravelEditActivity.class);		
 			Bundle bundle = new Bundle();
 			bundle.putSerializable(TRAVEL_STRING, travel);
 			intent.putExtras(bundle);
@@ -200,6 +199,11 @@ public class PersonalTravelDetailActivity extends Activity implements LoaderMana
 			});
 			builder.create().show();
 			break;
+		case R.id.action_route:
+			Intent intent1 = new Intent(PersonalTravelDetailActivity.this, RouteActivity.class);
+			intent1.putExtra("travel_created_time", travel.getCreate_time());
+			startActivity(intent1);
+			break;
 		default:
 			break;
 		}
@@ -217,7 +221,7 @@ public class PersonalTravelDetailActivity extends Activity implements LoaderMana
 						MyImageUtil.setBitmapResize(this, travelImageView, editedTravel.getCover_url());
 					}
 					titleTextView.setText(editedTravel.getTitle());
-					timeTextView.setText(TimeUtils.getListTime(editedTravel.getCreated_time()));
+					timeTextView.setText(TimeUtils.getListTime(editedTravel.getCreate_time()));
 					descriptionTextView.setText(editedTravel.getDescription());
 				}
 			}

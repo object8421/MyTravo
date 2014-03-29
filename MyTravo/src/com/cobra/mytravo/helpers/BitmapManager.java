@@ -104,7 +104,7 @@ public class BitmapManager {
 
     	BitmapFactory.Options o = new BitmapFactory.Options();
         o.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(AppData.TRAVO_PATH + "/" + urlString + ".jpg", o);
+        BitmapFactory.decodeFile(urlString, o);
         // Find the correct scale value. It should be the power of 2.
         final int REQUIRED_SIZE = 140;
         int width_tmp = o.outWidth, height_tmp = o.outHeight;
@@ -121,10 +121,10 @@ public class BitmapManager {
         // decode with inSampleSize
         BitmapFactory.Options o2 = new BitmapFactory.Options();
         o2.inSampleSize = scale;
-        Bitmap bm = BitmapFactory.decodeFile(AppData.TRAVO_PATH + "/" + urlString + ".jpg", o2);
+        Bitmap bm = BitmapFactory.decodeFile(urlString, o2);
         Bitmap bitmap = bm;
 
-        ExifInterface exif = new ExifInterface(AppData.TRAVO_PATH + "/" + urlString + ".jpg");
+        ExifInterface exif = new ExifInterface(urlString);
 
         int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
 

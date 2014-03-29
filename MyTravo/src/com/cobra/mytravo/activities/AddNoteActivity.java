@@ -8,33 +8,28 @@ import java.util.List;
 import java.util.Locale;
 
 import com.cobra.mytravo.R;
-import com.cobra.mytravo.R.layout;
-import com.cobra.mytravo.R.menu;
 import com.cobra.mytravo.data.AppData;
 import com.cobra.mytravo.data.MyHandlerMessage;
 import com.cobra.mytravo.data.NotesDataHelper;
+import com.cobra.mytravo.data.TravelsDataHelper;
 import com.cobra.mytravo.helpers.ActionBarUtils;
 import com.cobra.mytravo.helpers.BitmapUtil;
-import com.cobra.mytravo.helpers.MyImageUtil;
 import com.cobra.mytravo.helpers.PhotoUtils;
 import com.cobra.mytravo.helpers.ScreenUtil;
 import com.cobra.mytravo.helpers.TimeUtils;
+import com.cobra.mytravo.internet.UploadNoteService;
 import com.cobra.mytravo.models.MyLocation;
 import com.cobra.mytravo.models.Note;
-import com.cobra.mytravo.models.Travel;
 import com.cobra.mytravo.util.Tools;
-import com.google.android.gms.games.multiplayer.realtime.RoomUpdateListener;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
@@ -47,12 +42,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.TextureView;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
@@ -89,6 +82,7 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 	//(after we create the AddNoteActivity)
 	private boolean imageExist = false;
 	private NotesDataHelper mDataHelper;
+	private TravelsDataHelper travelsDataHelper;
 	private Note note;
 	private Note editNote;
 	private ProgressDialog progressDialog;
@@ -107,6 +101,12 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 				}
 				if(progressDialog != null && progressDialog.isShowing())
 					progressDialog.dismiss();
+				Toast.makeText(AddNoteActivity.this, "success", Toast.LENGTH_LONG);
+				
+				Intent uploadnote = new Intent(AddNoteActivity.this, UploadNoteService.class);
+				uploadnote.putExtra("type", "dirty");
+				startService(uploadnote);
+				
 				AddNoteActivity.this.finish();
 				break;
 
@@ -127,8 +127,8 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 		InitialView();
 		if(!isEdit)
 			getLocation();
-		mDataHelper = new NotesDataHelper(this, AppData.getUserId(), AppData.getTravelTime());
-		
+		mDataHelper = new NotesDataHelper(this, AppData.getUserId());
+		travelsDataHelper = new TravelsDataHelper(this, AppData.getUserId());
 	}
 
 	@Override
@@ -212,7 +212,7 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 		if(isEdit){
 			if(editNote.getImage_url() != null){
 				coverBitmap = BitmapUtil.getRoundBitmap(BitmapUtil.createScaleBitmap
-	        			(AppData.TRAVO_PATH+"/"+editNote.getImage_url()+".jpg", ScreenUtil.dip2px(this, coverImageView.getWidth()), 
+	        			(editNote.getImage_url(), ScreenUtil.dip2px(this, coverImageView.getWidth()), 
 	        					ScreenUtil.dip2px(this, coverImageView.getHeight())), 10);
 				//MyImageUtil.setBitmap(coverImageView, editNote.getImage_url());
 				if(coverBitmap != null){
@@ -227,7 +227,7 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 			if(editNote.getDescription() != null)
 				descriptionEditText.setText(editNote.getDescription());
 			if(editNote.getLocation() != null){
-				 locationTextView.setText(editNote.getLocation().getNameString());
+				 locationTextView.setText(editNote.getLocation().getAddress());
 				 locationProgressBar.setVisibility(View.INVISIBLE);
 			 }
 		}
@@ -260,8 +260,10 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 				note = new Note();
 				note.setUser_id(AppData.getUserId());
 				note.setTravel_created_time(AppData.getTravelTime());
-				note.setTime(TimeUtils.getTime().toString());
+				note.setCreate_time(TimeUtils.getTime().toString());
 				note.setDescription(descriptionString);
+				note.setIs_sync(1);
+				note.setTravel_id(travelsDataHelper.queryByTime(AppData.getTravelTime()).getId());
 				if(myLocation != null){
 					note.setLocation(myLocation);
 				}
@@ -270,18 +272,19 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 						if(photoTimeString != null){
 							coverPathString = PhotoUtils.saveImage(photoTimeString, coverBitmap);
 							if(coverPathString != null)
-								note.setImage_url(photoTimeString);
+								note.setImage_url(AppData.TRAVO_PATH + "/" + photoTimeString + ".jpg");
 						}
 					}
 					else{
 						if(photoTimeString != null)
-						note.setImage_url(photoTimeString);
+						note.setImage_url(AppData.TRAVO_PATH + "/" + photoTimeString + ".jpg");
 						
 					}
 					
 				}
 				
 				mDataHelper.insert(note);
+				Log.i("note insert", "ok");
 				return true;
 			}
 			else{
@@ -295,11 +298,11 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 							coverPathString = PhotoUtils.saveImage(photoTimeString, coverBitmap);
 							if(coverPathString != null)
 								Log.v("coverPath is:", coverPathString);
-								editNote.setImage_url(photoTimeString);
+								editNote.setImage_url(AppData.TRAVO_PATH + "/" + photoTimeString + ".jpg");
 						}
 					}
 					else{
-						editNote.setImage_url(photoTimeString);
+						editNote.setImage_url(AppData.TRAVO_PATH + "/" + photoTimeString + ".jpg");
 					}
 				}
 				
@@ -372,7 +375,7 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 	        case REQUEST_LOCATION_CODE:
 	        	myLocation = (MyLocation) data.getSerializableExtra(LOCATION_STRING);
 	        	if(myLocation != null){
-	        		locationTextView.setText(myLocation.getNameString());
+	        		locationTextView.setText(myLocation.getAddress());
 	        		locationProgressBar.setVisibility(View.INVISIBLE);
 	        	}
 	        	
@@ -469,14 +472,12 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 					locationTextView.setText(address);
 				Location location = Tools.getMyLocation(mContext);
 				if(location != null){
-					
 					myLocation = new MyLocation();
-					myLocation.setLatitude(String.valueOf(location.getLatitude()));
-					myLocation.setLongitude(String.valueOf(location.getLongitude()));
-					myLocation.setNameString(address);
+					myLocation.setLatitude(location.getLatitude());
+					myLocation.setLongitude(location.getLongitude());
+					myLocation.setAddress(address);
 				}
 			}
-			
 		}
 	}
 	

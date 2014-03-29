@@ -1,6 +1,7 @@
 package com.cobra.mytravo.adapters;
 
 import com.cobra.mytravo.R;
+import com.cobra.mytravo.data.RequestManager;
 import com.cobra.mytravo.helpers.BitmapManager;
 import com.cobra.mytravo.helpers.TimeUtils;
 import com.cobra.mytravo.models.Note;
@@ -9,6 +10,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.support.v4.widget.CursorAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,9 +25,11 @@ public class TravelDetailAdapter extends CursorAdapter{
 	private LayoutInflater mLayoutInflater;
 	private ListView mListView;
 	private BitmapManager bitmapManager;
+	private Drawable defaultImageDrawable;
 	public TravelDetailAdapter(Context context, ListView listView) {
 		super(context, null, false);
 		mLayoutInflater = ((Activity) context).getLayoutInflater();
+		defaultImageDrawable = context.getResources().getDrawable(R.drawable.me_default_image);
         mListView = listView;
         bitmapManager = new BitmapManager(context);
 	}
@@ -45,16 +49,17 @@ public class TravelDetailAdapter extends CursorAdapter{
                 + mListView.getHeaderViewsCount()));
 		Note note = Note.fromCursor(cursor);
 		holder.descriptionTextView.setText(note.getDescription());
-		holder.timeTextView.setText(TimeUtils.getListTime(note.getTime()));
+		holder.timeTextView.setText(TimeUtils.getListTime(note.getCreate_time()));
 		if(note.getLocation() != null){
-			if(note.getLocation().getNameString() != null){
-				holder.locationTextView.setText(note.getLocation().getNameString());
+			if(note.getLocation().getAddress() != null){
+				holder.locationTextView.setText(note.getLocation().getAddress());
 			}
 		}
 		holder.imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.me_default_image));
 		if(note.getImage_url()!= null){
 			holder.imageView.setVisibility(View.VISIBLE);
 			bitmapManager.fetchBitmapOnThread(note.getImage_url(), holder.imageView);
+			//RequestManager.getImageListener(holder.imageView, defaultImageDrawable, defaultImageDrawable);
 		}
 		else{
 			holder.imageView.setVisibility(View.GONE);
