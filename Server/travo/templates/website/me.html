@@ -110,11 +110,11 @@
               </tr>
               <tr>
               
-              <div style="clear:both; float:left;"><h6>{{travel.create_time}}</h6>
+              <div style="clear:both; float:left;"><h6>{{travel.create_time | date:"Y-m-d"}}</h6>
               </div>
               <div style="float:right; padding-right:10px;"><h6>
                 <span class="glyphicon glyphicon-heart"></span> {{ travel.vote_qty}}
-                <span class="glyphicon glyphicon-comment"></span>{{ travel.favorite_qty}}</h6>
+                <span class="glyphicon glyphicon-comment"></span> {{ travel.favorite_qty}}</h6>
               </div>
 
               </tr>
