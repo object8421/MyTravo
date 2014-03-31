@@ -48,11 +48,16 @@ class ShowRegisterView(View):
         return HttpResponse(template.render(context))
 
 class OtherInfoView(View):
-    def get(self,request):
+    def get(self, request, token):
         template = loader.get_template('website/others.html')
-        context = RequestContext(request)
-        return HttpResponse(template.render(context))
-
+        user = get_object_or_404(User, token=token)
+        followers_list = userservice.follow_list(token)['users']
+        travels= travelservice.get_travel(token,3)
+        context = RequestContext(request,{\
+            "user":user,
+            "travel_list_length":travels['travel_list_length'],
+            "recent_travel_list":travels['travel_list'],
+            "folowers_list":folowers_list})
 class MyInfoView(View):
     '''展示个人主页'''
     def get(self, request):

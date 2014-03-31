@@ -12,7 +12,7 @@ urlpatterns = patterns('travo',
 		url(r'^$', sviews.IndexView.as_view(), name ='index'),
 		url(r'^contact', sviews.ContactView.as_view(), name = 'contact'),
 		url(r'^me', sviews.MyInfoView.as_view(),name = 'me'),
-		url(r'^others',sviews.OtherInfoView.as_view(),name='others'),
+		url(r'^others/(?P<token>\[a-z0-9]{32})/',sviews.OtherInfoView.as_view(),name='others'),
 		url(r'user/change_password',sviews.ChangePasswordView.as_view(),name='change_password'),
 		url(r'user/change_avatar',sviews.ChangeAvatarView.as_view(),name='change_avatar'),
 		url(r'^user/register_success', sviews.RegisterSuccessView.as_view(), \
