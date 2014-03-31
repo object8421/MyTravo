@@ -153,13 +153,15 @@ class PersonalInfoSetView(View):
             print attr_dict[key]
         try:
             userservice.update_info(request.session['token'],attr_dict)
-            result = userservice.change_self_avatar(user,request.FILES)
+            result = userservice.change_self_avatar(user,request.FILES.get('face_path'))
+            print request.FILES
             userservice.change_signature_authority(request.session['token'],signature,is_info_public)
-            response = HttpResponse()
-            response['Content-Type']="text/javascript"
-            return response
+            
         except:
            print traceback.format_exc()
+        response = HttpResponse()
+        response['Content-Type']="text/javascript"
+        return response
 
 class ChangePasswordView(View):
     def post(self,request):

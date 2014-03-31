@@ -9,7 +9,7 @@ from django.core.exceptions import ValidationError
 from datetime import datetime
 
 
-def _build_image_path(image):
+def _build_image_path(cover):
 	suffix = cover.name.split('.')[-1]
 	return uuid.uuid4().hex[0:16] + '.' + suffix
 
