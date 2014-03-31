@@ -2,11 +2,11 @@ import uuid
 import re
 import urllib2
 import utils
-import traceback
+import travelservice
 
 from travo.exceptions import TokenError, IllegalDataError,AuthError
 from django.db import IntegrityError
-from travo.models import User, LoginRecord,UserInfo,Follow
+from travo.models import User, LoginRecord,UserInfo,Follow,FavoriteTravel
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.exceptions import ValidationError
 from django.db.utils import OperationalError
@@ -326,5 +326,35 @@ def update_pass(email, old_pass, new_pass):
 			result = {RSP_CODE : RC_SUCESS}
 			result['token'] = u.token
 			return result
+
+######    similar user    ######
+def similar(token):
+	user = get_user(token)
+
+	relate_T = travelservice.relate_travel(user)
+	prelate_T = travelservice.clear(relate_T)		#positive related travel
+	order_T = sorted(prelate_T.keys(), key=lambda x : prelate_T[x], reverse=True)
+	
+	followed_id = _followed_id(user)
+	similar_user = set() 
+	for t in order_T:
+		if len(similar_user) >= 5:
+			break
+		if not t.user_id in followed_id:
+			similar_user.add(t.user)
+		for ft in FavoriteTravel.objects.filter(travel=t).exclude(user_id__in=followed_id):
+			similar_user.add(ft.user)
+
+	result = {RSP_CODE : RC_SUCESS}
+	result['users'] = list(similar_user)
+	return result
+
+def _followed_id(user):
+	follows = follow_list(user.token)['users']
+	ids = []
+	for f in follows:
+		ids.append(f['id'])
+	return ids 
+
 
 

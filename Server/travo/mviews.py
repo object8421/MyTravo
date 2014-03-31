@@ -289,6 +289,14 @@ class UpdatePasswordView(BaseView):
 				self.get_required_arg('new_password')
 				)
 
+class GetSimilarUserView(BaseView):
+	def get(self, request):
+		self._request = request
+		return JsonResponse(self.handle())
+
+	def do(self):
+		return userservice.similar(self.get_token())
+
 ##############################################
 ########	TRAVEL MOUDLE	##################
 ##############################################

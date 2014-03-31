@@ -89,7 +89,7 @@ def _exists_travel(user_id, create_time):
 
 def _check_key(t):
 	'''check required key'''
-	return t.has_key('title') and t.has_key('create_time')
+	return t.has_key('title') and t.has_key('create_time') and t.has_key('begin_date')
 
 #######		sync		###########
 def sync(token, begin_time):
@@ -165,15 +165,34 @@ def _search_default(first_idx, max_qty, token):
 		return _search_newest(first_idx, max_qty)
 	#search travels which related with user
 	user = userservice.get_user(token)
+	relate_T = relate_travel(user)	
+
+	exclude_id = _exclude_id(relate_T)
+	prelate_T = clear(relate_T)		#positive related travel
+
+	order_T = sorted(prelate_T.keys(), key=lambda x : prelate_T[x], reverse=True)
+
+	result_T = set() 
+	for t in order_T:
+		if len(result_T) >= first_idx + max_qty:	#get enough
+			break
+		result_T |= set(Travel.objects.filter(destination__contains=t.destination).exclude(user=user, id__in=exclude_id))
+	
+	return list(result_T)[first_idx : max_qty]
+
+def relate_travel(user):
 	relate_T = {}
 	add_favorite(user, relate_T)
 	add_comment(user, relate_T)
 	add_vote(user, relate_T)
 	add_read(user, relate_T)
+	return relate_T
 
-	prelate_T = clear(relate_T)		#filter some useless data
-
-
+def _exclude_id(relate_T):
+	l = []
+	for t in relate_T.keys():
+		l.append(t.id)
+	return l
 
 def _search_newest(first_idx, max_qty):
 	return list(Travel.objects.order_by('create_time').reverse()[first_idx:max_qty])
@@ -183,24 +202,7 @@ def _search_read_times(first_idx, max_qty):
 
 def _search_vote_qty(first_idx, max_qty):
 	return list(Travel.objects.order_by('vote_qty').reverse()[first_idx:max_qty])
-###add by L!ar for website travel list search
-def search_web(order=SO_DEFAULT, first_idx=1, max_qty=20):
-	first_idx = int(first_idx)
-	return {
-			SO_DEFAULT	: _search_default_web,
-			SO_READ_TIMES: _search_read_times_web,
-			SO_VOTE_QTY	: _search_vote_qty_web,
-			SO_NEWEST	: _search_newest_web,
-			}[order](first_idx - 1, max_qty)
 
-def _search_default_web(first_idx, max_qty):
-	return _search_newest_web(first_idx, max_qty)
-
-def _search_newest_web(first_idx, max_qty):
-	return list(Travel.objects.order_by('-create_time'))
-
-def _search_read_times_web(first_idx, max_qty):
-	return list(Travel.objects.order_by('-read_times'))
 
 def clear(tls):
 	travels = {} 
@@ -241,6 +243,24 @@ def add_read(u, relate_T):
 	for trl in trlls:
 		merge(relate_T, trl.travel, READ_SCORE)
 
+###add by L!ar for website travel list search
+def search_web(order=SO_DEFAULT, first_idx=1, max_qty=20):
+	first_idx = int(first_idx)
+	return {
+			SO_DEFAULT	: _search_default_web,
+			SO_READ_TIMES: _search_read_times_web,
+			SO_VOTE_QTY	: _search_vote_qty_web,
+			SO_NEWEST	: _search_newest_web,
+			}[order](first_idx - 1, max_qty)
+
+def _search_default_web(first_idx, max_qty):
+	return _search_newest_web(first_idx, max_qty)
+
+def _search_newest_web(first_idx, max_qty):
+	return list(Travel.objects.order_by('-create_time'))
+
+def _search_read_times_web(first_idx, max_qty):
+	return list(Travel.objects.order_by('-read_times'))
 
 def _search_vote_qty_web(first_idx, max_qty):
 	return list(Travel.objects.order_by('-vote_qty'))
