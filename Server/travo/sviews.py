@@ -175,6 +175,7 @@ class PersonalInfoSetView(View):
         try:
             userservice.update_info(request.session['token'],attr_dict)
             result = userservice.change_self_avatar(user,request.FILES.get('face_path'))
+            print result 
             print request.FILES
             userservice.change_signature_authority(request.session['token'],signature,is_info_public)
             

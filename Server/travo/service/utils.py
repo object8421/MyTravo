@@ -67,7 +67,9 @@ def save_image(path, image):
 	__save_image('travo-note-pic', path, image)
 
 def save_face(path, face):
+	print 'upload %s as avatar'%path 
 	__save_image('travo-user-avatar', path, face)
+	print 'avartar uploaded successful'
 
 ######    other    ######
 def filter_key(d, keys):

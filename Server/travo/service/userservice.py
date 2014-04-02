@@ -1,3 +1,4 @@
+#-*- coding: utf-8 -*-
 import uuid
 import re
 import urllib2
@@ -172,8 +173,6 @@ def get_face(user_id):
 def update_info(token, info):
 	user = get_user(token)
 	ui = UserInfo.from_dict(info)
-	
-
 	ui.user = user
 	ui.save()
 	return {RSP_CODE : RC_SUCESS}
@@ -191,11 +190,14 @@ def change_self_info(token,attr_dict):
 ##add by L!ar for changing avatar or adding avatar if there's no one #####
 def change_self_avatar(user,image=None):
 	if image is not None: 
-		_save_image(user, image)
-def _save_image(user, image):
-	user.face_path = _build_face_path(image)
-	user.save()
-	utils.save_image(user.face_path, image)	
+		user.face_path = _build_face_path(image)
+		user.save()
+		print  '存储了头像外的其他信息，准备存储头像。。。'
+
+		utils.save_face(user.face_path, image)	
+		return 'upload avatar successful! '
+
+
 ##add end ###
 ##add by L!ar for changing signature
 def change_signature_authority(token, signature, is_info_public):
@@ -356,5 +358,14 @@ def _followed_id(user):
 		ids.append(f['id'])
 	return ids 
 
+def get_follow_state(self_token, follower_token):
+	'''获取self_token是否关注了Follower'''
+	user = get_user(token)
+	res = follow_list(self_token)
+	for item in res['user']:
+		if item.id == user.id:
+			return True
+	return False
+	
 
 
