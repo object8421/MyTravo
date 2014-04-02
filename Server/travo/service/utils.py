@@ -80,11 +80,13 @@ def filter_key(d, keys):
 
 def get_photo_time(photo):
 	'''return photo shoot time'''
-	im = Image.open(copy.deepcopy(photo))
-	exif = im._getexif()
-	if exif is None:
-		return None
-	else:
-		print exif[36867]
-		return _standard_time_str(exif[36867])		#DateTimeOriginal
+	
+	#im = Image.open(cpimage)
 
+	#exif = im._getexif()
+	#if exif is None:
+	#	return None
+	#else:
+		#print exif[36867]
+		#return _standard_time_str(exif[36867])		#DateTimeOriginal
+	return datetime.now()

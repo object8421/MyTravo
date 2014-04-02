@@ -24,7 +24,7 @@
 
           <a type="button" class="btn btn-primary"  style="border-radius:0;" onclick="javascript:window.location.href='{%url 'show_my_travel'%}' "><p style="font-size:22px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">{{travel_list_length | default:"0"}}</p><p style="font-size:8px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">游记</p></a>
           
-          <a type="button" class="btn btn-primary" style="border-radius:0;"><p style="font-size:22px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">{{want_list_length | default:"0"}}</p><p style="font-size:8px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">关注</p></a>
+          <a type="button" class="btn btn-primary" style="border-radius:0;" onclick="javascript:window.location.href='{%url 'followed'%}' "><p style="font-size:22px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">{{want_list_length | default:"0"}}</p><p style="font-size:8px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">关注</p></a>
           <a type="button" class="btn btn-primary"  style="border-radius:0;"><p style="font-size:22px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">{{favorite_list_length | default:"0"}}</p><p style="font-size:8px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">粉丝</p></a>
           
         </div>

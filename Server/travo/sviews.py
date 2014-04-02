@@ -51,13 +51,29 @@ class OtherInfoView(View):
     def get(self, request, token):
         template = loader.get_template('website/others.html')
         user = get_object_or_404(User, token=token)
-        followers_list = userservice.follow_list(token)['users']
-        travels= travelservice.get_travel(token,3)
-        context = RequestContext(request,{\
-            "user":user,
-            "travel_list_length":travels['travel_list_length'],
-            "recent_travel_list":travels['travel_list'],
-            "folowers_list":folowers_list})
+        userinfo_result = userservice.get_user_info(request.session['token'], user.id)
+        if token == request.session['token']:
+            return HttpResponse('权限受限，访问被拒绝!')
+        if userinfo_result[RSP_CODE] == RC_SUCESS:
+            followers_list = userservice.follow_list(token)['users']
+            travels= travelservice.get_travel(token,3)
+            follow_result = userservice.follow(request.session['token'],user.id,1)
+            if follow_result[RSP_CODE] == RC_DUP_ACTION:
+                is_followed = 1
+            else:
+                userservice.follow(request.session['token'],user.id,0)
+                is_followed = 0
+            return render(request,'website/others.html',{"user":user,
+                "travel_list_length":travels['travel_list_length'],
+                "recent_travel_list":travels['travel_list'],
+                "followers_list":followers_list,
+                "userinfo":userinfo_result['user_info'],
+                "is_followed":is_followed,
+                "other_id":user.id
+                })
+        else:
+            return HttpResponse('权限受限，访问被拒绝!')
+
 class MyInfoView(View):
     '''展示个人主页'''
     def get(self, request):
@@ -167,7 +183,23 @@ class PersonalInfoSetView(View):
         response = HttpResponse()
         response['Content-Type']="text/javascript"
         return response
-
+class ChangeFollowView(View):
+    def post(self,request):
+        token = request.session['token']
+        other_id = request.POST.get('other_id')
+        action = request.POST.get('action')
+        print token
+        print other_id
+        print action
+        result = userservice.follow(token,other_id,action)
+        response = HttpResponse()
+        response['Content-Type']="text/javascript"
+        if result[RSP_CODE] == RC_SUCESS:
+            ret = "1"
+        else:
+            ret = "2"
+        response.write(ret)
+        return response
 class ChangePasswordView(View):
     def post(self,request):
         token = request.session['token']
@@ -315,10 +347,13 @@ class FollowingView(View):
 
 class FollowedView(View):
     def get(self,request):
-        template = loader.get_template('website/followed.html')
-        context = RequestContext(request)
-        return HttpResponse(template.render(context))
-
+        token = request.session['token']
+        result = userservice.follow_list(token)
+        if result[RSP_CODE] == RC_SUCESS:
+            return render(request,'website/followed.html',{"followed_list":result['users'],
+            })
+        else:
+            pass
 
 class ShowMyTravel(View):
     def get(self,request):
@@ -343,6 +378,8 @@ class DetailTravelView(View):
         result = noteservice.get_all_in_travel(travel_id)
         if result[RSP_CODE] == RC_SUCESS:
             note_list = result['notes']
+            # for note in note_list:
+            #     if(note.location not None or note.location.latitude !='' or note.location.longitude !='')
         else:
             return HttpResponse('获取游记出现问题')
         print note_list
@@ -377,7 +414,8 @@ class AddNewNoteView(View):
         note['content'] = request.POST.get('note_description','暂无描述')
         location ={}
         location['address'] = request.POST.get('note_location','')
-        
+        print request.POST.get('latitude',0.0)
+        print request.POST.get('longitude',0.0)
         location['latitude'] = float(request.POST.get('latitude',0.0))
         location['longitude'] = float(request.POST.get('longitude',0.0))
         note['location'] = location

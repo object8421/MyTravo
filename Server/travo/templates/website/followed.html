@@ -75,94 +75,19 @@
 
                       <table class="table table-hover table-striped" style=" margin-bottom:20px;margin-left:15px;margin">
                         <!-- 一个tr显示一个用户 -->
+                        {% for user in followed_list%}
                         <tr class="active"><td ><img src="../../static/travo/image/me_avatar0.jpg" alt="..." class="img-rounded" style="height:50px; margin=0;width:50px;border-radius:2px;">
                         </td>
                         <td>
-                          <div class="col-md-12" style="padding-bottom:0;"><p ><b>我是小昵称</b>
+                          <div class="col-md-12" style="padding-bottom:0;"><p ><b>{{user.nickname}}</b>
                             </p>
                          </div>
                          <div class="col-md-12">
-                          <lable>现在这里是个性签名。如果很长很长呢!如果很长很长呢！</lable>
+                          <lable>{{user.signature}}</lable>
                           </div>
                         </td>
                         </tr>
-                        <tr class="active"><td ><img src="../../static/travo/image/me_avatar0.jpg" alt="..." class="img-rounded" style="height:50px; margin=0;width:50px;border-radius:2px;">
-                        </td>
-                        <td>
-                          <div class="col-md-12" style="padding-bottom:0;"><p ><b>我是小昵称</b>
-                            </p>
-                         </div>
-                         <div class="col-md-12">
-                          <lable>现在这里是个性签名。如果</lable>
-                          </div>
-                        </td>
-                        </tr>
-                        <tr class="active"><td ><img src="../../static/travo/image/me_avatar0.jpg" alt="..." class="img-rounded" style="height:50px; margin=0;width:50px;border-radius:2px;">
-                        </td>
-                        <td>
-                          <div class="col-md-12" style="padding-bottom:0;"><p ><b>我是小昵称</b>
-                            </p>
-                         </div>
-                         <div class="col-md-12">
-                          <lable>现在这里是个性签名。如果很长很长呢!如果很长很长呢如果很长很长呢如果很长很长呢如果很长很长呢如果很长很长呢如果很长很长呢！</lable>
-                          </div>
-                        </td>
-                        </tr>
-                        <tr class="active"><td ><img src="../../static/travo/image/me_avatar0.jpg" alt="..." class="img-rounded" style="height:50px; margin=0;width:50px;border-radius:2px;">
-                        </td>
-                        <td>
-                          <div class="col-md-12" style="padding-bottom:0;"><p ><b>我是小昵称</b>
-                            </p>
-                         </div>
-                         <div class="col-md-12">
-                          <lable>现在这里是个性签名。如果很长很长呢!如果很长很长呢如果很长很长呢如果很长很长呢如果很长很长呢如果很长很长呢如果很长很长呢！</lable>
-                          </div>
-                        </td>
-                        </tr>
-                        <tr class="active"><td ><img src="../../static/travo/image/me_avatar0.jpg" alt="..." class="img-rounded" style="height:50px; margin=0;width:50px;border-radius:2px;">
-                        </td>
-                        <td>
-                          <div class="col-md-12" style="padding-bottom:0;"><p ><b>我是小昵称</b>
-                            </p>
-                         </div>
-                         <div class="col-md-12">
-                          <lable>现在这里是个性签名。如果很长很长呢!</lable>
-                          </div>
-                        </td>
-                        </tr>
-                        <tr class="active"><td ><img src="../../static/travo/image/me_avatar0.jpg" alt="..." class="img-rounded" style="height:50px; margin=0;width:50px;border-radius:2px;">
-                        </td>
-                        <td>
-                          <div class="col-md-12" style="padding-bottom:0;"><p ><b>我是小昵称</b>
-                            </p>
-                         </div>
-                         <div class="col-md-12">
-                          <lable>现在这里是个性签名。如果很长很长呢!如果很长很长呢</lable>
-                          </div>
-                        </td>
-                        </tr>
-                        <tr class="active"><td ><img src="../../static/travo/image/me_avatar0.jpg" alt="..." class="img-rounded" style="height:50px; margin=0;width:50px;border-radius:2px;">
-                        </td>
-                        <td>
-                          <div class="col-md-12" style="padding-bottom:0;"><p ><b>我是小昵称</b>
-                            </p>
-                         </div>
-                         <div class="col-md-12">
-                          <lable>现在这里是个性签名。如果很长很长呢!如果很长很长呢如果很长很长呢如果很长很长呢如果很长很长呢如果很长很长呢如果很长很长呢！</lable>
-                          </div>
-                        </td>
-                        </tr>
-                        <tr class="active"><td ><img src="../../static/travo/image/me_avatar0.jpg" alt="..." class="img-rounded" style="height:50px; margin=0;width:50px;border-radius:2px;">
-                        </td>
-                        <td>
-                          <div class="col-md-12" style="padding-bottom:0;"><p ><b>我是小昵称</b>
-                            </p>
-                         </div>
-                         <div class="col-md-12">
-                          <lable>现在这里是个性签名。</lable>
-                          </div>
-                        </td>
-                        </tr>
+                        {% endfor %}
                      
                     
          

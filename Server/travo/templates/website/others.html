@@ -1,6 +1,6 @@
 
 {% extends "website/base_index.html" %}
-{% block title %}我的主页{% endblock %}
+{% block title %}{{user.nickname}}的主页{% endblock %}
 
 {% block content %}
 
@@ -42,11 +42,18 @@
 
   <div style="float:left;margin-top:70px;">
   {%if user %}
-        <h1>{{request.session.username}}</h1>
+        <h1>{{user.nickname}}</h1>
         <h3>{{userinfo.sex | default:"男"}}</h3>
 
         <h4>{{user.signature | default:"暂无个性签名"}}</h4>
-        <li type="button"  class="btn btn-primary" onclick="javascript:location.href='{%url 'new_travel'%}'" value="创建新游记">＋关注</li>
+        <form id="ChangeFollowForm" role="form">
+        <input type="hidden" id="other_id" value={{user.id}}></input>
+        {% ifequal is_followed 0 %}
+        <button id="btnfollow" type="button"  class="btn btn-primary" >＋关注</button>
+        {% else %}
+        <button id="btnfollow" type="button"  class="btn btn-danger" >-取消关注</button>
+        {% endifequal %}
+        </form>
   {% endif %}
   </div>
 
@@ -149,4 +156,54 @@
 </div><!-- end of container -->
 
     {% endblock %}
+{% block myscript %}
+<script type="text/javascript">
+// function follow(action){
+  
+//   var other_id = $("#other_id").val();
+//   var btn = document.getElementById("btnfollow");
+//   $.post("/user/change_follow",{'other_id':other_id,'action':action}, function(ret){
+//     if(ret == '1'){
+//       if(action == 1){
+//         btn.innerHTML = "-取消关注";
+//         btn.onclick = this(0);
+//       }
+        
+//       else{
+//         btn.innerHTML = "+关注";
+//         btn.onclick = this(1);
+//       }
+        
+//     }
+      
+//     else
+//       $('#changePasswordFailModal').modal('show');
+//   }
+//   alert(action);
+// }
+  $('#btnfollow').click(function(){
+  alert("fuck");
+  var other_id = $("#other_id").val();
+  var btn = document.getElementById("btnfollow");
+  var action = 1;
+  $.post("/user/change_follow",{'other_id':other_id,'action':action}, function(ret){
+    if(ret == '1'){
+      if(action == 1){
+        btn.innerHTML = "-取消关注";
+        
+      }
+        
+      else{
+        btn.innerHTML = "+关注";
+        
+      }
+        
+    }
+      
+    else
+      alert(ret);
+  });  
+});
 
+</script>
+{% endblock %}
