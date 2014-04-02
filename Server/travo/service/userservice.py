@@ -256,6 +256,7 @@ def follow_list(token):
 		if not f.passive in unique_passive:
 			unique_passive.append(f.passive)
 			result['users'].append(f.passive.public_dict())
+	result['length'] = len(result['users'])
 	return result
 
 ######    get user info    ########

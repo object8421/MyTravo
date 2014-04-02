@@ -80,23 +80,16 @@ class MyInfoView(View):
         template = loader.get_template('website/me.html')
         token = request.session['token']
         user = get_object_or_404(User, token=token)
-        followers_list = userservice.follow_list(token)['users']
-        result = travelservice.get_travel(token,3)
-        
+        userinfo = userservice.get_user_info(token, user.id)['user_info']
+        followed_list_length = userservice.follow_list(token)['length']
+        result = travelservice.get_travel(token,3)   
         basic_travel_path = settings.COVER_PATH
-        context =  RequestContext(request,{\
-            'user':user,
-            "travel_list_length":result['travel_list_length'],
-            "recent_travel_list":result['travel_list'],
-            "basic_travel_path":basic_travel_path,
-            "followers_list":followers_list})
-
-        #return HttpResponse(template.render(context))
         return render(request,'website/me.html',{"user":user,
+            "userinfo":userinfo,
             "travel_list_length":result['travel_list_length'],
             "recent_travel_list":result['travel_list'],
             "basic_travel_path":basic_travel_path,
-            "followers_list":followers_list,
+            "followed_list_length":followed_list_length,
             })
 
 class RegisterSuccessView(View):
@@ -195,6 +188,7 @@ class ChangeFollowView(View):
         result = userservice.follow(token,other_id,action)
         response = HttpResponse()
         response['Content-Type']="text/javascript"
+        ret = "0"
         if result[RSP_CODE] == RC_SUCESS:
             ret = "1"
         else:
@@ -349,10 +343,13 @@ class FollowingView(View):
 class FollowedView(View):
     def get(self,request):
         token = request.session['token']
+        user = get_object_or_404(User, token=token)
+        userinfo = userservice.get_user_info(token, user.id)['user_info']
         result = userservice.follow_list(token)
         if result[RSP_CODE] == RC_SUCESS:
             return render(request,'website/followed.html',{"followed_list":result['users'],
-            })
+            "user":user,
+            "userinfo":userinfo})
         else:
             pass
 

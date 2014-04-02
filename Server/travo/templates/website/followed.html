@@ -41,15 +41,12 @@
 
   <div style="float:left;margin-top:70px;">
         <h1>{{request.session.username}}</h1>
-        <h3>男</h3>
-        <h4>我的个性签名是不是菜鸡</h4>
+        <h3>{{userinfo.sex}}</h3>
+        <h4>{{user.signature}}</h4>
   </div>
 
 
-  <div style="float:right; margin-right:20px;">
-      <h6>我的足迹</h6>
-            <img alt="140x140" src="http://lorempixel.com/140/140/" class="img-rounded"style="width:250px;" />
-  </div>
+  
  
 
  </div><!-- row end -->
@@ -76,16 +73,18 @@
                       <table class="table table-hover table-striped" style=" margin-bottom:20px;margin-left:15px;margin">
                         <!-- 一个tr显示一个用户 -->
                         {% for user in followed_list%}
-                        <tr class="active"><td ><img src="../../static/travo/image/me_avatar0.jpg" alt="..." class="img-rounded" style="height:50px; margin=0;width:50px;border-radius:2px;">
-                        </td>
-                        <td>
-                          <div class="col-md-12" style="padding-bottom:0;"><p ><b>{{user.nickname}}</b>
-                            </p>
-                         </div>
-                         <div class="col-md-12">
-                          <lable>{{user.signature}}</lable>
-                          </div>
-                        </td>
+                        <tr class="active">
+                          <td >
+                            <img src="../../static/travo/image/me_avatar0.jpg" alt="..." class="img-rounded" style="height:50px; margin=0;width:50px;border-radius:2px;">
+                          </td>
+                          <td>
+                            <div class="col-md-12" style="padding-bottom:0;"><p ><b>{{user.nickname}}</b>
+                              </p>
+                            </div>
+                            <div class="col-md-12">
+                              <lable>{{user.signature}}</lable>
+                            </div>
+                          </td>
                         </tr>
                         {% endfor %}
                      
