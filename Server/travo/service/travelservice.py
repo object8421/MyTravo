@@ -130,7 +130,7 @@ def get_travel(token,recent = False):
 	result = {RSP_CODE : RC_SUCESS}
 	try:
 		travel_list = Travel.objects.filter(user=user_id).order_by('-create_time')
-		result['travel_list_length'] = len(travel_list)
+		
 		if recent == False:
 			result['travel_list'] = travel_list
 			return result
@@ -296,7 +296,16 @@ def get_favorit(token, first_idx=1, max_qty=20):
 	result = {RSP_CODE : RC_SUCESS}
 	result['travels'] = travels
 	return result
-
+###add by L!ar for web get_favorite 'cause we don't need pagination by ourself, just use auto pagination from django provision
+def get_favorite_web(token):
+	user = userservice.get_user(token)
+	fts = FavoriteTravel.objects.filter(user=user).order_by('time').reverse()
+	travels = []
+	for ft in fts:
+		travels.append(ft.travel)
+	result = {RSP_CODE : RC_SUCESS}
+	result['travels'] = travels
+	return result
 ######    read    ######
 def read(token, travel_id):
 	user = userservice.get_user(token)

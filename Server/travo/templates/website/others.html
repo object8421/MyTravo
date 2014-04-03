@@ -22,10 +22,10 @@
         <div class="btn-group btn-group-justified" style="padding-top:0;padding-bottom:0;">
           
 
-          <a type="button" class="btn btn-primary"  style="border-radius:0;" onclick="javascript:window.location.href='{%url 'show_my_travel'%}' "><p style="font-size:22px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">{{travel_list_length | default:"0"}}</p><p style="font-size:8px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">游记</p></a>
+          <a type="button" class="btn btn-primary"  style="border-radius:0;" onclick="javascript:window.location.href='{%url 'show_my_travel'%}' "><p style="font-size:22px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">{{user.travel_qty}}</p><p style="font-size:8px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">游记</p></a>
           
-          <a type="button" class="btn btn-primary" style="border-radius:0;"><p style="font-size:22px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">{{want_list_length | default:"0"}}</p><p style="font-size:8px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">关注</p></a>
-          <a type="button" class="btn btn-primary"  style="border-radius:0;"><p style="font-size:22px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">{{favorite_list_length | default:"0"}}</p><p style="font-size:8px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">粉丝</p></a>
+          <a type="button" class="btn btn-primary" style="border-radius:0;"><p style="font-size:22px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">{{followed_list | length}}</p><p style="font-size:8px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">关注</p></a>
+          <a type="button" class="btn btn-primary"  style="border-radius:0;"><p style="font-size:22px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">{{user.follower_qty}}</p><p style="font-size:8px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">粉丝</p></a>
           
         </div>
         </div>
@@ -50,8 +50,10 @@
         <input type="hidden" id="other_id" value={{user.id}}></input>
         {% ifequal is_followed 0 %}
         <button id="btnfollow" type="button"  class="btn btn-primary" >＋关注</button>
+        <button id="btnunfollow" type="hidden"  class="btn btn-danger" >-取消关注</button>
         {% else %}
-        <button id="btnfollow" type="button"  class="btn btn-danger" >-取消关注</button>
+        <button id="btnfollow" type="hidden"  class="btn btn-primary" >＋关注</button>
+        <button id="btnunfollow" type="button"  class="btn btn-danger" >-取消关注</button>
         {% endifequal %}
         </form>
   {% endif %}
@@ -77,7 +79,7 @@
 
 <div class="col-md-12" style=" padding-left:5px;margin-bottom:20px;">
 <div class="col-md-2" style="padding:0;">
-<button type="button" onclick="javascript:window.location.href='{%url 'show_my_travel'%}' " class="btn btn-info btn-lg btn-block" style="border-radius:2px;">游记   <span class="badge"> {{travel_list_length | default:"0"}}</span></button>  
+<button type="button" onclick="javascript:window.location.href='{%url 'show_my_travel'%}' " class="btn btn-info btn-lg btn-block" style="border-radius:2px;">游记   <span class="badge"> {{user.travel_qty}}</span></button>  
 
  
 </div>
@@ -181,29 +183,44 @@
 //   }
 //   alert(action);
 // }
+  $(document).ready(function(){
+  {% ifequal is_followed 1 %}
+    $('#btnfollow').hide();
+  {% else %}
+    $('#btnunfollow').hide();
+  {% endifequal %}
+});
   $('#btnfollow').click(function(){
-  alert("fuck");
   var other_id = $("#other_id").val();
   var btn = document.getElementById("btnfollow");
   var action = 1;
   $.post("/user/change_follow",{'other_id':other_id,'action':action}, function(ret){
     if(ret == '1'){
-      if(action == 1){
-        btn.innerHTML = "-取消关注";
-        
-      }
-        
-      else{
-        btn.innerHTML = "+关注";
-        
-      }
-        
+      
+        $('#btnunfollow').show();
+        $('#btnfollow').hide();
+      
     }
       
     else
-      alert(ret);
+      alert("关注失败");
   });  
 });
-
+  $('#btnunfollow').click(function(){
+  var other_id = $("#other_id").val();
+  var btn = document.getElementById("btnfollow");
+  var action = 0;
+  $.post("/user/change_follow",{'other_id':other_id,'action':action}, function(ret){
+    if(ret == '1'){
+      
+        $('#btnfollow').show();
+        $('#btnunfollow').hide();
+           
+    }
+      
+    else
+      alert("取消关注失败");
+  });  
+});
 </script>
 {% endblock %}

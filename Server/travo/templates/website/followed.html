@@ -12,7 +12,7 @@
         <table class="table" style="float:left;width:250px;margin-right:50px;">
           <tr>
             <td style="padding:0;">
-            <img src="../../static/travo/image/me_avatar0.jpg" alt="Responsive image" class="img-rounded img-responsive" style="width:100%; height:250px; margin:0;padding:0;border-radius:0;">
+            <img src="http://travo-user-avatar.oss-cn-hangzhou.aliyuncs.com/{{currentuser.face_path}}" alt="Responsive image" class="img-rounded img-responsive" style="width:100%; height:250px; margin:0;padding:0;border-radius:0;">
              </td>
           </tr>
           <tr style="padding:0;">     
@@ -41,8 +41,8 @@
 
   <div style="float:left;margin-top:70px;">
         <h1>{{request.session.username}}</h1>
-        <h3>{{userinfo.sex}}</h3>
-        <h4>{{user.signature}}</h4>
+        <h3>{{currentuserinfo.sex}}</h3>
+        <h4>{{currentuser.signature}}</h4>
   </div>
 
 
@@ -75,10 +75,10 @@
                         {% for user in followed_list%}
                         <tr class="active">
                           <td >
-                            <img src="../../static/travo/image/me_avatar0.jpg" alt="..." class="img-rounded" style="height:50px; margin=0;width:50px;border-radius:2px;">
+                            <img src="http://travo-user-avatar.oss-cn-hangzhou.aliyuncs.com/{{user.face_path}}" alt="otheruser" class="img-rounded" style="height:50px; margin=0;width:50px;border-radius:2px;">
                           </td>
                           <td>
-                            <div class="col-md-12" style="padding-bottom:0;"><p ><b>{{user.nickname}}</b>
+                            <div class="col-md-12" style="padding-bottom:0;"><p ><b><a href="{% url 'others' user.id %}" name="otheruser" >{{user.nickname}}</a></b>
                               </p>
                             </div>
                             <div class="col-md-12">

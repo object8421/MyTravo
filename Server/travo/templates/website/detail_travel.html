@@ -102,11 +102,11 @@
 <div style="margin-bottom:20px;" align="center">
 	<div class="col-md-2"></div>
 	<div class="col-md-4">
-<button type="button" class=" btn btn-danger btn-lg btn-block" style="margin-bottom:20px;">喜	欢	<span class="badge">10</span></button>
+<button id="btnfavorite" type="button" class=" btn btn-danger btn-lg btn-block" style="margin-bottom:20px;">喜	欢	<span id="badgefavorite" class="badge">{{travel.favorite_qty}}</span></button>
 </div>
 
 <div class="col-md-4">
-<button type="button" class=" btn btn-info btn-lg btn-block" style="margin-bottom:20px;"  data-toggle="modal" data-target="#myModal4">评	论	<span class="badge">22</span></button>
+<button type="button" class=" btn btn-info btn-lg btn-block" style="margin-bottom:20px;"  data-toggle="modal" data-target="#myModal4">评	 论	<span id="badgecomment" class="badge">{{travel.comment_qty}}</span></button>
 </div>
 
 </div>
@@ -115,82 +115,7 @@
 
 </div><!-- container end -->
 
-<!--
 
-
-<!-- 添加note模态框 --
-
-              <div class="modal fade" id="myModal3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                      <h4 class="modal-title" id="myModalLabel" style="color: #104e8b;">添加足迹</h4>
-                     </div>
-                     <div class="modal-body">
-                      
-                        <form action="/user/login" method="POST" class="form-horizontal" role="form">
-
-                        	<div class="form-group">
-     							 <label for="cover_picker" class="col-sm-2 control-label" style="color: #104e8b;">上传照片</label>
-      							<div class="col-sm-4">
-      								<div id="cover_picker" class="fileinput fileinput-new" name="cover" data-provides="fileinput">
-
-        								<div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 192px; height: 150px; padding:0;"></div>
-        							<div>
-          							<span class="btn btn-default btn-file btn-success btn-sm"><span class="fileinput-new">选择照片上传</span>
-          							<span class="fileinput-exists">重新选择照片</span><input type="file" name="cover"></span>
-
-          							<a href="#" class="btn btn-default btn-danger fileinput-exists btn-sm" data-dismiss="fileinput">移除当前照片</a>
-        							</div>
-      								</div>
-    							</div>
- 							 </div>
-                          
-                        
-<div class="form-group">
-                <label for="datetimepicker" class="col-sm-2  control-label" style="color: #104e8b;">时间</label>
-                <div class="col-sm-10">
-                    <input type="text"  class="form-control" name="start_time" value="" id="datetimepicker" placeholder="yyyy-mm-dd">
-                </div>
-                     
-            </div>
-
-
-                          <div class="form-group">
-                            <label for="inputUsername" class="col-sm-2 control-label" style="color: #104e8b;">地点</label>
-                            <div class="col-sm-8">
-              					<input id="geocomplete" type="text" placeholder="输入足迹地址"  />
-            				</div>
-            				<div class="col-sm-2">
-              					<input id="find" type="button" value="find" />
-            				</div>
-
-                          </div> 
-                          <div class="form-group">
-   							 <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">游记描述</label>
-   							 <div class="col-sm-9">
-      							<textarea class="form-control" rows="3" name="travel_description" placeholder="请在这里添加游记描述"></textarea>
-    						</div>
-						  </div>
-                          
-                          <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                    <button type="submit" class="btn btn-primary">添加</button>
-                   </div>
-                        </form>
-                      
-
-                    </div>
-                   
-                  </div><!-- /.modal-content --
-                </div><!-- /.modal-dialog --
-              </div><!-- /.modal end --
-
-
-
-
--->
 
 
 <!-- 添加／查看游记评论模态框 -->
@@ -202,56 +127,39 @@
                       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                       <h4 class="modal-title" id="myModalLabel" style="color: #104e8b;">评论</h4>
                      </div>
-                     <div class="modal-body">
+                     
+                     <div class="modal-body" >
+                      <div id="self_comment" style="max-height:300px; overflow:auto;">
+                      {% for comment in comment_list%}
                       <!-- 一条评论 在这里开始-->
                       <table class="table table-hover" style=" margin-bottom:0;">
-                        <tr class="active"><td ><img src="../../static/travo/image/me_avatar0.jpg" alt="..." class="img-rounded" style="height:50px; margin=0;width:50px;">
+                        <tr class="active"><td style="width:60px;">
+                          <img src="http://travo-user-avatar.oss-cn-hangzhou.aliyuncs.com/{{comment.commenter.face_path}}" class="img-rounded" style="height:50px; margin=0;width:50px;">
                         </td>
                         <td>
-                          <div class="col-md-12" style="padding-bottom:0;"><p style="float:left;"><b>评论者用户名</b>:
-                            <lable>把用户评论放这里吧！真是无奈阿啊阿啊阿啊。如果很长很长呢!如果很长很长呢如果很长很长呢如果很长很长呢如果很长很长呢如果很长很长呢如果很长很长呢！</lable></p>
-                                                      </div>
-                          <div style="float:left;padding-left:20px; padding-top:0;margin-top:0;">2014-3-20
+                          <div class="col-md-12" style="padding-bottom:0;">
+                            <p><b>{{comment.commenter.nickname}}</b>:
+                            <lable>{{comment.content}}</lable>
+                          </p>
+                          </div>
+                          <div class="col-md-12 pull-right">{{comment.time | date:"Y-m-d"}}
                           </div><!-- here is the comment time -->
                         </td>
                         </tr>
                       </table><!-- 一条评论结束 -->
+                      {% endfor %}
+                    </div>
 
+                     
+                      <!-- 一条评论 在这里开始-->
                       
-                      <!-- 一条评论 在这里开始-->
-                      <table class="table table-hover" style=" margin-bottom:0;">
-                        <tr class="active"><td ><img src="../../static/travo/image/me_avatar0.jpg" alt="..." class="img-rounded" style="height:50px; margin=0;width:50px;">
-                        </td>
-                        <td>
-                          <div class="col-md-12" style="padding-bottom:0;"><p style="float:left;"><b>评论者用户名</b>:
-                            <lable>把用户评论放这里吧！真是无奈阿啊阿啊阿啊。</lable></p>
-                                                      </div>
-                          <div style="float:left;padding-left:20px; padding-top:0;margin-top:0;">2014-3-20
-                          </div><!-- here is the comment time -->
-                        </td>
-                        </tr>
-                      </table><!-- 一条评论结束 -->
-
-                      <!-- 一条评论 在这里开始-->
-                      <table class="table table-hover"style=" margin-bottom:0;">
-                        <tr class="active"><td ><img src="../../static/travo/image/me_avatar0.jpg" alt="..." class="img-rounded" style="height:50px; margin=0;width:50px;">
-                        </td>
-                        <td>
-                          <div class="col-md-12" style="padding-bottom:0;"><p style="float:left;"><b>评论者用户名</b>:
-                            <lable>把用户评论放这里吧！真是无奈阿啊阿啊阿啊。如果很长很长呢!如果很长很长呢如果很长很长呢</lable></p>
-                                                      </div>
-                          <div style="float:left;padding-left:20px; padding-top:0;margin-top:0;">2014-3-20
-                          </div><!-- here is the comment time -->
-                        </td>
-                        </tr>
-                      </table><!-- 一条评论结束 -->
                       
                           <div class="modal-footer" >
                           	<div>
-                        		<textarea class="form-control" rows="3" name="travel_description" placeholder="回车发表评论" style=" margin-bottom:0; padding-bottom:0;"></textarea>
+                        		<textarea class="form-control" rows="4" id="comment_content" placeholder="发表评论" style=" margin-bottom:0; padding-bottom:0;"></textarea>
 
     						            </div>
-                    
+                            <div class="pull-right" style="margin:10px;"><button type="button" id="btncomment" class="btn btn-primary">评论</button></div>
                           </div>
                       
 
@@ -260,7 +168,31 @@
                   </div><!-- /.modal-content -->
                 </div><!-- /.modal-dialog -->
               </div><!-- /.modal -->
+<div class="modal fade" id="CommentFailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                      <h4 class="modal-title" id="myModalLabel" style="color: #104e8b;">评论</h4>
+                     </div>
+                     <div class="modal-body">
+                      
+                        <h6 class="modal-title" id="myModalLabel" style="color: #104e8b;">添加评论失败</h6>
+                          
+                          
+                          </div>
+                          <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">确认</button>
+                    
+                   </div>
+                        </form>
+                      
 
+                    </div>
+                   
+                  </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+              </div><!-- /.modal -->
 {% endblock %}
 {% block myscript %}
 <script>
@@ -352,4 +284,37 @@
       // Initializes the Google Map
       google.maps.event.addDomListener(window, 'load', initialize);
     </script>
+<script>
+  $(document).ready(function(){
+  $('#btncomment').click(function(){
+    var content = $("#comment_content").val();
+    var travel_id = {{travel.id}};
+    $.post("/user/comment_travel",{'travel_id':travel_id,'content':content}, function(ret){
+      if(ret == '1'){
+        $('#self_comment').append("<table class= 'table table-hover' style='margin-bottom:0;'><tr class='active'><td><div class='col-md-12' style= 'padding-bottom:0;'><p><b>我</b>:<lable>" + content + "</lable></p></div><div class='col-md-12 pull-right'>{{comment.time | date:"Y-m-d"}}</div></td></tr></table>");
+        $("#comment_content").val("");
+        var cnumber= parseInt($('#badgecomment').text());
+        cnumber = cnumber + 1;
+        $('#badgecomment').text(cnumber);
+      }
+
+      else
+        $('#CommentFailModal').modal('show');
+    });
+  });
+
+  $('#btnfavorite').click(function(){
+    var travel_id = {{travel.id}};
+    $.post("/user/favorite_travel",{'travel_id':travel_id},function(ret){
+      if(ret == '1'){
+        var fnumber= parseInt($('#badgefavorite').text());
+        fnumber = fnumber + 1;
+        $('#badgefavorite').text(fnumber);
+      }
+      else
+        $('#CommentFailModal').modal('show');
+    })
+  });
+});
+</script>
 {% endblock %}

@@ -43,7 +43,7 @@
                     {% ifequal travel.user.token request.session.token%}
                     <a href="{%url 'me'%}" ><h5 class="pull-left"> <span class="glyphicon glyphicon-user " style="float:left;"></span>{{travel.user.nickname}}</h5></a>
                     {% else %}
-                 		<a href="{%url 'others' travel.user.token %}" ><h5 class="pull-left"> <span class="glyphicon glyphicon-user " style="float:left;"></span>{{travel.user.nickname}}</h5></a>
+                 		<a href="{%url 'others' travel.user.id %}" ><h5 class="pull-left"> <span class="glyphicon glyphicon-user " style="float:left;"></span>{{travel.user.nickname}}</h5></a>
                     {% endifequal %}
                  	</div>
               </div>

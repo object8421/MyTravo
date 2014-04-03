@@ -252,10 +252,16 @@ def follow_list(token):
 	unique_passive = []
 	result = {RSP_CODE : RC_SUCESS}
 	result['users'] = []
+	neg_result = []
 	for f in fl:
-		if not f.passive in unique_passive:
+		if not f.passive in unique_passive and not f.passive in neg_result and f.action == '1':
 			unique_passive.append(f.passive)
 			result['users'].append(f.passive.public_dict())
+			print 'add one '
+		elif not f.passive in unique_passive and not f.passive in neg_result and f.action == '0':
+			neg_result.append(f.passive)
+			print 'neg one'
+
 	result['length'] = len(result['users'])
 	return result
 
@@ -361,10 +367,10 @@ def _followed_id(user):
 
 def get_follow_state(self_token, follower_token):
 	'''获取self_token是否关注了Follower'''
-	user = get_user(token)
-	res = follow_list(self_token)
-	for item in res['user']:
-		if item.id == user.id:
+	user = get_user(follower_token)
+	res = follow_list(self_token)['users']
+	for item in res:
+		if item['id'] == user.id:
 			return True
 	return False
 	

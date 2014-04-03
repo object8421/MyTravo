@@ -48,28 +48,31 @@ class ShowRegisterView(View):
         return HttpResponse(template.render(context))
 
 class OtherInfoView(View):
-    def get(self, request, token):
+    def get(self, request, id):
         template = loader.get_template('website/others.html')
-        user = get_object_or_404(User, token=token)
-        userinfo_result = userservice.get_user_info(request.session['token'], user.id)
-        if token == request.session['token']:
+        print '根本没执行？'
+        user = userservice.get_user_by_id(id)
+        self_token = request.session['token']
+        userinfo_result = userservice.get_user_info(self_token, user.id)
+        
+        if user.token == self_token:
             return HttpResponse('权限受限，访问被拒绝!')
         if userinfo_result[RSP_CODE] == RC_SUCESS:
-            followers_list = userservice.follow_list(token)['users']
-            travels= travelservice.get_travel(token,3)
-            follow_result = userservice.follow(request.session['token'],user.id,1)
-            if follow_result[RSP_CODE] == RC_DUP_ACTION:
+            followers_list = userservice.follow_list(user.token)['users']
+            travels= travelservice.get_travel(user.token,3)
+            follow_result = userservice.get_follow_state(self_token, user.token)
+            print follow_result
+            if follow_result:
                 is_followed = 1
             else:
-                userservice.follow(request.session['token'],user.id,0)
                 is_followed = 0
             return render(request,'website/others.html',{"user":user,
-                "travel_list_length":travels['travel_list_length'],
+                
                 "recent_travel_list":travels['travel_list'],
-                "followers_list":followers_list,
+                "followed_list":followers_list,
                 "userinfo":userinfo_result['user_info'],
                 "is_followed":is_followed,
-                "other_id":user.id
+                "other_id":id
                 })
         else:
             return HttpResponse('权限受限，访问被拒绝!')
@@ -86,7 +89,6 @@ class MyInfoView(View):
         basic_travel_path = settings.COVER_PATH
         return render(request,'website/me.html',{"user":user,
             "userinfo":userinfo,
-            "travel_list_length":result['travel_list_length'],
             "recent_travel_list":result['travel_list'],
             "basic_travel_path":basic_travel_path,
             "followed_list_length":followed_list_length,
@@ -177,6 +179,22 @@ class PersonalInfoSetView(View):
         response = HttpResponse()
         response['Content-Type']="text/javascript"
         return response
+class CommentView(View):
+    def post(self,request):
+        token = request.session['token']
+        travel_id = request.POST.get['travel_id']
+        content = request.POST.get['content']
+        response = HttpResponse()
+        response['Content-Type']="text/javascript"
+        result = travelservice.comment(token, travel_id, content)
+        ret = "0"
+        if result[RSP_CODE] == RC_SUCESS:
+            ret = "1"
+        else:
+            ret = "2"
+        print ret
+        response.write(ret)
+        return response    
 class ChangeFollowView(View):
     def post(self,request):
         token = request.session['token']
@@ -193,6 +211,7 @@ class ChangeFollowView(View):
             ret = "1"
         else:
             ret = "2"
+        print ret
         response.write(ret)
         return response
 class ChangePasswordView(View):
@@ -348,8 +367,8 @@ class FollowedView(View):
         result = userservice.follow_list(token)
         if result[RSP_CODE] == RC_SUCESS:
             return render(request,'website/followed.html',{"followed_list":result['users'],
-            "user":user,
-            "userinfo":userinfo})
+            "currentuser":user,
+            "currentuserinfo":userinfo})
         else:
             pass
 
@@ -372,24 +391,53 @@ class DetailTravelView(View):
     def get(self,request,travel_id):
         template = loader.get_template('website/detail_travel.html')
         travel = get_object_or_404(Travel,pk=travel_id)
-
-        result = noteservice.get_all_in_travel(travel_id)
-        if result[RSP_CODE] == RC_SUCESS:
-            note_list = result['notes']
-            # for note in note_list:
-            #     if(note.location not None or note.location.latitude !='' or note.location.longitude !='')
+        comments_result= travelservice.get_comments(travel_id)
+        notes_result = noteservice.get_all_in_travel(travel_id)
+        if notes_result[RSP_CODE] == RC_SUCESS and comments_result[RSP_CODE] == RC_SUCESS:
+            note_list = notes_result['notes']
+            comment_list = comments_result['comments']
+            
         else:
             return HttpResponse('获取游记出现问题')
         print note_list
         context = RequestContext(request,{\
             'travel':travel,
             'note_list':note_list,
+            'comment_list':comment_list
             })
         return HttpResponse(template.render(context))
 
-
-
-
+class CommentTravelView(View):
+    def post(self,request):
+        ret = "0"
+        response = HttpResponse()
+        response['Content-Type']="text/javascript"
+        token = request.session['token']
+        travel_id = request.POST.get('travel_id')
+        content = request.POST.get('content')
+        comment_result = travelservice.comment(token, travel_id, content)
+        if comment_result[RSP_CODE] == RC_SUCESS:
+            ret = "1"
+        else:
+            ret = "2"
+        print ret
+        response.write(ret)
+        return response       
+class FavoriteTravelView(View):
+    def post(self,request):
+        ret = "0"
+        response = HttpResponse()
+        response['Content-Type']="text/javascript"
+        token = request.session['token']
+        travel_id = request.POST.get('travel_id')
+        favorite_result = travelservice.favorit(token,travel_id)
+        if favorite_result[RSP_CODE] == RC_SUCESS:
+            ret = "1"
+        else:
+            ret = "2"
+        print ret
+        response.write(ret)
+        return response  
 #======================note view======================================
 
 

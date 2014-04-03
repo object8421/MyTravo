@@ -22,10 +22,10 @@
         <div class="btn-group btn-group-justified" style="padding-top:0;padding-bottom:0;">
           
 
-          <a type="button" class="btn btn-primary"  style="border-radius:0;" onclick="javascript:window.location.href='{%url 'show_my_travel'%}' "><p style="font-size:22px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">{{travel_list_length | default:"0"}}</p><p style="font-size:8px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">游记</p></a>
+          <a type="button" class="btn btn-primary"  style="border-radius:0;" onclick="javascript:window.location.href='{%url 'show_my_travel'%}' "><p style="font-size:22px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">{{user.travel_qty}}</p><p style="font-size:8px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">游记</p></a>
           
           <a type="button" class="btn btn-primary" style="border-radius:0;" onclick="javascript:window.location.href='{%url 'followed'%}' "><p style="font-size:22px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">{{followed_list_length | default:"0"}}</p><p style="font-size:8px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">关注</p></a>
-          <a type="button" class="btn btn-primary"  style="border-radius:0;"><p style="font-size:22px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">{{following_list_length | default:"0"}}</p><p style="font-size:8px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">粉丝</p></a>
+          <a type="button" class="btn btn-primary"  style="border-radius:0;"><p style="font-size:22px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">{{user.follower_qty}}</p><p style="font-size:8px;padding-bottom:0;margin-bottom:0;padding-top:0;margin-top:0;">粉丝</p></a>
           
         </div>
         </div>
@@ -67,7 +67,7 @@
 
 <div class="col-md-12" style=" padding-left:5px;margin-bottom:20px;">
 <div class="col-md-2" style="padding:0;">
-<button type="button" onclick="javascript:window.location.href='{%url 'show_my_travel'%}' " class="btn btn-info btn-lg btn-block" style="border-radius:2px;">我的游记   <span class="badge"> {{travel_list_length | default:"0"}}</span></button>  
+<button type="button" onclick="javascript:window.location.href='{%url 'show_my_travel'%}' " class="btn btn-info btn-lg btn-block" style="border-radius:2px;">我的游记   <span class="badge"> {{user.travel_qty}}</span></button>  
 
  
 </div>
@@ -110,8 +110,8 @@
               <div style="clear:both; float:left;"><h6>{{travel.create_time | date:"Y-m-d"}}</h6>
               </div>
               <div style="float:right; padding-right:10px;"><h6>
-                <span class="glyphicon glyphicon-heart"></span> {{ travel.vote_qty}}
-                <span class="glyphicon glyphicon-comment"></span> {{ travel.favorite_qty}}</h6>
+                <span class="glyphicon glyphicon-heart"></span> {{ travel.favorite_qty}}
+                <span class="glyphicon glyphicon-comment"></span> {{ travel.comment_qty}}</h6>
               </div>
 
               </tr>
@@ -128,7 +128,7 @@
 <hr class="featurette-divider">
 <div class="col-md-12" style=" padding-left:5px;margin-bottom:20px;">
 <div class="col-md-2" style="padding:0;">
-<button type="button" class="btn btn-info btn-lg btn-block" style="border-radius:2px;">想去的地方   <span class="badge"> {{want_list_length | default:"0"}}</span></button>  
+<button type="button" class="btn btn-info btn-lg btn-block" style="border-radius:2px;">我的收藏   <span class="badge"> {{user.favorite_travel_qty}}</span></button>  
 </div>
 </div>
 </div>
