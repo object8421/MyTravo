@@ -229,7 +229,7 @@ def change_password(token, original_password, new_password):
 
 ######    follow      ######
 def follow(token, passive_id, action):
-	'''获取我关注的人'''
+
 	activer = get_user(token)
 	if activer.id == int(passive_id):
 		return {RSP_CODE : RC_FUCK_SELF}
@@ -249,6 +249,7 @@ def follow(token, passive_id, action):
 
 ######    follow list    ######
 def follow_list(token):
+	'''获取我关注的人'''
 	user = get_user(token)
 	fl = list(Follow.objects.filter(active=user).order_by('time').reverse())
 	unique_passive = []
@@ -379,7 +380,17 @@ def get_follow_state(self_token, follower_token):
 	
 def followin_list(self_token):
 	'''获取关注我的人'''
-	pass
+	user = get_user(self_token)
+	fl = list(Follow.objects.filter(passive=user).order_by('time').reverse())
+	unique_passive = []
+	result = {RSP_CODE : RC_SUCESS}
+	result['users'] = []
+	for f in fl:
+		if not f.passive in unique_passive:
+			unique_passive.append(f.passive)
+			result['users'].append(f.passive.public_dict())
+	result['length'] = len(result['users'])
+	return result
 
 #################### search user  #####################################
 def search_user(key_word):
