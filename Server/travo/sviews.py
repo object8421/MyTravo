@@ -85,12 +85,12 @@ class MyInfoView(View):
         user = get_object_or_404(User, token=token)
         userinfo = userservice.get_user_info(token, user.id)['user_info']
         followed_list_length = userservice.follow_list(token)['length']
-        result = travelservice.get_travel(token,3)   
-        basic_travel_path = settings.COVER_PATH
+        travel_result = travelservice.get_travel(token,3)
+        favorite_travel_result = travelservice.get_favorit(token,1,3)
         return render(request,'website/me.html',{"user":user,
             "userinfo":userinfo,
-            "recent_travel_list":result['travel_list'],
-            "basic_travel_path":basic_travel_path,
+            "recent_travel_list":travel_result['travel_list'],
+            "favorite_travel_list":favorite_travel_result['travels'],
             "followed_list_length":followed_list_length,
             })
 
@@ -178,6 +178,8 @@ class PersonalInfoSetView(View):
            print traceback.format_exc()
         response = HttpResponse()
         response['Content-Type']="text/javascript"
+        data = "1"
+        response.write(data)
         return response
 class CommentView(View):
     def post(self,request):
@@ -373,20 +375,41 @@ class FollowedView(View):
             pass
 
 class ShowMyTravel(View):
-    def get(self,request):
-        template = loader.get_template('website/all_my_travel.html')
-        token = request.session['token']
-        user = get_object_or_404(User, token=token)
-        my_recent_travel_list = travelservice.get_travel(token)['travel_list']
-        basic_travel_path = settings.COVER_PATH
-        context =  RequestContext(request,{\
-            "user":user,
-            "recent_travel_list":my_recent_travel_list,
-            "basic_travel_path":basic_travel_path,})
+    def get(self,request,user_id):
+        user = get_object_or_404(User, pk=user_id)
+        travel_list = travelservice.get_travel(user.token)['travel_list']
+        page_size = 10
+        paginator = Paginator(travel_list, page_size)
+        try:
+            page = int(request.GET.get('page','1'))
 
-        return HttpResponse(template.render(context))
-        pass
+        except ValueError:
+            page = 1
+        try:
+            travel_results = paginator.page(page)
+        except (EmptyPage, InvalidPage):
+            travel_results = paginator.page(paginator.num_pages)
+        return render(request,'website/all_my_travel.html',{"travel_list":travel_results,
+            "user":user
+            })
+class ShowMyFavoriteTravel(View):
+    def get(self,request,user_id):
+        user = get_object_or_404(User, pk=user_id)
+        travel_list = travelservice.get_favorite_web(user.token)['travels']
+        page_size = 10
+        paginator = Paginator(travel_list, page_size)
+        try:
+            page = int(request.GET.get('page','1'))
 
+        except ValueError:
+            page = 1
+        try:
+            travel_results = paginator.page(page)
+        except (EmptyPage, InvalidPage):
+            travel_results = paginator.page(paginator.num_pages)
+        return render(request,'website/all_my_favorite.html',{"favorite_travel_list":travel_results,
+            "user":user
+            })
 class DetailTravelView(View):
     def get(self,request,travel_id):
         template = loader.get_template('website/detail_travel.html')
@@ -438,6 +461,18 @@ class FavoriteTravelView(View):
         print ret
         response.write(ret)
         return response  
+class SearchUserView(View):
+    def get(self,request,keyword):
+        user_list_result = userservice.search_user(keyword)
+        print keyword
+        return render(request,'website/search_user.html',{"user_list":user_list_result['user_list'],  
+            })
+class SearchTravelView(View):
+    def get(self,request,keyword):
+        travel_list_result = travelservice.search_travel(keyword)
+        print keyword
+        return render(request,'website/search_travel.html',{"travel_list":travel_list_result['travel_list'],
+            })
 #======================note view======================================
 
 

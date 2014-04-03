@@ -13,6 +13,8 @@ urlpatterns = patterns('travo',
 		url(r'^contact', sviews.ContactView.as_view(), name = 'contact'),
 		url(r'^me', sviews.MyInfoView.as_view(),name = 'me'),
 		url(r'^others/(?P<id>\d+)/',sviews.OtherInfoView.as_view(),name='others'),
+		url(r'^search_user/(?P<keyword>\w+)/',sviews.SearchUserView.as_view(),name='search_user'),
+		url(r'^search_travel/(?P<keyword>\w+)/',sviews.SearchTravelView.as_view(),name='search_user'),
 		url(r'user/comment_travel',sviews.CommentTravelView.as_view(),name='comment_travel'),
 		url(r'user/favorite_travel',sviews.FavoriteTravelView.as_view(),name='comment_travel'),
 		url(r'user/change_follow',sviews.ChangeFollowView.as_view(),name='change_follow'),
@@ -44,7 +46,8 @@ urlpatterns = patterns('travo',
 		url(r'^detail_travel/(?P<travel_id>\d+)/',sviews.DetailTravelView.as_view(),\
 			name = 'detail_travel'),	
 
-		url(r'^user/show_my_travel',sviews.ShowMyTravel.as_view(),name='show_my_travel'),
+		url(r'^user/show_my_travel/(?P<user_id>\d+)/',sviews.ShowMyTravel.as_view(),name='show_my_travel'),
+		url(r'^user/show_my_favorite_travel/(?P<user_id>\d+)/',sviews.ShowMyFavoriteTravel.as_view(),name='show_my_favorite_travel'),
 		url(r'^user/set_account', sviews.PersonalInfoSetView.as_view(),\
             name = 'set_account'),
 		url(r'^test', sviews.TestView.as_view(),name='test'),

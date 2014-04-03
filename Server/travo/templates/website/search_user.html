@@ -1,0 +1,59 @@
+
+{% extends "website/base_index.html" %}
+{% block title %}我的粉丝{% endblock %}
+
+{% block content %}
+
+<div class="container" style="background-color:#ffffff;">
+  <!-- 个人信息条 -->
+
+
+
+<!-- Here comes the divider -->
+
+
+<hr class="featurette-divider " style="margin-top:0;">
+<div style="padding-bottom:20px;">
+  <!-- 游记条题目 -->
+
+
+<div class="col-md-12" style=" padding-left:5px;margin-bottom:20px;">
+<div class="col-md-2" style="padding:0;">
+<button type="button"  class="btn btn-info btn-lg btn-block" style="border-radius:2px;">搜索到的用户   <span class="badge"> 10</span></button>  
+ 
+</div>
+</div>
+<!-- 我关注的人 从这里开始-->
+<div class="row clearfix col-md-6 " align="center">
+
+
+                      <table class="table table-hover table-striped" style=" margin-bottom:20px;margin-left:15px;margin">
+                        <!-- 一个tr显示一个用户 -->
+                        {% for user in user_list%}
+                        <tr class="active">
+                          <td style="width:60px;">
+                            <img src="http://travo-user-avatar.oss-cn-hangzhou.aliyuncs.com/{{user.face_path}}" alt="otheruser" class="img-rounded" style="height:50px; margin=0;width:50px;border-radius:2px;">
+                          </td>
+                          <td>
+                            <div class="col-md-12" style="padding-bottom:0;"><p><b><a href="{% url 'others' user.id %}" name="otheruser" >{{user.nickname}}</a></b>
+                              </p>
+                            </div>
+                            <div class="col-md-12">
+                              <lable>{{user.signature}}</lable>
+                            </div>
+                          </td>
+                        </tr>
+                        {% endfor %}
+                     
+                    
+         
+                      </table>
+
+</div><!-- 我的粉丝 end-->
+</div>
+
+
+
+</div><!-- end of container -->
+
+    {% endblock %}

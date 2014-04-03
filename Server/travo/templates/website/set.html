@@ -317,10 +317,15 @@ $(document).ready(function(){
             url: :'/user/set_account',
             method: 'post',
             data: data,
-            success: function(data){$('#changePasswordSuccessModal').modal('show');},
-            error: function(data){$('#changePasswordFailModal').modal('show');},
             processData: false,
             contentType: false,
+            success: function(data){
+              $('#changePasswordSuccessModal').modal('show');
+            },
+            error: function(data){
+              $('#changePasswordFailModal').modal('show');
+            },
+            
         });
         return false;
     });

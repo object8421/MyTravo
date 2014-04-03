@@ -35,7 +35,7 @@
 <body>
   {% block background %}
   <div id="web_bg" style="position:absolute; width:100%; height:100%; z-index:-1"> 
-<img style="position:fixed;" src="../../static/travo/image/welcome_bg8.jpg" height="100%" width="100%" /> 
+<img style="position:fixed;" src="../../static/travo/image/welcome_bg16.jpg" height="100%" width="100%" /> 
 </div>
  {% endblock %}
     <div id="page-content">
@@ -64,13 +64,25 @@
                 <li><a href={%url 'me'%}>个人主页</a></li>
                 {% endif %}
                 <li><a href="#contact">客户端下载</a></li>
-
+                <li><a href="#contact">关于</a></li>
               </ul>
               <form class="navbar-form navbar-left navbar-search" role="search">
       <div class="form-group">
-        <input type="text" class="form-control search-query" placeholder="Search">
+        <input id="inputkeyword" type="text" class="form-control search-query" placeholder="Search">
       </div>
-      <button type="submit" class="btn btn-primary"  onclick="javascript:window.location.href='{%url 'search_result'%}' ">搜索</button>
+      <div class="btn-group">
+      <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+                     搜索<span class="caret"></span>
+                      </button> 
+                       <ul class="dropdown-menu">
+                       
+                       <li type="button" id="linksearchuser"><a href="#" onClick="searchuser(); return false">搜索用户</a></li>
+                       <li type="button" id="linksearchtravel"><a href="#" onClick="searchtravel(); return false;">搜索游记</a></li>
+
+
+                       <!--<li><a href="#">One more separated link</a></li> -->
+                     </ul>
+      </div>
     </form>
 
             <!-- search form -->
@@ -386,16 +398,40 @@ $('#datetimepicker').datetimepicker({
     <script type="text/javascript">
 $(document).ready(function(){
   $('#btnlogin').click(function(){
-  var email = $("#loginEmail").val();
-  var password = $("#loginPassword").val();
-  $.post("/user/login",{'email':email,'password':password}, function(ret){
-    if(ret == '1')
-      window.location.href="/me"
-    else
-      $('#LoginFailModal').modal('show');
-  });
+    var email = $("#loginEmail").val();
+    var password = $("#loginPassword").val();
+    $.post("/user/login",{'email':email,'password':password}, function(ret){
+      if(ret == '1')
+        window.location.href="/me"
+      else
+        $('#LoginFailModal').modal('show');
+    });
   });
 });
+  function searchuser(){
+    
+    var keyword = $('#inputkeyword').val();
+    if(keyword != null){
+       // $.get("/search_user/"+keyword,{},function(){
+       //  });
+       window.location.href="/search_user/"+keyword
+    }
+     
+    else
+      alert("关键字不能为空");
+  }
+    function searchtravel(){
+    
+    var keyword = $('#inputkeyword').val();
+    if(keyword != null){
+       // $.get("/search_user/"+keyword,{},function(){
+       //  });
+       window.location.href="/search_travel/"+keyword
+    }
+     
+    else
+      alert("关键字不能为空");
+  }
 </script>
 
 

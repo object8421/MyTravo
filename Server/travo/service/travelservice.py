@@ -390,4 +390,5 @@ def search_travel(key_word):
 		result['travel_list'] =  travel_list
 	else:
 		result = {RSP_CODE:RC_FUCK_SELF}
+		result['travel_list'] =  travel_list
 	return result

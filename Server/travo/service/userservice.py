@@ -403,5 +403,6 @@ def search_user(key_word):
 		result['user_list'] = user_list
 	else:
 		result = {RSP_CODE:RC_FUCK_SELF}
+		result['user_list'] = user_list
 	return result
 
