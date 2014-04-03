@@ -2,6 +2,7 @@ import uuid
 import utils
 import userservice
 
+from django.db.models import Q
 from travo.rc import *
 from travo.models import Travel,FavoriteTravel,TravelReadLog,TravelVote,TravelComment,Follow
 from django.core.exceptions import ObjectDoesNotExist
@@ -381,3 +382,12 @@ def friend_travels(token, friend_id):
 		result['travels'] = list(Travel.objects.filter(user=friend, is_public=True, is_deleted=False))
 		return result
 
+####################### search travel ########################################
+def search_travel(key_word):
+	travel_list = Travel.objects.filter(Q(title__contains=key_word)|Q(destination__contains=key_word))
+	if travel_list:
+		result = {RSP_CODE:RC_SUCESS}
+		result['travel_list'] =  travel_list
+	else:
+		result = {RSP_CODE:RC_FUCK_SELF}
+	return result

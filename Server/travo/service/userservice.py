@@ -5,6 +5,7 @@ import urllib2
 import utils
 import travelservice
 
+from django.db.models import Q
 from travo.exceptions import TokenError, IllegalDataError,AuthError
 from django.db import IntegrityError
 from travo.models import User, LoginRecord,UserInfo,Follow,FavoriteTravel
@@ -228,6 +229,7 @@ def change_password(token, original_password, new_password):
 
 ######    follow      ######
 def follow(token, passive_id, action):
+	'''获取我关注的人'''
 	activer = get_user(token)
 	if activer.id == int(passive_id):
 		return {RSP_CODE : RC_FUCK_SELF}
@@ -366,6 +368,7 @@ def _followed_id(user):
 	return ids 
 
 def get_follow_state(self_token, follower_token):
+
 	'''获取self_token是否关注了Follower'''
 	user = get_user(follower_token)
 	res = follow_list(self_token)['users']
@@ -374,5 +377,17 @@ def get_follow_state(self_token, follower_token):
 			return True
 	return False
 	
+def followin_list(self_token):
+	'''获取关注我的人'''
+	pass
 
+#################### search user  #####################################
+def search_user(key_word):
+	user_list = User.objects.filter(Q(nickname__contains=key_word)|Q(signature__contains=key_word))
+	if user_list:
+		result = {RSP_CODE:RC_SUCESS}
+		result['user_list'] = user_list
+	else:
+		result = {RSP_CODE:RC_FUCK_SELF}
+	return result
 
