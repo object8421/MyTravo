@@ -380,15 +380,18 @@ def get_follow_state(self_token, follower_token):
 	
 def followin_list(self_token):
 	'''获取关注我的人'''
-	user = get_user(self_token)
+	user = get_user(token)
 	fl = list(Follow.objects.filter(passive=user).order_by('time').reverse())
 	unique_passive = []
 	result = {RSP_CODE : RC_SUCESS}
 	result['users'] = []
+	neg_result = []
 	for f in fl:
-		if not f.passive in unique_passive:
-			unique_passive.append(f.passive)
-			result['users'].append(f.passive.public_dict())
+		if not f.active in unique_passive and not f.active in neg_result and f.action == '1':
+			unique_passive.append(f.active)
+			result['users'].append(f.active.public_dict())
+		elif not f.active in unique_passive and not f.active in neg_result and f.action == '0':
+			neg_result.append(f.active)
 	result['length'] = len(result['users'])
 	return result
 
