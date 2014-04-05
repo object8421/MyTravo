@@ -24,6 +24,8 @@ from django.core.paginator import Paginator
 from django.core.paginator import PageNotAnInteger
 from django.core.paginator import EmptyPage
 
+import json
+
 # Create your views here.
 
 #===================user view=====================================
@@ -161,9 +163,13 @@ class PersonalInfoSetView(View):
             })
     def post(self, request):
         attr_dict = request.POST
+        token  = request.session['token']
         is_info_public = request.POST.get('is_info_public','1')
         signature = request.POST.get('signature','')
         user = get_object_or_404(User,token=request.session['token'])
+        response = HttpResponse()
+        response['Content-Type']="text/javascript"
+        ret = "1"
         for key in attr_dict.keys():
             print key
             print attr_dict[key]
@@ -176,11 +182,13 @@ class PersonalInfoSetView(View):
             
         except:
            print traceback.format_exc()
-        response = HttpResponse()
-        response['Content-Type']="text/javascript"
-        data = "1"
-        response.write(data)
-        return response
+        
+        ##ret_json = { 'success': "1", }
+        ##return HttpResponse( json.dumps( ret_json ) )
+        user_info = userservice.get_user_info(token, user.id)['user_info']
+        return render(request,'website/set.html',{"user":user,
+            "userinfo":user_info
+            })
 class CommentView(View):
     def post(self,request):
         token = request.session['token']

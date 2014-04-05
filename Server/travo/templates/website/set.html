@@ -132,7 +132,7 @@
  
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">  
-      <button id="btnChangeInfo" type="submit" class="btn btn-primary" >确认修改</button>
+      <button id="btnupload" type="submit" class="btn btn-primary" data-loading-text="正在修改...">确认修改</button>
    </div>
 </div>
   
@@ -311,20 +311,24 @@ $(document).ready(function(){
 //     });
 
     $('#PersonalInfoForm').on('submit', function(e){
+        $('#btnupload').button('loading');
         e.preventDefault();
         var data = new FormData($('#PersonalInfoForm').get(0));
         $.ajax({
-            url: :'/user/set_account',
+            url::'/user/set_account',
             method: 'post',
             data: data,
+            dataType : 'json', 
+            contentType : 'application/json',
             processData: false,
-            contentType: false,
-            success: function(data){
+            
+            success: function(){
               // $('#changePasswordSuccessModal').modal('show');
               alert("fffffuuuuuccccckkkkk!");
             },
-            error: function(data){
+            error: function(){
               $('#changePasswordFailModal').modal('show');
+              $('#btnupload').button('reset');
             },
             
         });

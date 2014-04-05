@@ -64,7 +64,9 @@ def save_cover(path, cover):
 	__save_image('travo-travel-cover', path, cover)
 
 def save_image(path, image):
-	__save_image('travo-note-pic', path, image)
+    print 'upload %s as note'%path
+    __save_image('travo-note-pic', path, image)
+    print 'note uploaded successful'
 
 def save_face(path, face):
 	print 'upload %s as avatar'%path 
