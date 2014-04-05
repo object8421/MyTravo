@@ -36,9 +36,9 @@ public class ShotsAdapter extends CursorAdapter {
     private ListView mListView;
     
     private BitmapDrawable mDefaultAvatarBitmap ;
-
+    
     private Drawable mDefaultImageDrawable = new ColorDrawable(Color.argb(255, 201, 201, 201));
-
+    
     public ShotsAdapter(Context context, ListView listView) {
         super(context, null, false);
         mLayoutInflater = ((Activity) context).getLayoutInflater();

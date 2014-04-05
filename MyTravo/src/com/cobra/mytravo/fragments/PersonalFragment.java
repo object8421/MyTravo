@@ -63,14 +63,11 @@ public class PersonalFragment extends BaseFragment implements LoaderCallbacks<Cu
 			int previous = 0;
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
-				// TODO Auto-generated method stub
-				
 			}
 			
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem,
 					int visibleItemCount, int totalItemCount) {
-				// TODO Auto-generated method stub
 				int currentY = getScroll();
 				int direction = currentY - previous;
 				if(direction > DISTANCE_SENSOR){

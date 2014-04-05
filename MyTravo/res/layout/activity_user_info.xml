@@ -184,6 +184,33 @@
                     android:src="@drawable/userinfo_navigationbar_arrow" />
 
         </RelativeLayout>
+        
+        <RelativeLayout 
+            android:id="@+id/layout5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layout4"
+            android:layout_marginTop="10dp"
+           
+            android:background="@drawable/user_info_selector"
+            android:clickable="true"
+            android:padding="4dp" >
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="绑定qq账号" />
+            
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="right|center_vertical"
+                    android:src="@drawable/userinfo_navigationbar_arrow" />
+            
+        </RelativeLayout>
 
     </RelativeLayout>
 

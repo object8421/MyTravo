@@ -158,7 +158,7 @@ public class UploadNoteService extends IntentService
 			if(rsp_code == 100)
 			{
 				lm_time = response.getString("lm_time");
-				if(lm_time == null)
+				if(lm_time != null)
 				{
 					UserSync clientsync = usersyncDataHelper.getByToken(AppData.getIdToken());
 			    	clientsync.setNote(lm_time);

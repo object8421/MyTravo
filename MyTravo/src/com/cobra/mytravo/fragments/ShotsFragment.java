@@ -79,7 +79,7 @@ public class ShotsFragment extends BaseFragment implements LoaderManager.LoaderC
 	        
 	        mListView = (ListView) view.findViewById(R.id.listView);
 			//初始化数据库
-	       Log.i("mycontext", getActivity().getApplicationContext().toString());
+	        Log.i("mycontext", getActivity().getApplicationContext().toString());
 	       
 			
 	        mDataHelper = new ShotsDataHelper(getActivity().getApplicationContext(), mCategory);

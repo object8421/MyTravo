@@ -6,6 +6,7 @@ import com.cobra.mytravo.fragments.BaseFragment;
 import com.cobra.mytravo.fragments.DrawerFragment;
 import com.cobra.mytravo.fragments.FakeFragment;
 import com.cobra.mytravo.fragments.PersonalFragment;
+import com.cobra.mytravo.fragments.SearchFragment;
 import com.cobra.mytravo.fragments.SettingFragment;
 import com.cobra.mytravo.fragments.ShotsFragment;
 import com.cobra.mytravo.helpers.ActionBarUtils;
@@ -54,6 +55,7 @@ public class MainActivity extends FragmentActivity {
 	private ActionBarDrawerToggle mDrawerToggle;
 	private String[] listItems;
 	private ShotsFragment shotsFragment;
+	private SearchFragment searchTravelFragment;
 	private FakeFragment guideFragment, nearbyFakeFragment;
 	private PersonalFragment personalFragment;
 	private SettingFragment settingFragment;
@@ -197,10 +199,15 @@ public class MainActivity extends FragmentActivity {
 		BaseFragment mContentFragment;
 		
 		switch (position) {
+//		case 0:
+//			if(shotsFragment == null)
+//				shotsFragment = new ShotsFragment();
+//			mContentFragment = shotsFragment;
+//			break;
 		case 0:
-			if(shotsFragment == null)
-				shotsFragment = new ShotsFragment();
-			mContentFragment = shotsFragment;
+			if(searchTravelFragment == null)
+				searchTravelFragment = new SearchFragment();
+			mContentFragment = searchTravelFragment;
 			break;
 		case 3:
 			if(personalFragment == null)

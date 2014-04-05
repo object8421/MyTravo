@@ -123,7 +123,6 @@ public class LoginActivity extends Activity {
 		loginbyqq = (Button)findViewById(R.id.login_by_qq);
 		loginbyqq.setOnClickListener(new OnClickListener()
 		{
-			
 			@Override
 			public void onClick(View v)
 			{
@@ -318,8 +317,6 @@ public class LoginActivity extends Activity {
 		{
 			Toast.makeText(LoginActivity.this, "cancel", Toast.LENGTH_LONG).show();
 		}
-
-
 		
 		protected void doComplete(JSONObject values) {
 			try

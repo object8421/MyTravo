@@ -95,5 +95,6 @@
     <string name="title_activity_edit_nickname">EditNicknameActivity</string>
     <string name="title_activity_edit_gender">EditGenderActivity</string>
     <string name="title_activity_route">RouteActivity</string>
+    <string name="title_activity_edit_email">EditEmailActivity</string>
 
 </resources>
