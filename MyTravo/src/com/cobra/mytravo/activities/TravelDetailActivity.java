@@ -25,18 +25,24 @@ import com.cobra.mytravo.fragments.SuperAwesomeCardFragment;
 import com.cobra.mytravo.fragments.TravelCommentsFragment;
 import com.cobra.mytravo.fragments.TravelFragment;
 import com.cobra.mytravo.helpers.ActionBarUtils;
+import com.cobra.mytravo.helpers.CommonUtils;
 import com.cobra.mytravo.helpers.TimeUtils;
 import com.cobra.mytravo.models.CommonRequestData;
 import com.cobra.mytravo.models.Note;
+import com.cobra.mytravo.models.Shot;
 import com.cobra.mytravo.models.Travel;
 import com.cobra.mytravo.ui.LoadingFooter;
+import com.cobra.mytravo.util.Blur;
 import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
@@ -52,8 +58,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,6 +77,10 @@ public class TravelDetailActivity extends FragmentActivity{
 	private int mActionBarOptions;
 	private AlertDialog.Builder commentAlertDialog;
 	private String comment;
+	private RelativeLayout layout;
+	private FrameLayout blurView;
+	private View cacheView;
+	private Bitmap backBitmap,blurBitmap;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -84,6 +96,9 @@ public class TravelDetailActivity extends FragmentActivity{
 	}
 	private void InitialView(){
 		ActionBarUtils.InitialDarkActionBar(this, getActionBar(), "游记详情");
+		layout = (RelativeLayout) findViewById(R.id.travel_detail);
+		blurView = (FrameLayout) findViewById(R.id.travel_detail_back);
+		layout.setDrawingCacheEnabled(true);
 		mCustomView = LayoutInflater.from(this).inflate(R.layout.actionbar_customview, null);
 		title = (TextView) mCustomView.findViewById(R.id.tv_title);
 		title.setText("游记详情");
@@ -123,20 +138,46 @@ public class TravelDetailActivity extends FragmentActivity{
 		switch(item.getItemId()){
 		case R.id.action_comment:
 			if(AppData.getIsLogin()){
+				layout.buildDrawingCache();
+				//cacheView = getWindow().getDecorView();
+				//cacheView.setDrawingCacheEnabled(true);
+				//cacheView.buildDrawingCache();
+				layout.buildDrawingCache();
+				backBitmap = layout.getDrawingCache();
+				
+				
+                CommonUtils.executeAsyncTask(new AsyncTask<Object, Object, Object>() {
+                    @Override
+                    protected Object doInBackground(Object... params) {
+                        blurBitmap = Blur.fastblur(TravelDetailActivity.this, backBitmap, 25);
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Object o) {
+                        super.onPostExecute(o);
+                        blurView.setBackgroundDrawable(new BitmapDrawable(blurBitmap));
+                    }
+                });
+				
+				
 				commentAlertDialog = new AlertDialog.Builder(this);
 				commentAlertDialog.setTitle("评论游记");
 				commentAlertDialog.setMessage("请输入您的评论");
 				final EditText contentEditText = new EditText(this);
 				commentAlertDialog.setView(contentEditText);
 				commentAlertDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {  
-				       public void onClick(DialogInterface dialog, int whichButton) {  
+				       @SuppressLint("NewApi") public void onClick(DialogInterface dialog, int whichButton) {  
 				    	   comment = contentEditText.getText().toString();  
 				    	   uploadComment(comment);
+				    	   blurView.setBackground(null);
+				    	   layout.setDrawingCacheEnabled(false);
 				             }  
 				           });  
 				commentAlertDialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {  
-				       public void onClick(DialogInterface dialog, int whichButton) {  
-
+				       @SuppressLint("NewApi") public void onClick(DialogInterface dialog, int whichButton) {  
+				    	   blurView.setBackground(null);
+				    	   layout.setDrawingCacheEnabled(false);
 				           return;
 				         }  
 				      });  
@@ -275,5 +316,11 @@ public class TravelDetailActivity extends FragmentActivity{
                         
                     }
                 }, null),this);
+	}
+	private class BlurThread extends Thread{
+		@Override
+		public void run(){
+			
+		}
 	}
 }

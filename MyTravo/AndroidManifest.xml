@@ -200,7 +200,8 @@
         <activity
             android:name="com.cobra.mytravo.activities.TravelDetailActivity"
             android:label="@string/title_activity_travel_detail" 
-            android:uiOptions="splitActionBarWhenNarrow">
+            android:uiOptions="splitActionBarWhenNarrow"
+            android:windowSoftInputMode="adjustPan">
         </activity>
     </application>
 
