@@ -1,12 +1,14 @@
 package com.cobra.mytravo.models;
 
+import java.io.Serializable;
+
 import android.database.Cursor;
 
 
 import com.cobra.mytravo.data.UsersDataHelper.UserInfoDB;
 import com.google.gson.Gson;
 
-public class User extends BaseType{
+public class User extends BaseType implements Serializable{
 	private int id;
 	private String token;
 	private String qq_user_id;
@@ -21,7 +23,14 @@ public class User extends BaseType{
 	private int achievement_qty;
 	
 	private String last_travel_motified;
+	private String face_path;
 	
+	public String getFace_path() {
+		return face_path;
+	}
+	public void setFace_path(String face_path) {
+		this.face_path = face_path;
+	}
 	public int getId()
 	{
 		return id;

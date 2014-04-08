@@ -12,17 +12,17 @@ public final class R {
 		public static final int fade_out = 0x7f040001;
 	}
 	public static final class drawable {
-		public static final int ptr_progress_horizontal_holo_center = 0x7f020050;
-		public static final int ptr_progress_indeterminate_horizontal_holo = 0x7f020051;
-		public static final int ptr_progress_primary_holo = 0x7f020052;
-		public static final int ptr_progressbar_indeterminate_holo1 = 0x7f020053;
-		public static final int ptr_progressbar_indeterminate_holo2 = 0x7f020054;
-		public static final int ptr_progressbar_indeterminate_holo3 = 0x7f020055;
-		public static final int ptr_progressbar_indeterminate_holo4 = 0x7f020056;
-		public static final int ptr_progressbar_indeterminate_holo5 = 0x7f020057;
-		public static final int ptr_progressbar_indeterminate_holo6 = 0x7f020058;
-		public static final int ptr_progressbar_indeterminate_holo7 = 0x7f020059;
-		public static final int ptr_progressbar_indeterminate_holo8 = 0x7f02005a;
+		public static final int ptr_progress_horizontal_holo_center = 0x7f020069;
+		public static final int ptr_progress_indeterminate_horizontal_holo = 0x7f02006a;
+		public static final int ptr_progress_primary_holo = 0x7f02006b;
+		public static final int ptr_progressbar_indeterminate_holo1 = 0x7f02006c;
+		public static final int ptr_progressbar_indeterminate_holo2 = 0x7f02006d;
+		public static final int ptr_progressbar_indeterminate_holo3 = 0x7f02006e;
+		public static final int ptr_progressbar_indeterminate_holo4 = 0x7f02006f;
+		public static final int ptr_progressbar_indeterminate_holo5 = 0x7f020070;
+		public static final int ptr_progressbar_indeterminate_holo6 = 0x7f020071;
+		public static final int ptr_progressbar_indeterminate_holo7 = 0x7f020072;
+		public static final int ptr_progressbar_indeterminate_holo8 = 0x7f020073;
 	}
 	public static final class id {
 		public static final int ptr_content = 0x7f060005;
@@ -31,14 +31,14 @@ public final class R {
 		public static final int ptr_text_opaque_bg = 0x7f060006;
 	}
 	public static final class layout {
-		public static final int default_header = 0x7f030007;
+		public static final int default_header = 0x7f030014;
 	}
 	public static final class string {
-		public static final int pull_to_refresh_pull_label = 0x7f070015;
-		public static final int pull_to_refresh_refreshing_label = 0x7f070017;
-		public static final int pull_to_refresh_release_label = 0x7f070016;
+		public static final int pull_to_refresh_pull_label = 0x7f07001a;
+		public static final int pull_to_refresh_refreshing_label = 0x7f07001c;
+		public static final int pull_to_refresh_release_label = 0x7f07001b;
 	}
 	public static final class style {
-		public static final int Widget_PullToRefresh_ProgressBar_Horizontal_Center = 0x7f080000;
+		public static final int Widget_PullToRefresh_ProgressBar_Horizontal_Center = 0x7f090000;
 	}
 }

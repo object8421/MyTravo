@@ -196,13 +196,13 @@ def _exclude_id(relate_T):
 	return l
 
 def _search_newest(first_idx, max_qty):
-	return list(Travel.objects.order_by('create_time').reverse()[first_idx:max_qty])
+	return list(Travel.objects.order_by('create_time').reverse()[first_idx: max_qty])
 
 def _search_read_times(first_idx, max_qty):
-	return list(Travel.objects.order_by('read_times').reverse()[first_idx:max_qty])
+	return list(Travel.objects.order_by('read_times').reverse()[first_idx: max_qty])
 
 def _search_vote_qty(first_idx, max_qty):
-	return list(Travel.objects.order_by('vote_qty').reverse()[first_idx:max_qty])
+	return list(Travel.objects.order_by('vote_qty').reverse()[first_idx: max_qty])
 
 
 def clear(tls):

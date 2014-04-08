@@ -5,6 +5,7 @@ import com.cobra.mytravo.data.AppData;
 import com.cobra.mytravo.fragments.BaseFragment;
 import com.cobra.mytravo.fragments.DrawerFragment;
 import com.cobra.mytravo.fragments.FakeFragment;
+import com.cobra.mytravo.fragments.HotTravelFragment;
 import com.cobra.mytravo.fragments.PersonalFragment;
 import com.cobra.mytravo.fragments.SearchFragment;
 import com.cobra.mytravo.fragments.SettingFragment;
@@ -55,10 +56,14 @@ public class MainActivity extends FragmentActivity {
 	private ActionBarDrawerToggle mDrawerToggle;
 	private String[] listItems;
 	private ShotsFragment shotsFragment;
-	private SearchFragment searchTravelFragment;
+	private HotTravelFragment hottravelFragment;
 	private FakeFragment guideFragment, nearbyFakeFragment;
 	private PersonalFragment personalFragment;
 	private SettingFragment settingFragment;
+	private String hotTravelTag = "hottravel";
+	private String fakeTag = "fake";
+	private String personalTag = "personal";
+	private String settingTag = "setting";
 	//store current position
 	private int current;
 	@Override
@@ -197,7 +202,7 @@ public class MainActivity extends FragmentActivity {
 		mDrawerLayout.closeDrawer(GravityCompat.START);
 		mPullToRefreshAttacher.setRefreshing(false);
 		BaseFragment mContentFragment;
-		
+		FragmentManager fragmentManager = getFragmentManager();
 		switch (position) {
 //		case 0:
 //			if(shotsFragment == null)
@@ -205,21 +210,42 @@ public class MainActivity extends FragmentActivity {
 //			mContentFragment = shotsFragment;
 //			break;
 		case 0:
-			if(searchTravelFragment == null)
-				searchTravelFragment = new SearchFragment();
-			mContentFragment = searchTravelFragment;
+			mContentFragment = (BaseFragment) fragmentManager.findFragmentByTag(hotTravelTag);
+			if(mContentFragment == null){
+				mContentFragment = new HotTravelFragment();
+				fragmentManager.beginTransaction().
+				replace(R.id.content_frame, mContentFragment, hotTravelTag).commit();
+			}
+			else{
+				fragmentManager.beginTransaction().attach(mContentFragment).commit();
+			}
+			
 			break;
 		case 3:
-			if(personalFragment == null)
-				personalFragment = new PersonalFragment();
-			mContentFragment = personalFragment;
+			mContentFragment = (BaseFragment) fragmentManager.findFragmentByTag(personalTag);
+			if(mContentFragment == null){
+				mContentFragment = new PersonalFragment();
+				fragmentManager.beginTransaction().
+				replace(R.id.content_frame, mContentFragment, personalTag).commit();
+			}
+			else{
+				fragmentManager.beginTransaction().attach(mContentFragment).commit();
+			}
 			break;
 		default:
-			mContentFragment = FakeFragment.newInstance(position);
+			mContentFragment = (BaseFragment) fragmentManager.findFragmentByTag(personalTag);
+			if(mContentFragment == null){
+				mContentFragment = new PersonalFragment();
+				fragmentManager.beginTransaction().
+				replace(R.id.content_frame, mContentFragment, personalTag).commit();
+			}
+			else{
+				fragmentManager.beginTransaction().attach(mContentFragment).commit();
+			}
 			break;
 		}
-		 FragmentManager fragmentManager = getFragmentManager();
-		 fragmentManager.beginTransaction().replace(R.id.content_frame, mContentFragment).commit();
+		 
+		 
 	}
 	public Button getComposeButton(){
 		return this.composeButton;

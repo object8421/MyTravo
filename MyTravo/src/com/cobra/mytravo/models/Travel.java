@@ -1,6 +1,7 @@
 package com.cobra.mytravo.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -38,6 +39,17 @@ public class Travel extends BaseType implements Serializable{
 	private int is_sync;//判断客户端中游记的同步状态，1：需要上传到服务器， 0：客户端中为最新版本
 	private int TAG;//与服务器交互是辨别travel
 	
+	
+	private String cover_path;
+	
+	public String getCover_path() {
+		return cover_path;
+	}
+
+	public void setCover_path(String cover_path) {
+		this.cover_path = cover_path;
+	}
+
 	public int getIs_sync()
 	{
 		return is_sync;
@@ -201,5 +213,23 @@ public class Travel extends BaseType implements Serializable{
     }
 	public static void clearCache(){
 		CACHE.clear();
+	}
+	
+	public static class TravelsRequestData{
+		private int rsp_code;
+		private ArrayList<Travel> travels;
+		public int getRsp_code() {
+			return rsp_code;
+		}
+		public void setRsp_code(int rsp_code) {
+			this.rsp_code = rsp_code;
+		}
+		public ArrayList<Travel> getTravels() {
+			return travels;
+		}
+		public void setTravels(ArrayList<Travel> travels) {
+			this.travels = travels;
+		}
+		
 	}
 }

@@ -52,6 +52,9 @@
     <string name="action_refresh">刷新</string>
     <string name="action_edit">编辑</string>
     <string name="action_finish">结束游记</string>
+    <string name="action_comment">评论</string>
+    <string name="action_vote">点赞</string>
+    <string name="action_favorite">收藏</string>
     <string name="picture_description">写下你的游记或者图片描述</string>
     <string name="action_formroute">路线图</string>
 
@@ -96,5 +99,6 @@
     <string name="title_activity_edit_gender">EditGenderActivity</string>
     <string name="title_activity_route">RouteActivity</string>
     <string name="title_activity_edit_email">EditEmailActivity</string>
+    <string name="title_activity_travel_detail">TravelDetailActivity</string>
 
 </resources>

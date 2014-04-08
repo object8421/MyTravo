@@ -93,7 +93,7 @@
             android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
-            android:name="com.cobra.mytravo.activities.PersonalTravelDetailActivity"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+            android:name="com.cobra.mytravo.activities.PersonalTravelDetailActivity"
             android:label="@string/title_activity_personal_notes"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TranslucentActionBar.ActionBar.Overlay"
@@ -162,21 +162,33 @@
         <service android:name="com.cobra.mytravo.internet.UploadNoteService" >
         </service>
         <service android:name="com.cobra.mytravo.internet.GetMyTravelsPicture" />
-        <service android:name="com.cobra.mytravo.internet.GetMyNotesService" ></service>
-        <service android:name="com.cobra.mytravo.internet.GetMyNotePicture" ></service>
-        <service android:name="com.cobra.mytravo.internet.SearchTravelService"></service>
-        
-        <service android:name="com.cobra.mytravo.internet.user.BindService" ></service>
-        <service android:name="com.cobra.mytravo.internet.user.SetEmailService"></service>
-        <service android:name="com.cobra.mytravo.internet.user.UpdateUserService"></service>
-		<service android:name="com.cobra.mytravo.internet.user.UpdateUserInfoService"></service>
-        <service android:name="com.cobra.mytravo.internet.user.UpdatePasswordService"></service>
-		<service android:name="com.cobra.mytravo.internet.user.GetUserInfoService"></service>
-		<service android:name="com.cobra.mytravo.internet.user.GetUserPhotoService"></service>
-		<service android:name="com.cobra.mytravo.internet.user.FollowFriendService"></service>
-		<service android:name="com.cobra.mytravo.internet.user.UnFollowFriendService"></service>
-		<service android:name="com.cobra.mytravo.internet.user.GetFollowsService"></service>
-		
+        <service android:name="com.cobra.mytravo.internet.GetMyNotesService" >
+        </service>
+        <service android:name="com.cobra.mytravo.internet.GetMyNotePicture" >
+        </service>
+        <service android:name="com.cobra.mytravo.internet.SearchTravelService" >
+        </service>
+        <service android:name="com.cobra.mytravo.internet.user.BindService" >
+        </service>
+        <service android:name="com.cobra.mytravo.internet.user.SetEmailService" >
+        </service>
+        <service android:name="com.cobra.mytravo.internet.user.UpdateUserService" >
+        </service>
+        <service android:name="com.cobra.mytravo.internet.user.UpdateUserInfoService" >
+        </service>
+        <service android:name="com.cobra.mytravo.internet.user.UpdatePasswordService" >
+        </service>
+        <service android:name="com.cobra.mytravo.internet.user.GetUserInfoService" >
+        </service>
+        <service android:name="com.cobra.mytravo.internet.user.GetUserPhotoService" >
+        </service>
+        <service android:name="com.cobra.mytravo.internet.user.FollowFriendService" >
+        </service>
+        <service android:name="com.cobra.mytravo.internet.user.UnFollowFriendService" >
+        </service>
+        <service android:name="com.cobra.mytravo.internet.user.GetFollowsService" >
+        </service>
+
         <activity
             android:name="com.cobra.mytravo.activities.RouteActivity"
             android:label="@string/title_activity_route" >
@@ -184,6 +196,10 @@
         <activity
             android:name="com.cobra.mytravo.activities.EditEmailActivity"
             android:label="@string/title_activity_edit_email" >
+        </activity>
+        <activity
+            android:name="com.cobra.mytravo.activities.TravelDetailActivity"
+            android:label="@string/title_activity_travel_detail" >
         </activity>
     </application>
 

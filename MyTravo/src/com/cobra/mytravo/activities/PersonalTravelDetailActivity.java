@@ -89,7 +89,7 @@ public class PersonalTravelDetailActivity extends Activity implements LoaderMana
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.travel_detail, menu);
+		getMenuInflater().inflate(R.menu.personal_travel_detail, menu);
 		return true;
 	}
 	private void InitialView(){

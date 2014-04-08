@@ -1,6 +1,7 @@
 package com.cobra.mytravo.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.cobra.mytravo.data.NotesDataHelper;
@@ -29,7 +30,16 @@ public class Note extends BaseType implements Serializable{
 	
 	private int is_sync;//判断客户端中游记的同步状态，1：需要上传到服务器， 0：客户端中为最新版本
 	private int TAG;//
+	private String image_path;
 	
+	public String getImage_path() {
+		return image_path;
+	}
+
+	public void setImage_path(String image_path) {
+		this.image_path = image_path;
+	}
+
 	public int getIs_sync()
 	{
 		return is_sync;
@@ -154,5 +164,21 @@ public class Note extends BaseType implements Serializable{
     }
 	public static void clearCache(){
 		CACHE.clear();
+	}
+	public static class NotesRequestData{
+		private int rsp_code;
+		private ArrayList<Note> notes;
+		public int getRsp_code() {
+			return rsp_code;
+		}
+		public void setRsp_code(int rsp_code) {
+			this.rsp_code = rsp_code;
+		}
+		public ArrayList<Note> getNotes() {
+			return notes;
+		}
+		public void setNotes(ArrayList<Note> notes) {
+			this.notes = notes;
+		}
 	}
 }
