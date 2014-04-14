@@ -29,7 +29,8 @@ def strpdate(s):
 	except Exception, e:
 		raise ValueError(e)
 
-class MyModel():
+class MyModel(models.Model):
+
 	@classmethod
 	def from_dict(cls, d):
 		o = cls()
@@ -47,6 +48,16 @@ class MyModel():
 		'''parse this model to dict'''
 		return self._filter_key(self.__dict__)
 
+	def __init__(self, separator=",", *args, **kwargs):
+		self.separator = ","
+		super(CommaSepField, self).__init__(*args, **kwargs)
+
+	def deconstruct(self):
+		name, path, args, kwargs = super(CommaSepField, self).deconstruct()
+        # Only include kwarg if it's not the default
+		if self.separator != ",":
+			kwargs['separator'] = self.separator
+		return name, path, args, kwargs
 	def update(self, d):
 		'''use new data in dict to update model'''
 		for key in d:
@@ -73,9 +84,11 @@ class SyncModel(MyModel):
 			return str(cls.objects.filter(user=user).latest('lm_time').lm_time)
 		except ObjectDoesNotExist:
 			return None
+	class meta:
+		abstract = True
 
-class User(models.Model, MyModel):
-	id = models.AutoField(primary_key=True)
+class User(MyModel):
+	
 	email = models.CharField(unique=True, max_length=25)
 	token = models.CharField(unique=True, max_length=32)
 	qq_user_id = models.CharField(unique=True, max_length=32, default=None)
@@ -109,7 +122,7 @@ class User(models.Model, MyModel):
 		managed = False
 		db_table = 'user'
 
-class Travel(models.Model, SyncModel):
+class Travel( SyncModel):
 	id = models.AutoField(primary_key=True)
 	user = models.ForeignKey('User')
 	title = models.CharField(max_length=45)
@@ -131,7 +144,7 @@ class Travel(models.Model, SyncModel):
 		managed = False
 		db_table = 'travel'
 
-class Note(models.Model, SyncModel):
+class Note( SyncModel):
 	id = models.AutoField(primary_key=True)
 	user = models.ForeignKey('User')
 	travel = models.ForeignKey('Travel')
@@ -146,8 +159,8 @@ class Note(models.Model, SyncModel):
 		managed = False
 		db_table = 'note'
 
-class Location(models.Model, MyModel):
-	id = models.AutoField(primary_key=True)
+class Location(MyModel):
+
 	address = models.CharField(max_length=45, null=True)
 	longitude = models.FloatField()
 	latitude = models.FloatField()
@@ -238,7 +251,7 @@ class Follow(models.Model):
 		managed = False
 		db_table = 'follow'
 
-class LoginRecord(models.Model, MyModel):
+class LoginRecord(MyModel):
 	user = models.ForeignKey('User')
 	time = models.DateTimeField()
 	ip = models.CharField(max_length=15)
@@ -311,7 +324,7 @@ class ScenicPointInfo(models.Model):
 		managed = False
 		db_table = 'scenic_point_info'
 
-class TravelComment(models.Model, MyModel):
+class TravelComment(MyModel):
 	travel = models.ForeignKey(Travel)
 	time = models.DateTimeField()
 	commenter = models.ForeignKey('User', db_column='commenter')
@@ -374,7 +387,7 @@ class UserAchievement(models.Model):
 		managed = False
 		db_table = 'user_achievement'
 
-class UserInfo(models.Model, SyncModel):
+class UserInfo(SyncModel):
 	user = models.ForeignKey(User, primary_key=True)
 	#id = models.IntegerField(primary_key=True)
 	phone = models.CharField(max_length=12, null=True)
