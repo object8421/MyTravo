@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cobra.mytravo.R;
+import com.cobra.mytravo.activities.OtherUserInfoActivity;
 import com.cobra.mytravo.activities.TravelDetailActivity;
 import com.cobra.mytravo.adapters.CardsAnimationAdapter;
 import com.cobra.mytravo.adapters.CommentAdapter;
@@ -15,13 +16,18 @@ import com.cobra.mytravo.data.MyServerMessage;
 import com.cobra.mytravo.models.Comment;
 import com.cobra.mytravo.models.Note;
 import com.cobra.mytravo.models.Travel;
+import com.cobra.mytravo.models.User;
+import com.cobra.mytravo.models.UserInfo;
 import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
@@ -49,6 +55,21 @@ public class TravelCommentsFragment extends V4BaseFragment implements PullToRefr
 	    AnimationAdapter animationAdapter = new CardsAnimationAdapter(mAdapter);
         animationAdapter.setAbsListView(mListView);
         mListView.setAdapter(animationAdapter);
+        mListView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+					long arg3) {
+				// TODO Auto-generated method stub
+				User user = mAdapter.getItem(position - mListView.getHeaderViewsCount()).getCommenter();
+				if(user != null){
+					Intent intent = new Intent(getActivity(), OtherUserInfoActivity.class);
+					intent.putExtra("user", user);
+					getActivity().startActivity(intent);
+				}
+				
+			}
+		});
         loadData();
 		return view;
 	}

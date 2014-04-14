@@ -1,6 +1,7 @@
 package com.cobra.mytravo.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class UserInfo extends BaseType implements Serializable
 {
@@ -102,5 +103,23 @@ public class UserInfo extends BaseType implements Serializable
 	public void setJob(String job)
 	{
 		this.job = job;
+	}
+	public static class UserInfoRequestData{
+		private int rsp_code;
+		private UserInfo user_info;
+		public int getRsp_code() {
+			return rsp_code;
+		}
+		public void setRsp_code(int rsp_code) {
+			this.rsp_code = rsp_code;
+		}
+		public UserInfo getUser_info() {
+			return user_info;
+		}
+		public void setUser_info(UserInfo user_info) {
+			this.user_info = user_info;
+		}
+		
+		
 	}
 }

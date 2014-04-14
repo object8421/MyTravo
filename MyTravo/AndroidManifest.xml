@@ -199,9 +199,13 @@
         </activity>
         <activity
             android:name="com.cobra.mytravo.activities.TravelDetailActivity"
-            android:label="@string/title_activity_travel_detail" 
+            android:label="@string/title_activity_travel_detail"
             android:uiOptions="splitActionBarWhenNarrow"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
+        <activity
+            android:name="com.cobra.mytravo.activities.OtherUserInfoActivity"
+            android:label="@string/title_activity_other_user_info" >
         </activity>
     </application>
 

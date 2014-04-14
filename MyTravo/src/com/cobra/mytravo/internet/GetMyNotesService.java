@@ -76,6 +76,7 @@ public class GetMyNotesService extends IntentService
 									{
 										Intent intent = new Intent(GetMyNotesService.this, GetMyNotePicture.class);
 										intent.putExtra("note_id", note.getId());
+										intent.putExtra("image_path", note.getImage_path());
 										startService(intent);
 									}
 									

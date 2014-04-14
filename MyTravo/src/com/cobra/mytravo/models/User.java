@@ -24,7 +24,28 @@ public class User extends BaseType implements Serializable{
 	
 	private String last_travel_motified;
 	private String face_path;
+	private int travel_qty;
+	private int follower_qty;
+	private int favorite_travel_qty;
 	
+	public int getTravel_qty() {
+		return travel_qty;
+	}
+	public void setTravel_qty(int travel_qty) {
+		this.travel_qty = travel_qty;
+	}
+	public int getFollower_qty() {
+		return follower_qty;
+	}
+	public void setFollower_qty(int follower_qty) {
+		this.follower_qty = follower_qty;
+	}
+	public int getFavorite_travel_qty() {
+		return favorite_travel_qty;
+	}
+	public void setFavorite_travel_qty(int favorite_travel_qty) {
+		this.favorite_travel_qty = favorite_travel_qty;
+	}
 	public String getFace_path() {
 		return face_path;
 	}

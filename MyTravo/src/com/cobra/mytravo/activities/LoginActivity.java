@@ -80,6 +80,7 @@ public class LoginActivity extends Activity {
 				startService(syncService);
 				Toast.makeText(LoginActivity.this, "您已成功登陆", Toast.LENGTH_SHORT).show();
 				AppData.setIsLogin(true);
+				AppData.setIdToken(user.getToken());
 				Intent intent1 = new Intent(LoginActivity.this, MainActivity.class);
 				startActivity(intent1);
 				break; 

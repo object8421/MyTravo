@@ -41,6 +41,7 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -132,7 +133,7 @@ public class TravelDetailActivity extends FragmentActivity{
 		return true;
 	}
 	
-	@Override
+	@SuppressLint("NewApi") @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
 		switch(item.getItemId()){
@@ -170,17 +171,25 @@ public class TravelDetailActivity extends FragmentActivity{
 				       @SuppressLint("NewApi") public void onClick(DialogInterface dialog, int whichButton) {  
 				    	   comment = contentEditText.getText().toString();  
 				    	   uploadComment(comment);
-				    	   blurView.setBackground(null);
-				    	   layout.setDrawingCacheEnabled(false);
+				    	   
 				             }  
 				           });  
 				commentAlertDialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {  
 				       @SuppressLint("NewApi") public void onClick(DialogInterface dialog, int whichButton) {  
-				    	   blurView.setBackground(null);
-				    	   layout.setDrawingCacheEnabled(false);
+				    	   
 				           return;
 				         }  
 				      });  
+				commentAlertDialog.setOnDismissListener(new OnDismissListener(
+						) {
+					
+					@SuppressLint("NewApi") @Override
+					public void onDismiss(DialogInterface dialog) {
+						// TODO Auto-generated method stub
+						blurView.setBackground(null);
+				    	layout.setDrawingCacheEnabled(false);
+					}
+				});
 				commentAlertDialog.show();
 			}else{
 				Toast.makeText(this, "您尚未登录，不能进行评论哦", Toast.LENGTH_SHORT).show();

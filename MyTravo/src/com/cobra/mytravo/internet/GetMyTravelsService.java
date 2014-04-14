@@ -72,6 +72,7 @@ public class GetMyTravelsService extends IntentService
 									{
 										Intent intent = new Intent(GetMyTravelsService.this, GetMyTravelsPicture.class);
 										intent.putExtra("travel_id", travel.getId());
+										intent.putExtra("cover_path", travel.getCover_path());
 										startService(intent);
 									}
 									

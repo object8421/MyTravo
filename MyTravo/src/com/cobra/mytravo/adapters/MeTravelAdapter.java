@@ -20,6 +20,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class MeTravelAdapter extends CursorAdapter{
+	private String TAG = "metraveladapter";
 	private LayoutInflater mLayoutInflater;
 	private ListView mListView;
 	private Drawable defaultImageDrawable;
@@ -47,8 +48,10 @@ public class MeTravelAdapter extends CursorAdapter{
 		view.setEnabled(!mListView.isItemChecked(cursor.getPosition()
                 + mListView.getHeaderViewsCount()));
 		Travel travel = Travel.fromCursor(cursor);
+		
 		holder.titleTextView.setText(travel.getTitle());
 		holder.timeTextView.setText(TimeUtils.getListTime(travel.getCreate_time()));
+		
 		if(travel.getCover_url() != null){
 			bitmapManager.fetchBitmapOnThread(travel.getCover_url(), holder.imageView);
 //			holder.imageRequest = RequestManager.loadImage(travel.getCover_url(), RequestManager

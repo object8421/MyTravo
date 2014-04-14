@@ -31,11 +31,11 @@ public class GetMyNotePicture extends IntentService
 	{
 		Log.i("getMyNotePicture", "start");
 		int id = intent.getIntExtra("note_id", 0);
+		String image_path = intent.getStringExtra("image_path");
 		notesDataHelper = new NotesDataHelper(this, AppData.getUserId());
 		note = notesDataHelper.getNoteById(id);
 
-		String imageUrl = AppData.HOST_IP + "note/" + String.valueOf(id)
-				+ "/image?token" + AppData.getIdToken();
+		String imageUrl = "http://travo-note-pic.oss-cn-hangzhou.aliyuns.com/" + image_path;
 
 		URL url;
 		File file = null;

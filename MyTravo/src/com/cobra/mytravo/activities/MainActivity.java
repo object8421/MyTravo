@@ -5,6 +5,7 @@ import com.cobra.mytravo.data.AppData;
 import com.cobra.mytravo.fragments.BaseFragment;
 import com.cobra.mytravo.fragments.DrawerFragment;
 import com.cobra.mytravo.fragments.FakeFragment;
+import com.cobra.mytravo.fragments.FavoriteFragment;
 import com.cobra.mytravo.fragments.HotTravelFragment;
 import com.cobra.mytravo.fragments.PersonalFragment;
 import com.cobra.mytravo.fragments.SearchFragment;
@@ -58,10 +59,12 @@ public class MainActivity extends FragmentActivity {
 	private ShotsFragment shotsFragment;
 	private HotTravelFragment hottravelFragment;
 	private FakeFragment guideFragment, nearbyFakeFragment;
+	private FavoriteFragment favoriteFragment;
 	private PersonalFragment personalFragment;
 	private SettingFragment settingFragment;
 	private String hotTravelTag = "hottravel";
 	private String fakeTag = "fake";
+	private String favoriteTag = "favorite";
 	private String personalTag = "personal";
 	private String settingTag = "setting";
 	//store current position
@@ -215,6 +218,18 @@ public class MainActivity extends FragmentActivity {
 				mContentFragment = new HotTravelFragment();
 				fragmentManager.beginTransaction().
 				replace(R.id.content_frame, mContentFragment, hotTravelTag).commit();
+			}
+			else{
+				fragmentManager.beginTransaction().attach(mContentFragment).commit();
+			}
+			
+			break;
+		case 2:
+			mContentFragment = (BaseFragment) fragmentManager.findFragmentByTag(favoriteTag);
+			if(mContentFragment == null){
+				mContentFragment = new FavoriteFragment();
+				fragmentManager.beginTransaction().
+				replace(R.id.content_frame, mContentFragment, favoriteTag).commit();
 			}
 			else{
 				fragmentManager.beginTransaction().attach(mContentFragment).commit();
