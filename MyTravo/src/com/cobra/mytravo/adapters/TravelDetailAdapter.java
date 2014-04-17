@@ -48,7 +48,7 @@ public class TravelDetailAdapter extends CursorAdapter{
 		view.setEnabled(!mListView.isItemChecked(cursor.getPosition()
                 + mListView.getHeaderViewsCount()));
 		Note note = Note.fromCursor(cursor);
-		holder.descriptionTextView.setText(note.getDescription());
+		holder.descriptionTextView.setText(note.getContent());
 		holder.timeTextView.setText(TimeUtils.getListTime(note.getCreate_time()));
 		if(note.getLocation() != null){
 			if(note.getLocation().getAddress() != null){

@@ -49,7 +49,7 @@ public class UploadNoteService extends IntentService
 		try
 		{
 			jsonObject.put("id", note.getId());
-			jsonObject.put("content", note.getDescription());
+			jsonObject.put("content", note.getContent());
 			jsonObject.put("create_time",note.getCreate_time());
 			jsonObject.put("travel_id", note.getTravel_id());
 			jsonObject.put("tag", note.getTAG());

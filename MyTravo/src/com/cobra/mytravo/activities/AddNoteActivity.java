@@ -224,8 +224,8 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 				
 				
 			}
-			if(editNote.getDescription() != null)
-				descriptionEditText.setText(editNote.getDescription());
+			if(editNote.getContent() != null)
+				descriptionEditText.setText(editNote.getContent());
 			if(editNote.getLocation() != null){
 				 locationTextView.setText(editNote.getLocation().getAddress());
 				 locationProgressBar.setVisibility(View.INVISIBLE);
@@ -261,7 +261,7 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 				note.setUser_id(AppData.getUserId());
 				note.setTravel_created_time(AppData.getTravelTime());
 				note.setCreate_time(TimeUtils.getTime().toString());
-				note.setDescription(descriptionString);
+				note.setContent(descriptionString);
 				note.setIs_sync(1);
 				note.setTravel_id(travelsDataHelper.queryByTime(AppData.getTravelTime()).getId());
 				if(myLocation != null){
@@ -290,7 +290,7 @@ public class AddNoteActivity extends Activity implements OnMenuItemClickListener
 			else{
 				descriptionString = descriptionEditText.getText().toString().trim();
 				if(descriptionString != null){
-					editNote.setDescription(descriptionString);
+					editNote.setContent(descriptionString);
 				}
 				if(imageExist){
 					if(coverPathString == null){
