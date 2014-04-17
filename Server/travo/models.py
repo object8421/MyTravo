@@ -15,6 +15,7 @@ from datetime import datetime
 from datetime import date
 from django.core.exceptions import ObjectDoesNotExist
 
+######### utils ###########
 def strpdatetime(s):
 	try:
 		if s is not None:
@@ -29,66 +30,47 @@ def strpdate(s):
 	except Exception, e:
 		raise ValueError(e)
 
-class MyModel(models.Model):
+def lm_time(cls, user):
+	try:
+		return str(cls.objects.filter(user=user).latest('lm_time').lm_time)
+	except ObjectDoesNotExist:
+		return None
 
-	@classmethod
-	def from_dict(cls, d):
-		o = cls()
-		for key in o.__dict__:
-			if not key.startswith('_') and d.has_key(key):
-				if key.endswith('date'):
-					setattr(o, key, strpdate(d[key]))
-				elif key.endswith('time'):
-					setattr(o, key, strpdatetime(d[key]))
-				else:
-					setattr(o, key, d[key])
-		return o
+def model_to_dict(model):
+	return _filter_key(model.__dict__)
 
-	def dict(self):
-		'''parse this model to dict'''
-		return self._filter_key(self.__dict__)
+def dict_to_model(cls, d):
+	o = cls()
+	for key in o.__dict__:
+		if not key.startswith('_') and d.has_key(key):
+			if key.endswith('date'):
+				setattr(o, key, strpdate(d[key]))
+			elif key.endswith('time'):
+				setattr(o, key, strpdatetime(d[key]))
+			else:
+				setattr(o, key, d[key])
+	return o
 
-	def __init__(self, separator=",", *args, **kwargs):
-		self.separator = ","
-		super(CommaSepField, self).__init__(*args, **kwargs)
+def update(model, d):
+	'''use new data in dict to update model'''
+	for key in d:
+		if hasattr(model, key):
+			setattr(model, key, d[key])
 
-	def deconstruct(self):
-		name, path, args, kwargs = super(CommaSepField, self).deconstruct()
-        # Only include kwarg if it's not the default
-		if self.separator != ",":
-			kwargs['separator'] = self.separator
-		return name, path, args, kwargs
-	def update(self, d):
-		'''use new data in dict to update model'''
-		for key in d:
-			if hasattr(self, key):
-				setattr(self, key, d[key])
+def _filter_key(d):
+	'''remove some useless key from a model related dict'''
+	newd = dict(d)
+	for key in d:
+		if key.startswith('_'):
+			newd.pop(key)
+			continue
+		if isinstance(d[key], datetime) or isinstance(d[key], date):
+			newd[key] = str(d[key])[0:19]
+	return newd
 
-	def _filter_key(self, d):
-		'''remove some useless key from a model related dict'''
-		newd = dict(d)
-		for key in d:
-			if key.startswith('_'):
-				newd.pop(key)
-				continue
-			if isinstance(d[key], datetime) or isinstance(d[key], date):
-				newd[key] = str(d[key])[0:19]
-		return newd
-	class meta:
-		abstract = True
-
-class SyncModel(MyModel):
-	@classmethod
-	def lm_time(cls, user):
-		try:
-			return str(cls.objects.filter(user=user).latest('lm_time').lm_time)
-		except ObjectDoesNotExist:
-			return None
-	class meta:
-		abstract = True
-
-class User(MyModel):
-	
+########## Models #############
+class User(models.Model):
+	id = models.AutoField(primary_key=True)
 	email = models.CharField(unique=True, max_length=25)
 	token = models.CharField(unique=True, max_length=32)
 	qq_user_id = models.CharField(unique=True, max_length=32, default=None)
@@ -108,12 +90,23 @@ class User(MyModel):
 	is_info_public = models.IntegerField(default=True)
 	lm_time = models.DateTimeField()
 
+	def dict(self):
+		d = model_to_dict(self)
+		d.pop('password')
+		return d
+
+	def update(self):
+		return update_model(self)
+
+	@classmethod
+	def from_dict(cls, d):
+		return dict_to_model(cls, d)
+
 	def public_dict(self):
 		'''return a dict only include public key in this user'''
 		d = self.dict()
 		d.pop('qq_user_id')
 		d.pop('sina_user_id')
-		d.pop('password')
 		d.pop('token')
 		d.pop('lm_time')
 		return d
@@ -122,7 +115,7 @@ class User(MyModel):
 		managed = False
 		db_table = 'user'
 
-class Travel( SyncModel):
+class Travel(models.Model):
 	id = models.AutoField(primary_key=True)
 	user = models.ForeignKey('User')
 	title = models.CharField(max_length=45)
@@ -140,11 +133,26 @@ class Travel( SyncModel):
 	is_public = models.IntegerField(default=True)
 	is_deleted = models.IntegerField(default=False)
 	lm_time = models.DateTimeField()
+
+	def dict(self):
+		return model_to_dict(self)
+
+	def update(self):
+		return update_model(self)
+
+	@classmethod
+	def from_dict(cls, d):
+		return dict_to_model(cls, d)
+
+	@classmethod
+	def lm_time(cls, user):
+		return lm_time(cls, user)
+	
 	class Meta:
 		managed = False
 		db_table = 'travel'
 
-class Note( SyncModel):
+class Note(models.Model):
 	id = models.AutoField(primary_key=True)
 	user = models.ForeignKey('User')
 	travel = models.ForeignKey('Travel')
@@ -155,19 +163,41 @@ class Note( SyncModel):
 	image_path = models.CharField(max_length=24, null=True)
 	is_deleted = models.IntegerField(default=False)
 	lm_time = models.DateTimeField()
+
+	def dict(self):
+		return model_to_dict(self)
+
+	def update(self):
+		return update_model(self)
+
+	@classmethod
+	def from_dict(cls, d):
+		return dict_to_model(cls, d)
+
+	@classmethod
+	def lm_time(cls, user):
+		return lm_time(cls, user)
+
 	class Meta:
 		managed = False
 		db_table = 'note'
 
-class Location(MyModel):
-
+class Location(models.Model):
 	address = models.CharField(max_length=45, null=True)
 	longitude = models.FloatField()
 	latitude = models.FloatField()
-	def useful_dict(self):
-		d = self.dict()
+
+	def dict(self):
+		d = model_to_dict(self)
 		d.pop('id')
 		return d
+
+	def update(self):
+		return update_model(self)
+
+	@classmethod
+	def from_dict(cls, d):
+		return dict_to_model(cls, d)
 
 	class Meta:
 		managed = False
@@ -251,18 +281,21 @@ class Follow(models.Model):
 		managed = False
 		db_table = 'follow'
 
-class LoginRecord(MyModel):
+class LoginRecord(models.Model):
 	user = models.ForeignKey('User')
 	time = models.DateTimeField()
 	ip = models.CharField(max_length=15)
 
-	'''
-	def __init__(self, u, t, i):
-		super(LoginRecord, self).__init__()
-		self.user = u
-		self.time = t
-		self.ip = i
-	'''
+	def dict(self):
+		return model_to_dict(self)
+
+	def update(self):
+		return update_model(self)
+
+	@classmethod
+	def from_dict(cls, d):
+		return dict_to_model(cls, d)
+
 	class Meta:
 		managed = False
 		db_table = 'login_record'
@@ -324,16 +357,23 @@ class ScenicPointInfo(models.Model):
 		managed = False
 		db_table = 'scenic_point_info'
 
-class TravelComment(MyModel):
+class TravelComment(models.Model):
 	travel = models.ForeignKey(Travel)
 	time = models.DateTimeField()
 	commenter = models.ForeignKey('User', db_column='commenter')
 	content = models.CharField(max_length=200, null=False)
 
 	def dict(self):
-		d = super(TravelComment, self).dict()
+		d = model_to_dict(self)
 		d.pop('id')
 		return d
+
+	def update(self):
+		return update_model(self)
+
+	@classmethod
+	def from_dict(cls, d):
+		return dict_to_model(cls, d)
 
 	class Meta:
 		managed = False
@@ -387,9 +427,8 @@ class UserAchievement(models.Model):
 		managed = False
 		db_table = 'user_achievement'
 
-class UserInfo(SyncModel):
+class UserInfo(models.Model):
 	user = models.ForeignKey(User, primary_key=True)
-	#id = models.IntegerField(primary_key=True)
 	phone = models.CharField(max_length=12, null=True)
 	mobile = models.CharField(max_length=11, null=True)
 	qq = models.CharField(max_length=12, null=True)
@@ -403,6 +442,21 @@ class UserInfo(SyncModel):
 	degree = models.CharField(max_length=6, null=True)
 	job = models.CharField(max_length=15, null=True)
 	lm_time = models.DateTimeField()
+
+	def dict(self):
+		return model_to_dict(self)
+
+	def update(self):
+		return update_model(self)
+
+	@classmethod
+	def from_dict(cls, d):
+		return dict_to_model(cls, d)
+
+	@classmethod
+	def lm_time(cls, user):
+		return lm_time(cls, user)
+
 	class Meta:
 		managed = False
 		db_table = 'user_info'

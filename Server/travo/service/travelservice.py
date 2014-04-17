@@ -234,6 +234,7 @@ def add_comment(u, relate_T):
 			merge(relate_T, tc.travel, COMMENT_SCORE)
 		else:
 			merge(relate_T, tc.travel, -COMMENT_SCORE)
+
 def add_vote(u, relate_T):
 	tvls = TravelVote.objects.filter(voter=u)
 	for tv in tvls:
@@ -266,6 +267,7 @@ def _search_read_times_web(first_idx, max_qty):
 def _search_vote_qty_web(first_idx, max_qty):
 	return list(Travel.objects.order_by('-vote_qty'))
 ###add end
+
 #######		favorit ############
 def favorit(token, travel_id):
 	user = userservice.get_user(token)

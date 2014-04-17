@@ -479,7 +479,7 @@ class LocationAppender():
 			if n.location is None:
 				note['location'] = None
 			else:
-				note['location'] = n.location.useful_dict()
+				note['location'] = n.location.dict()
 			d_notes.append(note)
 		return d_notes
 
