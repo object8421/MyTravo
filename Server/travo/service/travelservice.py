@@ -14,6 +14,9 @@ def _build_cover_path(cover):
 	suffix = cover.name.split('.')[-1]
 	return uuid.uuid4().hex[0:16] + '.' + suffix
 
+def _build_snap_path(cover):
+	return _build_cover_path(cover)
+
 ########	upload		###########
 def upload(token, travels, covers={}):
 	user = userservice.get_user(token)
@@ -46,8 +49,7 @@ def _update(user, t, cover=None):
 		else:
 			travel.update(t)
 			if cover is not None: 
-				travel.cover_path = _build_cover_path(cover) 
-				utils.save_cover(travel.cover_path, cover)
+				_save_cover(travel, cover)
 			try:
 				travel.save()
 			except ValidationError, e:
@@ -72,8 +74,7 @@ def _new(user, t, cover=None):
 	else:
 		if not _exists_travel(user.id, travel.create_time):
 			if cover is not None:
-				travel.cover_path = _build_cover_path(cover) 
-				utils.save_cover(travel.cover_path, cover)
+				_save_cover(travel, cover)
 			try:
 				travel.save()
 			except ValidationError, e:
@@ -84,6 +85,14 @@ def _new(user, t, cover=None):
 		else:
 			rsp[RSP_CODE] = RC_DUP_DATA
 	return rsp
+
+def _save_cover(travel, cover):
+	travel.cover_path = _build_cover_path(cover) 
+	travel.snap_path = _build_snap_path(cover)
+	if not utils.save_cover_snap(travel.snap_path, cover):
+		travel.snap_path = travel.image_path
+
+	utils.save_cover(travel.cover_path, cover)
 
 def _exists_travel(user_id, create_time):
 	return Travel.objects.filter(user_id=user_id, create_time=create_time).exists()

@@ -9,9 +9,12 @@ from django.core.exceptions import ValidationError
 from datetime import datetime
 
 
-def _build_image_path(cover):
-	suffix = cover.name.split('.')[-1]
+def _build_image_path(image):
+	suffix = image.name.split('.')[-1]
 	return uuid.uuid4().hex[0:16] + '.' + suffix
+
+def _build_snap_path(image):
+	return _build_image_path(image)
 
 #########	upload	############
 def upload(token, notes, images={}):
@@ -96,7 +99,11 @@ def _new(user, n, image=None):
 	return rsp
 
 def _save_image(note, image):
+	note.snap_path = _build_snap_path(image)
 	note.image_path = _build_image_path(image)
+	if not utils.save_image_snap(note.snap_path, image):
+		note.snap_path = note.image_path
+
 	note.photo_time = utils.get_photo_time(image)
 	if note.photo_time is None:
 		note.photo_time = note.create_time

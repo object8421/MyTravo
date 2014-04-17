@@ -16,9 +16,11 @@ FTP_SERVER = '172.16.12.125'
 FTP_PORT = 21
 FTP_USER = 'rew'
 
-IMAGE_PATH = '/image/' 
+IMAGE_PATH = '/tmp/travo/' 
 FACE_PATH = IMAGE_PATH + 'face/'
 COVER_PATH = IMAGE_PATH + 'cover/'
+IMAGE_SNAP_PATH = IMAGE_PATH + 'snap/'
+COVER_SNAP_PATH = IMAGE_SNAP_PATH + 'cover/'
 
 MEDIA_ROOT = 'ftp://rew@172.16.12.125/image'
 MEDIA_URL = '/media/'
@@ -39,6 +41,10 @@ ALLOWED_HOSTS = []
 
 TOKEN_VALID_DAY = 30
 
+COVER_SNAP_WIDTH = 256 
+COVER_SNAP_HEIGHT = 256 
+IMAGE_SNAP_WIDTH = 128
+IMAGE_SNAP_HEIGHT = 128
 # Application definition
 
 INSTALLED_APPS = (

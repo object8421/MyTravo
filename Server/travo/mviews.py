@@ -38,11 +38,9 @@ class BaseView(View):
 		print('host:' + self._request.META['REMOTE_ADDR'])
 		print('arg:' + str(self._request.GET))
 
-		print('body:' + self._request.body)
-		'''
+		#print('body:' + self._request.body)
 		print('post:' + str(self._request.POST))
 		print('FILES:' + str(self._request.FILES))
-		'''
 
 		try:
 			result = self.do()

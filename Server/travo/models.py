@@ -32,7 +32,7 @@ def strpdate(s):
 
 def lm_time(cls, user):
 	try:
-		return str(cls.objects.filter(user=user).latest('lm_time').lm_time)
+		return str(cls.objects.filter(user=user.id).latest('lm_time').lm_time)
 	except ObjectDoesNotExist:
 		return None
 
@@ -120,6 +120,7 @@ class Travel(models.Model):
 	user = models.ForeignKey('User')
 	title = models.CharField(max_length=45)
 	cover_path = models.CharField(max_length=24,null=True)
+	snap_path = models.CharField(max_length=24, null=True)
 	destination = models.CharField(max_length=45)
 	begin_date = models.DateField(null=True)
 	end_date = models.DateField(blank=True, null=True)
@@ -145,7 +146,7 @@ class Travel(models.Model):
 		return dict_to_model(cls, d)
 
 	@classmethod
-	def lm_time(cls, user):
+	def user_lm_time(cls, user):
 		return lm_time(cls, user)
 	
 	class Meta:
@@ -161,6 +162,7 @@ class Note(models.Model):
 	photo_time = models.DateTimeField(null=True)
 	content = models.CharField(max_length=2048, blank=True)
 	image_path = models.CharField(max_length=24, null=True)
+	snap_path = models.CharField(max_length=24, null=True)
 	is_deleted = models.IntegerField(default=False)
 	lm_time = models.DateTimeField()
 
@@ -175,7 +177,7 @@ class Note(models.Model):
 		return dict_to_model(cls, d)
 
 	@classmethod
-	def lm_time(cls, user):
+	def user_lm_time(cls, user):
 		return lm_time(cls, user)
 
 	class Meta:
@@ -454,7 +456,7 @@ class UserInfo(models.Model):
 		return dict_to_model(cls, d)
 
 	@classmethod
-	def lm_time(cls, user):
+	def user_lm_time(cls, user):
 		return lm_time(cls, user)
 
 	class Meta:
