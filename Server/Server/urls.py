@@ -12,5 +12,6 @@ urlpatterns = patterns('',
 	url(r'^mobile/', include('travo.murls')),
 	url(r'', include('travo.surls')),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^destination/',include('des_info_provider.urls'))
     
 )

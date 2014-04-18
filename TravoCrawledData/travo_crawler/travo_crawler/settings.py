@@ -21,7 +21,7 @@ DATABASE = {
 	'USER':'root',
 	'PASSWORD':'123456',
 	'DBNAME':'scene_data',
-	'CHARSET':'UTF-8',
+	'CHARSET':'utf8',
 }
 
 ITEM_PIPELINES = {

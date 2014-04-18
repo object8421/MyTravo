@@ -55,7 +55,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 	'travo',
-    'destination'
+    'des_info_provider',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (  
