@@ -1,10 +1,14 @@
 package com.cobra.mytravo.fragments;
 
+import com.android.volley.toolbox.ImageLoader;
 import com.cobra.mytravo.R;
 import com.cobra.mytravo.activities.MainActivity;
 import com.cobra.mytravo.activities.UserInfoActivity;
+import com.cobra.mytravo.data.AppData;
+import com.cobra.mytravo.data.RequestManager;
 
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,12 +24,15 @@ public class DrawerFragment extends BaseFragment{
 	private ImageView avatarImageView;
 	private ListView drawerListView;
 	private MainActivity mainActivity;
-	
+	private BitmapDrawable mDefaultAvatarBitmap ;
 	private String[] listItems;
+	private ImageLoader.ImageContainer imageRequest;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 		mainActivity = (MainActivity)getActivity();
 		View view = inflater.inflate(R.layout.fragment_drawer, null);
+		mDefaultAvatarBitmap = (BitmapDrawable) mainActivity
+                .getResources().getDrawable(R.drawable.default_avatar);
 		avatarImageView = (ImageView) view.findViewById(R.id.avatar_imgview);
 		avatarImageView.setOnClickListener(new OnClickListener() {
 			
@@ -36,6 +43,7 @@ public class DrawerFragment extends BaseFragment{
 				getActivity().startActivity(userInfoIntent);
 			}
 		});
+		
 		listItems = getResources().getStringArray(R.array.drawermenu);
 		drawerListView = (ListView) view.findViewById(R.id.drawer_listview);
 		drawerListView.setItemChecked(0, true);

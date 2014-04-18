@@ -81,6 +81,7 @@ public class LoginActivity extends Activity {
 				Toast.makeText(LoginActivity.this, "您已成功登陆", Toast.LENGTH_SHORT).show();
 				AppData.setIsLogin(true);
 				AppData.setIdToken(user.getToken());
+				AppData.setSignature(user.getSignature());
 				Intent intent1 = new Intent(LoginActivity.this, MainActivity.class);
 				startActivity(intent1);
 				LoginActivity.this.finish();

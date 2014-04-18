@@ -445,6 +445,7 @@ public class AddTravelActivity extends Activity implements OnMenuItemClickListen
 				travel.setTitle(edtTitle.getText().toString());
 				travel.setAverage_spend(expense);
 				travel.setDestination(destination);
+				travel.setIs_public(1);
 				if(startString != null)
 					travel.setBegin_date(startString);
 				if(endString != null)

@@ -207,6 +207,10 @@
             android:name="com.cobra.mytravo.activities.OtherUserInfoActivity"
             android:label="@string/title_activity_other_user_info" >
         </activity>
+        <activity
+            android:name="com.cobra.mytravo.activities.EditAvatarActivity"
+            android:label="@string/title_activity_edit_avatar" >
+        </activity>
     </application>
 
 </manifest>

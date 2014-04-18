@@ -31,7 +31,16 @@ public class Note extends BaseType implements Serializable{
 	private int is_sync;//判断客户端中游记的同步状态，1：需要上传到服务器， 0：客户端中为最新版本
 	private int TAG;//
 	private String image_path;
+	private String snap_path;
 	
+	public String getSnap_path() {
+		return snap_path;
+	}
+
+	public void setSnap_path(String snap_path) {
+		this.snap_path = snap_path;
+	}
+
 	public String getImage_path() {
 		return image_path;
 	}
