@@ -55,6 +55,7 @@ public class PersonalTravelDetailActivity extends Activity implements LoaderMana
 	private TextView descriptionTextView;
 	private TextView noteCountTextView;
 	private ListView mListView;
+	private AlertDialog.Builder comfirmDialog;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -164,9 +165,37 @@ public class PersonalTravelDetailActivity extends Activity implements LoaderMana
 			this.onBackPressed();
 			break;
 		case R.id.action_add:
-			Intent addNoteIntent = new Intent();
-			addNoteIntent.setClass(this, AddNoteActivity.class);
-			startActivity(addNoteIntent);
+			String timeString = AppData.getTravelTime();
+			if((timeString != null && !timeString.equals(travel.getCreate_time())) || timeString == null){
+				comfirmDialog = new AlertDialog.Builder(this);
+				comfirmDialog.setTitle("是否重新开启此游记");
+				comfirmDialog.setMessage("当前游记和最近游记不是同一个游记，是否需要转换成当前游记");
+				comfirmDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						// TODO Auto-generated method stub
+						AppData.setTravel_time(travel.getCreate_time());
+						Intent addNoteIntent = new Intent();
+						addNoteIntent.setClass(PersonalTravelDetailActivity.this, AddNoteActivity.class);
+						startActivity(addNoteIntent);
+					}
+				});
+				comfirmDialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						// TODO Auto-generated method stub
+						return;
+					}
+				});
+				comfirmDialog.show();
+			}
+			else if(timeString != null && timeString.equals(travel.getCreate_time())){
+				Intent addNoteIntent = new Intent();
+				addNoteIntent.setClass(PersonalTravelDetailActivity.this, AddNoteActivity.class);
+				startActivity(addNoteIntent);
+			}
 			break;
 		case R.id.action_edit:
 			Intent intent = new Intent();

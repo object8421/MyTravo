@@ -10,9 +10,9 @@ class TravoCrawlerPipeline(object):
 
 	def open_spider(self, spider):
 		#self.conn = MySQLdb.connect(host=settings.DATABASE['HOST'], user = settings.DATABASE['USER'], \
-		#passwd = settings.DATABASE['PASSWORD'], db = settings.DATABASE.['DBNAME'], charset = settings.DATABASE['CHARSET'])
+		#passwd = settings.DATABASE['PASSWORD'], db = settings.DATABASE['DBNAME'], charset = settings.DATABASE['CHARSET'])
 		self.conn = MySQLdb.connect(host='127.0.0.1', user = 'root', \
-			passwd = '123456', db = 'scene_data', charset = 'utf8')
+		 	passwd = '123456', db = 'scene_data', charset = 'utf8')
 		self.cursor = self.conn.cursor()
 		sql_script = str(open('../crawler_data_table.sql').read())
 		sql_list = sql_script.split(';')
@@ -87,7 +87,18 @@ class TravoCrawlerPipeline(object):
 		return item
 
 	def process_scenery_spot_data(self, item, spider):
-		pass
+		print '开始将%s(景点)数据插入数据库。'%item['name']
+		self.cursor.execute("""insert into des_scenery_spot
+			(id,spot_name,related_province,related_city,crawled_url,image_url,brief_information,
+				ticket,proper_travel_time,transportation_info,last_update_time)
+			values(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",\
+			(0,item['name'],item['related_province'],item['related_city'],item['crawled_url'],item['image_url'],\
+				item['brief_description'],item['ticket_info'],item['proper_travel_time'],item['transportation_info'],item['last_update_time']))
+		self.conn.commit()
+		print '%s (城市)相关数据插入成功！'%(item['name'])
+		self.data_count += 1
+		print '共抓取了第 %d 条数据。'%self.data_count
+		return item
 
 	def is_exist(self,table_name,row_name,row_value):
 		#有待改进，table name 未加入

@@ -12,7 +12,7 @@
     <RelativeLayout
         android:id="@+id/relativeLayout1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:padding="4dp" >
 
         <RelativeLayout
@@ -44,16 +44,8 @@
                     android:layout_centerVertical="true"
                     android:layout_gravity="left|center_vertical"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginTop="20dp"
                     android:text="TextView" />
-
-                <ImageView
-                    
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="right|center_vertical"
-                    android:src="@drawable/userinfo_navigationbar_arrow" />
 
             </RelativeLayout>
 
@@ -69,19 +61,10 @@
                     android:id="@+id/tv_gender"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                   
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:text="TextView" 
-                    android:layout_marginLeft="10dp"/>
-                <ImageView
-                    
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="right|center_vertical"
-                    android:src="@drawable/userinfo_navigationbar_arrow" />
+                    android:layout_marginLeft="10dp"
+                    android:text="男" />
 
             </RelativeLayout>
         </RelativeLayout>
@@ -92,11 +75,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/layout1"
             android:layout_marginTop="10dp"
-            
             android:background="@drawable/user_info_selector"
             android:clickable="true"
             android:orientation="vertical"
-            android:padding="4dp" >
+            android:padding="10dp" >
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -110,21 +92,14 @@
                     android:layout_centerVertical="true"
                     android:text="@string/signature" />
 
-                <ImageView
-                    android:id="@+id/imageView1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/userinfo_navigationbar_arrow" />
-
             </RelativeLayout>
 
             <TextView
                 android:id="@+id/tv_signature"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="TextView" />
+                android:textSize="12sp" />
+
         </LinearLayout>
 
         <RelativeLayout
@@ -133,10 +108,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/layout2"
             android:layout_marginTop="10dp"
-           
             android:background="@drawable/user_info_selector"
             android:clickable="true"
-            android:padding="4dp" >
+            android:padding="10dp" >
 
             <TextView
                 android:id="@+id/tv_travel_count"
@@ -144,15 +118,6 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="@string/edit_email" />
-
-            <ImageView
-                    
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="right|center_vertical"
-                    android:src="@drawable/userinfo_navigationbar_arrow" />
 
         </RelativeLayout>
         
@@ -162,10 +127,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/layout3"
             android:layout_marginTop="10dp"
-           
             android:background="@drawable/user_info_selector"
             android:clickable="true"
-            android:padding="4dp" >
+            android:padding="10dp" >
 
             <TextView
                 
@@ -174,41 +138,23 @@
                 android:layout_centerVertical="true"
                 android:text="@string/edit_password" />
 
-            <ImageView
-                    
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="right|center_vertical"
-                    android:src="@drawable/userinfo_navigationbar_arrow" />
-
         </RelativeLayout>
         
-        <RelativeLayout 
+        <RelativeLayout
             android:id="@+id/layout5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/layout4"
             android:layout_marginTop="10dp"
-           
             android:background="@drawable/user_info_selector"
             android:clickable="true"
-            android:padding="4dp" >
+            android:padding="10dp" >
             
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:text="绑定qq账号" />
-            
-            <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="right|center_vertical"
-                    android:src="@drawable/userinfo_navigationbar_arrow" />
             
         </RelativeLayout>
 

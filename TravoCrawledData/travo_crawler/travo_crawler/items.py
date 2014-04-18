@@ -50,4 +50,7 @@ class CityDataCrawlerItem(TravoCrawlerItem):
 
 
 class ScenerySpotDataCrawlerItem(TravoCrawlerItem):
-    item_type = 'scenery_spot'
+    item_type = Field()
+    related_province = Field()
+    related_city = Field()
+    ticket_info = Field()

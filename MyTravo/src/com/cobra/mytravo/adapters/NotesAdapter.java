@@ -99,7 +99,7 @@ public class NotesAdapter extends BaseAdapter{
         else{
         	holder.image.setVisibility(View.GONE);
         }
-        holder.content.setText(note.getDescription());
+        holder.content.setText(note.getContent());
         holder.time.setText(TimeUtils.getListTime(note.getCreate_time()));
         if(note.getLocation() != null){
         	holder.location.setVisibility(View.VISIBLE);

@@ -38,7 +38,7 @@ public class GetMyTravelsPicture extends IntentService
 		mDataHelper = new TravelsDataHelper(this, AppData.getUserId());
 		travel = mDataHelper.queryById(id);
 
-		String imageUrl = "http://travo-travel-cover.oss-cn-hangzhou.aliyuns.com/" + cover_path;
+		String imageUrl = "http://travo-travel-cover.oss-cn-hangzhou.aliyuncs.com/" + cover_path;
 		Log.i("travelimageurl", imageUrl);
 
 		URL url;

@@ -71,8 +71,8 @@ public class NoteDetailActivity extends Activity {
 			MyImageUtil.setBitmapResize(this, imageView, note.getImage_url());
 			//bitmapManager.fetchBitmapOnThread(note.getImage_url(), imageView);
 		}
-		if(note.getDescription() != null){
-			descriptionTextView.setText(note.getDescription());
+		if(note.getContent() != null){
+			descriptionTextView.setText(note.getContent());
 		}
 		if(note.getLocation() != null){
 			locationTextView.setText(note.getLocation().getAddress());
@@ -133,8 +133,8 @@ public class NoteDetailActivity extends Activity {
 					if(editNote.getImage_url() != null){
 						MyImageUtil.setBitmap(imageView, editNote.getImage_url());
 					}
-					if(editNote.getDescription() != null)
-						descriptionTextView.setText(editNote.getDescription());
+					if(editNote.getContent() != null)
+						descriptionTextView.setText(editNote.getContent());
 					
 				}
 			}

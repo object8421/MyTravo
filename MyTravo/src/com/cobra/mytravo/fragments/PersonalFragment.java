@@ -59,48 +59,10 @@ public class PersonalFragment extends BaseFragment implements LoaderCallbacks<Cu
 				startActivity(intent);
 			}
 		});
-		mListView.setOnScrollListener(new OnScrollListener() {
-			int previous = 0;
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {
-			}
-			
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem,
-					int visibleItemCount, int totalItemCount) {
-				int currentY = getScroll();
-				int direction = currentY - previous;
-				if(direction > DISTANCE_SENSOR){
-					Log.v(TAG, "runOutAnimation");
-					//ComposeBtnUtil.runInAnimation(composeButton)
-					ComposeBtnUtil.runOutAnimation(((MainActivity)getActivity()).getComposeButton());
-				}
-				else if(direction < (-DISTANCE_SENSOR)){
-					Log.v(TAG, "runInAnimation");
-					ComposeBtnUtil.runInAnimation(((MainActivity)getActivity()).getComposeButton());
-				}
-				previous = currentY;
-			}
-		});
+		
 		return view;
 	}
-	private int getScroll() {
-	    View c = mListView.getChildAt(0); //this is the first visible row
-	    try{
-		    int scrollY = -c.getTop();
-		    listViewItemHeights.put(mListView.getFirstVisiblePosition(), c.getHeight());
-		    for (int i = 0; i < mListView.getFirstVisiblePosition(); ++i) {
-		        if (listViewItemHeights.get(i) != null) // (this is a sanity check)
-		            scrollY += listViewItemHeights.get(i); //add all heights of the views that are gone
-		      
-		    }
-		    return scrollY;
-	    }
-	    catch(NullPointerException e){
-	    	return 0;
-	    }
-	    
-	}
+	
 	@Override
 	public void onPause() {
 		// TODO Auto-generated method stub

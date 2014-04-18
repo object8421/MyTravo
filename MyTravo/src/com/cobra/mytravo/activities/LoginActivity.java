@@ -83,6 +83,7 @@ public class LoginActivity extends Activity {
 				AppData.setIdToken(user.getToken());
 				Intent intent1 = new Intent(LoginActivity.this, MainActivity.class);
 				startActivity(intent1);
+				LoginActivity.this.finish();
 				break; 
 			case MyHandlerMessage.LOGIN_FAIL_EMAIL:
 				Toast.makeText(LoginActivity.this, "邮箱不存在", Toast.LENGTH_SHORT).show();

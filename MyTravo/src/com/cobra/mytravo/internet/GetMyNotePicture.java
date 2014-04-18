@@ -35,7 +35,7 @@ public class GetMyNotePicture extends IntentService
 		notesDataHelper = new NotesDataHelper(this, AppData.getUserId());
 		note = notesDataHelper.getNoteById(id);
 
-		String imageUrl = "http://travo-note-pic.oss-cn-hangzhou.aliyuns.com/" + image_path;
+		String imageUrl = "http://travo-note-pic.oss-cn-hangzhou.aliyuncs.com/" + image_path;
 
 		URL url;
 		File file = null;
