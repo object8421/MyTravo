@@ -135,14 +135,20 @@ public class HotTravelAdapter extends BaseAdapter {
             holder.avartarRequest.cancelRequest();
         }
         Travel travel = this.travels.get(position);
-		holder.imageRequest = RequestManager.loadImage("http://travo-travel-cover.oss-cn-hangzhou.aliyuncs.com/"+travel.getCover_path(), RequestManager
+        if(travel.getCover_path() != null && travel.getSnap_path() != null && travel.getCover_path().equals(travel.getSnap_path()))
+        	holder.imageRequest = RequestManager.loadImage("http://travo-travel-cover.oss-cn-hangzhou.aliyuncs.com/"+travel.getCover_path(), RequestManager
+                    .getImageListener(holder.image, mDefaultImageDrawable, mDefaultImageDrawable));
+        else
+        	holder.imageRequest = RequestManager.loadImage("http://travo-travel-cover-snap.oss-cn-hangzhou.aliyuncs.com/"+travel.getSnap_path(), RequestManager
                 .getImageListener(holder.image, mDefaultImageDrawable, mDefaultImageDrawable));
-        holder.avartarRequest = RequestManager.loadImage("http://travo-user-avatar.oss-cn-hangzhou.aliyuncs.com/"+travel.getUser().getFace_path(),
+        if(travel.getUser() != null && travel.getUser().getFace_path() != null)
+        	holder.avartarRequest = RequestManager.loadImage("http://travo-user-avatar.oss-cn-hangzhou.aliyuncs.com/"+travel.getUser().getFace_path(),
                 RequestManager.getImageListener(holder.avatar, mDefaultAvatarBitmap,
                         mDefaultAvatarBitmap));
         holder.title.setText(travel.getTitle());
         holder.content.setText(travel.getDescription());
-        holder.userName.setText(travel.getUser().getNickname());
+        if(travel.getUser() != null && travel.getUser().getNickname() != null)
+        	holder.userName.setText(travel.getUser().getNickname());
         holder.text_view_count.setText(String.valueOf(travel.getView_qty()));
         holder.text_like_count.setText(String.valueOf(travel.getFavorite_qty()));
         holder.text_comment_count.setText(String.valueOf(travel.getComment_qty()));

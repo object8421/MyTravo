@@ -30,7 +30,7 @@
                         <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 192px; height: 150px; padding:0;"></div>
                       <div>
                         <span class="btn btn-default btn-file btn-success btn-sm"><span class="fileinput-new">选择照片上传</span>
-                        <span class="fileinput-exists">重新选择照片</span><input type="file" name="note_photo"></span>
+                        <span class="fileinput-exists">重新选择照片</span><input type="file" name="note_photo" required></span>
 
                         <a href="#" class="btn btn-default btn-danger fileinput-exists btn-sm" data-dismiss="fileinput">移除当前照片</a>
                       </div>
@@ -45,7 +45,7 @@
                             <label  class="col-sm-2 control-label" style="color: #104e8b;">地点</label>
                             <div class="col-sm-6">
 
-                              <input class="form-control" name="note_location" id="geocomplete" type="text" placeholder="输入足迹地址" />
+                              <input class="form-control" name="note_location" id="geocomplete" type="text" placeholder="输入足迹地址" required/>
                               <input name="latitude" type="hidden"  data-geo="lat"/>
                               <input name="longitude" type="hidden"  data-geo="lng"/>
 
@@ -62,7 +62,7 @@
 
                  <label for="inputTravelName" class="col-sm-2 control-label" style="color: #104e8b;">游记描述</label>
                  <div class="col-sm-9">
-                    <textarea class="form-control" rows="3" name="note_description" placeholder="请在这里添加游记描述"></textarea>
+                    <textarea class="form-control" rows="3" name="note_description" placeholder="请在这里添加游记描述" required></textarea>
                 </div>
               </div>
 

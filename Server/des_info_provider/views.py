@@ -42,3 +42,4 @@ class HomeView(View):
 class GetRelatedDesView(View):
     def get(self,request):
         pass
+

@@ -101,5 +101,6 @@
     <string name="title_activity_edit_email">EditEmailActivity</string>
     <string name="title_activity_travel_detail">TravelDetailActivity</string>
     <string name="title_activity_other_user_info">OtherUserInfoActivity</string>
+    <string name="title_activity_edit_avatar">EditAvatarActivity</string>
 
 </resources>

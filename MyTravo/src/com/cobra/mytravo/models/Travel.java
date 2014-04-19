@@ -41,7 +41,16 @@ public class Travel extends BaseType implements Serializable{
 	
 	
 	private String cover_path;
+	private String snap_path;
 	
+	public String getSnap_path() {
+		return snap_path;
+	}
+
+	public void setSnap_path(String snap_path) {
+		this.snap_path = snap_path;
+	}
+
 	public String getCover_path() {
 		return cover_path;
 	}

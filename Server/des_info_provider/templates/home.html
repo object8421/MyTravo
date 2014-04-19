@@ -1,3 +1,7 @@
+{% extends "base_index.html" %}
+{% block title %}攻略信息{% endblock %}
+{% block content %}
 {%for des in des_list %}
-{{des_list.country_name}}
+	{{des.country_name}}
 {% endfor %}
+{% endblock %}
