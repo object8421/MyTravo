@@ -229,7 +229,6 @@ def change_password(token, original_password, new_password):
 
 ######    follow      ######
 def follow(token, passive_id, action):
-
 	activer = get_user(token)
 	if activer.id == int(passive_id):
 		return {RSP_CODE : RC_FUCK_SELF}
@@ -281,6 +280,13 @@ def get_user_info(token, friend_id):
 			result = {RSP_CODE : RC_SUCESS}
 			result['user_info'] = UserInfo.objects.get(pk=u.id)
 			return result
+
+######    get user    ######
+def get_user(token):
+	user = get_user(token)
+	result = {RSP_CODE : RC_SUCESS}
+	result['user'] = user
+	return result
 
 ######    update email    ######
 def update_email(token, email, password):

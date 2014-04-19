@@ -35,6 +35,8 @@ class BaseView(View):
 	def handle(self):
 		print
 		print('************request************')
+		from datetime import datetime
+		print datetime.now()
 		print('host:' + self._request.META['REMOTE_ADDR'])
 		print('arg:' + str(self._request.GET))
 
@@ -63,6 +65,10 @@ class BaseView(View):
 					'token_overdate': RC_TOKEN_OVERDATE
 					}[e.args[0]]
 			return {RSP_CODE : rsp_code}
+		except KeyError:
+			print('======caught exception======')
+			print(traceback.format_exc())
+			return {RSP_CODE : RC_WRONG_ARG}
 		except Exception, e:
 			print('======caught exception======')
 			print(traceback.format_exc())

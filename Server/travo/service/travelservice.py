@@ -90,7 +90,7 @@ def _save_cover(travel, cover):
 	travel.cover_path = _build_cover_path(cover) 
 	travel.snap_path = _build_snap_path(cover)
 	if not utils.save_cover_snap(travel.snap_path, cover):
-		travel.snap_path = travel.image_path
+		travel.snap_path = travel.cover_path
 
 	utils.save_cover(travel.cover_path, cover)
 
@@ -163,18 +163,20 @@ READ_SCORE = 1
 
 def search(token, order=SO_DEFAULT, first_idx=1, max_qty=20):
 	first_idx = int(first_idx)
+	user = None
+	if token is not None:
+		user = userservice.get_user(token)
 	return {
 			SO_DEFAULT	: _search_default,
 			SO_READ_TIMES: _search_read_times,
 			SO_VOTE_QTY	: _search_vote_qty,
 			SO_NEWEST	: _search_newest,
-			}[order](first_idx - 1, max_qty, token)
+			}[order](first_idx - 1, max_qty, user)
 
-def _search_default(first_idx, max_qty, token):
-	if token is None:
-		return _search_newest(first_idx, max_qty)
+def _search_default(first_idx, max_qty, user):
+	if user is None:
+		return _search_newest(first_idx, max_qty, None)
 	#search travels which related with user
-	user = userservice.get_user(token)
 	relate_T = relate_travel(user)	
 
 	exclude_id = _exclude_id(relate_T)
@@ -204,14 +206,23 @@ def _exclude_id(relate_T):
 		l.append(t.id)
 	return l
 
-def _search_newest(first_idx, max_qty):
-	return list(Travel.objects.order_by('create_time').reverse()[first_idx: max_qty])
+def _search_newest(first_idx, max_qty, user):
+	if user is None:
+		return list(Travel.objects.order_by('create_time').reverse()[first_idx: max_qty])
+	else:
+		return list(Travel.objects.order_by('create_time').exclude(user=user).reverse()[first_idx: max_qty])
 
-def _search_read_times(first_idx, max_qty):
-	return list(Travel.objects.order_by('read_times').reverse()[first_idx: max_qty])
+def _search_read_times(first_idx, max_qty, user):
+	if user is None:
+		return list(Travel.objects.order_by('read_times').reverse()[first_idx: max_qty])
+	else:
+		return list(Travel.objects.order_by('read_times').exclude(user=user).reverse()[first_idx: max_qty])
 
-def _search_vote_qty(first_idx, max_qty):
-	return list(Travel.objects.order_by('vote_qty').reverse()[first_idx: max_qty])
+def _search_vote_qty(first_idx, max_qty, user):
+	if user is None:
+		return list(Travel.objects.order_by('vote_qty').reverse()[first_idx: max_qty])
+	else:
+		return list(Travel.objects.order_by('vote_qty').exclude(user=user).reverse()[first_idx: max_qty])
 
 
 def clear(tls):

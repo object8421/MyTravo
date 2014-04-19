@@ -36,8 +36,7 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
-		#'*',]
+ALLOWED_HOSTS = [] #['*',]
 
 TOKEN_VALID_DAY = 30
 
