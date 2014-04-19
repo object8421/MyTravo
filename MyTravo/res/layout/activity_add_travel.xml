@@ -1,7 +1,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@drawable/wall20140419094330" >
 
     <RelativeLayout
         android:id="@+id/layout_travel_add"
@@ -17,6 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginTop="20dp"
+            android:alpha="0.8"
             android:background="@drawable/bg_listitem_shot"
             android:ems="10"
             android:focusable="true"
@@ -40,6 +42,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:layout_weight="1"
+                android:alpha="0.8"
                 android:background="@drawable/bg_listitem_shot"
                 android:padding="8dp"
                 android:text="开始日期" />
@@ -51,6 +54,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/btn_travel_start"
                 android:layout_weight="1"
+                android:alpha="0.8"
                 android:background="@drawable/bg_listitem_shot"
                 android:padding="8dp"
                 android:text="结束日期" />
@@ -67,14 +71,6 @@
                 android:src="@drawable/my_avatar"
                 android:visibility="invisible" />
 
-            <ImageView
-                android:id="@+id/img_add_cover_travel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@+id/img_cover_travel"
-                android:src="@drawable/send_camera" />
-
             <Button
                 android:id="@+id/btn_delete_cover_travel"
                 android:layout_width="30dp"
@@ -83,6 +79,14 @@
                 android:layout_alignParentTop="true"
                 android:background="@drawable/btn_delete_selector"
                 android:visibility="invisible" />
+
+            <ImageView
+                android:id="@+id/img_add_cover_travel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/send_camera" />
 
         </RelativeLayout>
 
@@ -98,7 +102,8 @@
                 android:id="@+id/label_travel_expense"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="平均消费" />
+                android:text="平均消费"
+                android:textColor="@color/BewitchedTree" />
 
             <TextView
                 android:id="@+id/label_travel_description"
@@ -107,13 +112,15 @@
                 android:layout_alignLeft="@id/label_travel_expense"
                 android:layout_below="@+id/travel_expense"
                 android:layout_marginTop="4dp"
-                android:text="游记描述" />
+                android:text="游记描述"
+                android:textColor="@color/dark_blue" />
 
             <EditText
                 android:id="@+id/travel_expense"
-                android:layout_width="match_parent"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/label_travel_expense"
+                android:alpha="0.8"
                 android:background="@drawable/bg_listitem_shot"
                 android:ems="10"
                 android:inputType="number"
@@ -125,6 +132,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@id/label_travel_description"
+                android:alpha="0.8"
                 android:background="@drawable/bg_listitem_shot"
                 android:ems="10"
                 android:gravity="top|left"
@@ -138,15 +146,18 @@
                 android:id="@+id/label_travel_destination"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/travel_description"
-                android:layout_marginTop="4dp"
-                android:text="目的地" />
+                android:layout_above="@+id/travel_expense"
+                android:layout_centerHorizontal="true"
+                android:text="目的地"
+                android:textColor="@color/pressed_cobra_blue" />
 
             <EditText
                 android:id="@+id/travel_destination"
-                android:layout_width="match_parent"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/label_travel_destination"
+                android:layout_alignLeft="@+id/label_travel_destination"
+                android:layout_below="@+id/label_travel_destination"
+                android:alpha="0.8"
                 android:background="@drawable/bg_listitem_shot"
                 android:ems="10"
                 android:padding="8dp"

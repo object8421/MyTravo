@@ -171,8 +171,10 @@ public class MainActivity extends FragmentActivity {
         		break;
         	case R.id.logout:
         		AppData.clearData();
+        		AppData.setIsLogin(false);
         		Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
         		startActivity(loginIntent);
+        		MainActivity.this.finish();
         	case R.id.uploadnote:
         		/*Intent uploadnewnote = new Intent(
 						MainActivity.this,

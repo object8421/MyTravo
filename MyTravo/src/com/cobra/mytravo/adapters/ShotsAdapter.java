@@ -121,7 +121,7 @@ public class ShotsAdapter extends CursorAdapter {
             avatar = (ImageView) view.findViewById(R.id.userinfo_avatar);
             title = (TextView) view.findViewById(R.id.content);
             userName = (TextView) view.findViewById(R.id.userName);
-            text_view_count = (TextView) view.findViewById(R.id.text_view_count);
+            //text_view_count = (TextView) view.findViewById(R.id.text_view_count);
             text_comment_count = (TextView) view.findViewById(R.id.text_comment_count);
             text_like_count = (TextView) view.findViewById(R.id.text_like_count);
             time = (TextView) view.findViewById(R.id.time);

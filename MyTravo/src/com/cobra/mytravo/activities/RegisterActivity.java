@@ -26,6 +26,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -37,7 +38,7 @@ public class RegisterActivity extends Activity
 	private EditText email;
 	private EditText password;
 	private EditText repassword;
-	
+	private Button registerButton;
 	private RequestQueue mRequestQueue;
 	private RegisterThread registerThread;
 	public User user;
@@ -82,12 +83,12 @@ public class RegisterActivity extends Activity
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_register);
 		
-		ActionBarUtils.InitialDarkActionBar(this, getActionBar());
+		//ActionBarUtils.InitialDarkActionBar(this, getActionBar());
 		nickname = (EditText)findViewById(R.id.register_nickname);
 		email = (EditText)findViewById(R.id.register_email);
 		password = (EditText)findViewById(R.id.register_password);
 		repassword = (EditText)findViewById(R.id.register_pwdconfirm);
-		
+		registerButton = (Button) findViewById(R.id.btn_register);
 		Intent intent = this.getIntent();
 		
 		user_type = intent.getStringExtra("user_type");
@@ -99,7 +100,20 @@ public class RegisterActivity extends Activity
 			password.setVisibility(View.INVISIBLE);
 			repassword.setVisibility(View.INVISIBLE);
 		}
-		
+		registerButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if(check())
+	    		{
+	    			register();
+	        		Intent intent = new Intent();
+	        		intent.setClass(RegisterActivity.this, LoginActivity.class);
+	        		startActivity(intent);
+	    		}
+			}
+		});
 	}
 	
 	private boolean check()
@@ -151,8 +165,8 @@ public class RegisterActivity extends Activity
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.register, menu);
-		return true;
+		//getMenuInflater().inflate(R.menu.register, menu);
+		return false;
 	}
 	
 	@Override

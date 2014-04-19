@@ -57,7 +57,10 @@ public class DrawerFragment extends BaseFragment{
 				drawerListView.setItemChecked(position, true);
 				mainActivity.setSelectedItem(position);
 			}
-		});		
+		});
+		
+//		RequestManager.loadImage("http://travo-travel-cover.oss-cn-hangzhou.aliyuncs.com/"+travel.getCover_path(), RequestManager
+//                .getImageListener(cover, mDefaultImageDrawable, mDefaultImageDrawable));
 		return view;
 	}
 	

@@ -47,13 +47,13 @@ public class MyImageUtil {
                 
                 Bitmap bitmap = (Bitmap) message.obj;
                 if(bitmap != null){
-                	//int maxHeight = GUIUtils.dp2px(context, 400);
+                	int maxHeight = GUIUtils.dp2px(context, 550);
                 	//Log.v("maxHeight", maxHeight+"");
                 	int height = (int) ((float) imageView.getWidth()/bitmap.getWidth()* bitmap.getHeight());
                 	Log.v("height", "imageView's width is:"+imageView.getWidth()+""  
                         	+ "bitmap's width is:" + bitmap.getWidth() + "bitmap's height is:" 
                         			+ bitmap.getHeight());
-                	//if (height > maxHeight) height = maxHeight;
+                	if (height > maxHeight) height = maxHeight;
                 	imageView.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height));
                     imageView.setImageBitmap(bitmap);
                 }

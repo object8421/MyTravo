@@ -86,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/send_location_button_light" />
+                android:src="@drawable/btn_location_selected" />
         </RelativeLayout>
 
     </RelativeLayout>

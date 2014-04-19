@@ -78,9 +78,13 @@ public class TravelFragment extends V4BaseFragment implements PullToRefreshAttac
 	    AnimationAdapter animationAdapter = new CardsAnimationAdapter(mAdapter);
         animationAdapter.setAbsListView(mListView);
         mListView.setAdapter(animationAdapter);
-		RequestManager.loadImage("http://travo-travel-cover.oss-cn-hangzhou.aliyuncs.com/"+travel.getCover_path(), RequestManager
+        if(travel.getCover_path() != null && travel.getSnap_path() != null && travel.getCover_path().equals(travel.getSnap_path()))
+        	RequestManager.loadImage("http://travo-travel-cover.oss-cn-hangzhou.aliyuncs.com/"+travel.getCover_path(), RequestManager
                 .getImageListener(cover, mDefaultImageDrawable, mDefaultImageDrawable));
-		loadData();
+        else
+        	RequestManager.loadImage("http://travo-travel-cover-snap.oss-cn-hangzhou.aliyuncs.com/"+travel.getSnap_path(), RequestManager
+                    .getImageListener(cover, mDefaultImageDrawable, mDefaultImageDrawable));
+        loadData();
 		return view;
 	}
 	private void loadData(){

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:background="@drawable/wall20140419094330" >
 
     <ImageView
         android:id="@+id/login_logo"
@@ -11,6 +12,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="45dp"
         android:layout_marginTop="25dp"
+        android:alpha="0.8"
         android:src="@drawable/travo_logo" />
 
     <EditText
@@ -19,6 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/login_logo"
         android:layout_centerHorizontal="true"
+        android:alpha="0.7"
         android:background="@drawable/bg_listitem_shot"
         android:ems="10"
         android:hint="@string/email"
@@ -33,6 +36,7 @@
         android:layout_alignLeft="@+id/login_email"
         android:layout_below="@+id/login_email"
         android:layout_marginTop="20dp"
+        android:alpha="0.7"
         android:background="@drawable/bg_listitem_shot"
         android:ems="10"
         android:hint="@string/password"
@@ -51,24 +55,52 @@
         android:layout_alignTop="@+id/login_logo"
         android:layout_marginRight="20dp"
         android:text="@string/register"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@android:color/white" />
 
-    <Button
-        android:id="@+id/login_by_qq"
+    <RelativeLayout
+        android:id="@+id/RelativeLayout1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/login_password"
+        android:layout_alignRight="@+id/login_password"
         android:layout_below="@+id/login_password"
-        android:layout_marginTop="70dp"
-        android:text="QQ登录" />
+        android:layout_marginTop="100dp" >
+
+        <ImageView
+            android:id="@+id/login_by_qq"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:background="@drawable/logo_qq" />
+
+        <ImageView
+            android:id="@+id/login_by_sina"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/login_by_qq"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="right"
+            android:background="@drawable/logo_sina" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/logo_renren" />
+
+    </RelativeLayout>
 
     <Button
-        android:id="@+id/login_by_sina"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/login_by_qq"
-        android:layout_alignBottom="@+id/login_by_qq"
-        android:layout_toRightOf="@+id/login_by_qq"
-        android:text="微博登录" />
+        android:id="@+id/btn_login"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:layout_below="@id/RelativeLayout1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/listitem_shot_selector"
+        android:text="登录" />
 
 </RelativeLayout>

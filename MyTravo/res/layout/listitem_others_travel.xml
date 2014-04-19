@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_listitem_shot"
-     >
+    android:padding="2dip" >
 
     <ImageView
         android:id="@+id/image"
@@ -13,15 +13,7 @@
         android:layout_marginBottom="4dip"
         android:scaleType="centerCrop"/>
 
-    <ImageView
-        android:id="@+id/userinfo_avatar"
-        android:layout_width="26dip"
-        android:layout_height="26dip"
-        android:layout_below="@+id/image"
-        android:layout_marginLeft="4dip"
-        android:layout_marginRight="4dip"
-        android:layout_marginTop="4dip"
-        android:scaleType="fitXY" />
+    
 
     <LinearLayout
         android:id="@+id/layout_count"
@@ -29,7 +21,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/image"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="4dip"
         android:orientation="horizontal"
         >
 
@@ -68,8 +59,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/image"
+        android:layout_alignLeft="@id/image"
         android:layout_toLeftOf="@id/layout_count"
-        android:layout_toRightOf="@id/userinfo_avatar"
+       
         android:ellipsize="end"
         android:lines="1"
         android:textColor="#7E7E7E"
@@ -80,7 +72,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="12sp"
-        android:layout_toRightOf="@id/userinfo_avatar"
+        
         android:textColor="#3F83AA"
         android:layout_below="@id/content"
         />
@@ -94,7 +86,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/layout_count"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="4dip"
         />
 
     <TextView

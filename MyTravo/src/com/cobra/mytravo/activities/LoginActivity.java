@@ -45,6 +45,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,9 +59,9 @@ public class LoginActivity extends Activity {
 	private TextView registerTextView;
 	private EditText email;
 	private EditText password;
-	private Button loginbyqq;
-	private Button loginbysina;
-	
+	private ImageView loginbyqq;
+	private ImageView loginbysina;
+	private Button loginButton;
 	private String user_type = "travo";
 	private User user;
 	
@@ -124,7 +125,7 @@ public class LoginActivity extends Activity {
 		});
 		email = (EditText)findViewById(R.id.login_email);
 		password = (EditText)findViewById(R.id.login_password);
-		loginbyqq = (Button)findViewById(R.id.login_by_qq);
+		loginbyqq = (ImageView)findViewById(R.id.login_by_qq);
 		loginbyqq.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -134,7 +135,7 @@ public class LoginActivity extends Activity {
 				mTencent.login(LoginActivity.this,"get_user_info" , new BaseUiListener());
 			}
 		});
-		loginbysina = (Button)findViewById(R.id.login_by_sina);
+		loginbysina = (ImageView)findViewById(R.id.login_by_sina);
 		loginbysina.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -145,6 +146,19 @@ public class LoginActivity extends Activity {
 //				mWeiboAuth.anthorize(new MyWeiboAuthListener());
 				mSsoHandler = new SsoHandler(LoginActivity.this, mWeiboAuth);
 				mSsoHandler.authorize(new MyWeiboAuthListener());
+			}
+		});
+		loginButton = (Button) findViewById(R.id.btn_login);
+		loginButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if(check())
+				{
+					login();
+					
+				}
 			}
 		});
 	}
@@ -190,8 +204,8 @@ public class LoginActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.login, menu);
-		return true;
+		//getMenuInflater().inflate(R.menu.login, menu);
+		return false;
 	}
 	
 	@Override

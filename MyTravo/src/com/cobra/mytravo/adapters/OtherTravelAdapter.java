@@ -4,12 +4,11 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.support.v4.widget.CursorAdapter;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +23,7 @@ import com.cobra.mytravo.data.RequestManager;
 import com.cobra.mytravo.helpers.TimeUtils;
 import com.cobra.mytravo.models.Travel;
 
-public class HotTravelAdapter extends BaseAdapter {
+public class OtherTravelAdapter extends BaseAdapter {
 	private Context context;
     private LayoutInflater mLayoutInflater;
 
@@ -35,7 +34,7 @@ public class HotTravelAdapter extends BaseAdapter {
     private Drawable mDefaultImageDrawable = new ColorDrawable(Color.argb(255, 201, 201, 201));
     
     
-    public HotTravelAdapter (Context context, ListView listView, ArrayList<Travel> travels){
+    public OtherTravelAdapter (Context context, ListView listView, ArrayList<Travel> travels){
     	this.context = context;
     	mLayoutInflater = ((Activity) context).getLayoutInflater();
     	mListView = listView;
@@ -57,15 +56,14 @@ public class HotTravelAdapter extends BaseAdapter {
     private class Holder {
         public ImageView image;
 
-        public ImageView avatar;
-
+        
         public TextView title;
         
         public TextView content;
 
         public TextView userName;
 
-        public TextView text_view_count;
+       
 
         public TextView text_comment_count;
 
@@ -111,14 +109,14 @@ public class HotTravelAdapter extends BaseAdapter {
 		// TODO Auto-generated method stub
 		Holder holder = null;
 		if(convertView == null){
-			convertView = mLayoutInflater.inflate(R.layout.listitem_shot, null);
+			convertView = mLayoutInflater.inflate(R.layout.listitem_others_travel, null);
 			holder = new Holder();
 			holder.image = (ImageView) convertView.findViewById(R.id.image);
-			holder.avatar = (ImageView) convertView.findViewById(R.id.userinfo_avatar);
+			
 			holder.title = (TextView) convertView.findViewById(R.id.title);
 			holder.content = (TextView) convertView.findViewById(R.id.content);
 			holder.userName = (TextView) convertView.findViewById(R.id.userName);
-			//holder.text_view_count = (TextView) convertView.findViewById(R.id.text_view_count);
+			
 			holder.text_comment_count = (TextView) convertView.findViewById(R.id.text_comment_count);
 			holder.text_like_count = (TextView) convertView.findViewById(R.id.text_like_count);
 			holder.time = (TextView) convertView.findViewById(R.id.time);
@@ -131,9 +129,7 @@ public class HotTravelAdapter extends BaseAdapter {
             holder.imageRequest.cancelRequest();
         }
 
-        if (holder.avartarRequest != null) {
-            holder.avartarRequest.cancelRequest();
-        }
+        
         Travel travel = this.travels.get(position);
         if(travel.getCover_path() != null && travel.getSnap_path() != null && travel.getCover_path().equals(travel.getSnap_path()))
         	holder.imageRequest = RequestManager.loadImage("http://travo-travel-cover.oss-cn-hangzhou.aliyuncs.com/"+travel.getCover_path(), RequestManager
@@ -141,10 +137,7 @@ public class HotTravelAdapter extends BaseAdapter {
         else
         	holder.imageRequest = RequestManager.loadImage("http://travo-travel-cover-snap.oss-cn-hangzhou.aliyuncs.com/"+travel.getSnap_path(), RequestManager
                 .getImageListener(holder.image, mDefaultImageDrawable, mDefaultImageDrawable));
-        if(travel.getUser() != null && travel.getUser().getFace_path() != null)
-        	holder.avartarRequest = RequestManager.loadImage("http://travo-user-avatar.oss-cn-hangzhou.aliyuncs.com/"+travel.getUser().getFace_path(),
-                RequestManager.getImageListener(holder.avatar, mDefaultAvatarBitmap,
-                        mDefaultAvatarBitmap));
+        
         holder.title.setText(travel.getTitle());
         holder.content.setText(travel.getDescription());
         if(travel.getUser() != null && travel.getUser().getNickname() != null)

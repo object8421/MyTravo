@@ -38,7 +38,9 @@ public class ActionBarUtils {
 		actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
         actionBar.setSplitBackgroundDrawable(context.getResources().
-				getDrawable(R.color.transparant_black));
+				getDrawable(R.color.black));
+//        actionBar.setSplitBackgroundDrawable(context.getResources().
+//				getDrawable(R.color.transparant_black));
 		actionBar.setDisplayShowHomeEnabled(false);
 		
 

@@ -7,30 +7,17 @@
     <ImageView
         android:id="@+id/img_cover_note"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/me_listview_image_height"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
+        android:layout_height="250dp"
         android:adjustViewBounds="true"
-        android:paddingTop="10dp"
         android:scaleType="centerCrop"
         android:src="@drawable/me_default_image" />
 
-    <TextView
-        android:id="@+id/tv_description_note"
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/img_cover_note"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="4dp"
-        android:maxLength="144"
-        android:maxLines="3"
-        android:text="TextView"
-        android:textSize="16sp" />
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_description_note" >
+        android:layout_marginTop="6dp" >
 
         <TextView
             android:id="@+id/tv_time_note"
@@ -49,8 +36,10 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/img_location_note"
+            android:ellipsize="end"
+            android:maxEms="20"
             android:text="here&apos;s location string"
-            android:textColor="@android:color/darker_gray"
+            android:textColor="#3F83AA"
             android:textSize="12sp" />
 
         <ImageView
@@ -58,8 +47,25 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_marginLeft="4dp"
-            android:src="@drawable/send_location_button_light" />
-
+            android:src="@drawable/btn_location_selected" />
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_description_note"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/relativeLayout1"
+        android:layout_alignTop="@+id/img_cover_note"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="28dp"
+        android:maxLength="144"
+        android:maxLines="3"
+        android:shadowColor="@android:color/black"
+        android:shadowDx="2"
+        android:shadowDy="2"
+        android:shadowRadius="1"
+        android:text="TextView"
+        android:textColor="@android:color/white"
+        android:textSize="16sp" />
 
 </RelativeLayout>

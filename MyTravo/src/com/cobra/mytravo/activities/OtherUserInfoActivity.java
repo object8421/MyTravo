@@ -12,6 +12,7 @@ import com.cobra.mytravo.R.layout;
 import com.cobra.mytravo.R.menu;
 import com.cobra.mytravo.adapters.CardsAnimationAdapter;
 import com.cobra.mytravo.adapters.HotTravelAdapter;
+import com.cobra.mytravo.adapters.OtherTravelAdapter;
 import com.cobra.mytravo.data.AppData;
 import com.cobra.mytravo.data.GsonRequest;
 import com.cobra.mytravo.data.MyServerMessage;
@@ -29,6 +30,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -44,7 +46,7 @@ public class OtherUserInfoActivity extends Activity implements PullToRefreshAtta
 	private UserInfo userInfo;
 	private ArrayList<Travel> travels;
 	private ListView mListView;
-	private HotTravelAdapter mAdapter;
+	private OtherTravelAdapter mAdapter;
 	private View headerView;
 	private TextView nickname;
 	private TextView gender;
@@ -79,7 +81,7 @@ public class OtherUserInfoActivity extends Activity implements PullToRefreshAtta
 		RequestManager.loadImage("http://travo-user-avatar.oss-cn-hangzhou.aliyuncs.com/"+user.getFace_path(), RequestManager
                 .getImageListener(avatar, mDefaultImageDrawable, mDefaultImageDrawable));
 		mListView = (ListView) findViewById(R.id.lv_travel);
-		mAdapter = new HotTravelAdapter(this, mListView, null);
+		mAdapter = new OtherTravelAdapter(this, mListView, null);
 		mListView.addHeaderView(headerView);
 		mListView.setAdapter(mAdapter);
 		
@@ -145,6 +147,7 @@ public class OtherUserInfoActivity extends Activity implements PullToRefreshAtta
 					public void onResponse(TravelsRequestData requestData) {
 						// TODO Auto-generated method stub
 						int rsp_code = requestData.getRsp_code();
+						Log.i(TAG, String.valueOf(rsp_code));
 						if(rsp_code == MyServerMessage.SUCCESS){
 							travels = requestData.getTravels();
 							mAdapter.clearData();

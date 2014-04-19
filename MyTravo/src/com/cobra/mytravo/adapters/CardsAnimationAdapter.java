@@ -13,7 +13,7 @@ import com.nineoldandroids.animation.ObjectAnimator;
 
 public class CardsAnimationAdapter extends AnimationAdapter {
 
-    private float mTranslationY = 150;
+    private float mTranslationY = 125;
 
     private float mRotationX = 8;
 
@@ -22,6 +22,7 @@ public class CardsAnimationAdapter extends AnimationAdapter {
     public CardsAnimationAdapter(BaseAdapter baseAdapter) {
         super(baseAdapter);
         mDuration = AppData.getContext().getResources().getInteger(R.integer.config_mediumAnimTime);
+        
     }
 
     @Override

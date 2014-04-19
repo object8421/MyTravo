@@ -66,8 +66,8 @@ public class NoteDetailActivity extends Activity {
 		timeTextView = (TextView) findViewById(R.id.tv_time_note);
 		locationTextView = (TextView) findViewById(R.id.tv_location_note);
 		if(note.getImage_url() != null){
-			BitmapFactory.Options options = new BitmapFactory.Options();
-	        options.inSampleSize = 2;
+//			BitmapFactory.Options options = new BitmapFactory.Options();
+//	        options.inSampleSize = 2;
 			MyImageUtil.setBitmapResize(this, imageView, note.getImage_url());
 			//bitmapManager.fetchBitmapOnThread(note.getImage_url(), imageView);
 		}

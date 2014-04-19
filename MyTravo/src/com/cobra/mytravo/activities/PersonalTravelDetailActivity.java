@@ -140,8 +140,9 @@ public class PersonalTravelDetailActivity extends Activity implements LoaderMana
 	public void onLoadFinished(Loader<Cursor> arg0, Cursor data) {
 		// TODO Auto-generated method stub
 		mAdapter.changeCursor(data);
+		
 		if(noteCountTextView != null){
-			noteCount = mDataHelper.getCountByTravel(travel.getCreate_time());
+			noteCount = mAdapter.getCount();
 			if(noteCount > 0){
 				noteCountTextView.setText(String.valueOf(noteCount));
 			}
