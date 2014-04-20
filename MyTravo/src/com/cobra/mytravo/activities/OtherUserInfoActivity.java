@@ -65,7 +65,7 @@ public class OtherUserInfoActivity extends Activity implements PullToRefreshAtta
 		user = (User) getIntent().getSerializableExtra("user");
 		mPullToRefreshAttacher = PullToRefreshAttacher.get(this);
 		headerView = LayoutInflater.from(this).inflate(R.layout.userinfo_header, null);
-		avatar = (ImageView) headerView.findViewById(R.id.imageView1);
+		avatar = (ImageView) headerView.findViewById(R.id.avatar);
 		nickname = (TextView) headerView.findViewById(R.id.tv_nickname);
 		gender = (TextView) headerView.findViewById(R.id.tv_gender);
 		signature = (TextView) headerView.findViewById(R.id.tv_signature);

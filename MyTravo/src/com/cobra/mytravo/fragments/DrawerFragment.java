@@ -59,8 +59,8 @@ public class DrawerFragment extends BaseFragment{
 			}
 		});
 		
-//		RequestManager.loadImage("http://travo-travel-cover.oss-cn-hangzhou.aliyuncs.com/"+travel.getCover_path(), RequestManager
-//                .getImageListener(cover, mDefaultImageDrawable, mDefaultImageDrawable));
+		RequestManager.loadImage("http://travo-user-avatar.oss-cn-hangzhou.aliyuncs.com/"+AppData.getFacePath(), RequestManager
+                .getImageListener(avatarImageView, mDefaultAvatarBitmap, mDefaultAvatarBitmap));
 		return view;
 	}
 	

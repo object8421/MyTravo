@@ -9,7 +9,7 @@
     tools:context=".EditAvatarActivity" >
 
     <ImageView
-        android:id="@+id/imageView1"
+        android:id="@+id/avatar"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_alignParentTop="true"

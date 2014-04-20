@@ -50,6 +50,7 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 
 public class HotTravelFragment extends BaseFragment implements PullToRefreshAttacher.OnRefreshListener{
 	private final static String TAG = "hottravelfragment";
+	private final static String TYPE = "type";
 	private int mPage = 1;
 	private int rsp_code = 0;
 	private MainActivity mActivity;
@@ -60,13 +61,17 @@ public class HotTravelFragment extends BaseFragment implements PullToRefreshAtta
 	private LoadingFooter mLoadingFooter;
 	ArrayList<Travel> travels = new ArrayList<Travel>();
 	
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-	        super.onCreate(savedInstanceState);
-	        setRetainInstance(true);
-	        searchType = "default";
-	}
-	
+	public static HotTravelFragment newInstance(String searchType) {
+        HotTravelFragment fragment = new HotTravelFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(TYPE, searchType);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+	private void parseArgument() {
+        Bundle bundle = getArguments();
+        searchType = bundle.getString(TYPE,"default");
+    }
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		//inflater the layout 
@@ -120,6 +125,7 @@ public class HotTravelFragment extends BaseFragment implements PullToRefreshAtta
                 }
 			}
 		});
+	    parseArgument();
 	    loadFirstPage();
 		return view;
 	}

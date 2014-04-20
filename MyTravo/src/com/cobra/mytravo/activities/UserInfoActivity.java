@@ -73,6 +73,7 @@ public class UserInfoActivity extends Activity implements OnMenuItemClickListene
 	private TextView signatureTextView;
 	private ImageView avatarImageView;
 	private ProgressDialog progressDialog;
+	private Button logoutButton;
 	private Intent editIntent;
 	private UploadAvatar thread;
 	private String access_token;
@@ -135,8 +136,18 @@ public class UserInfoActivity extends Activity implements OnMenuItemClickListene
 		email_layout = findViewById(R.id.layout3);
 		password_layout = findViewById(R.id.layout4);
 		bind_layout = findViewById(R.id.layout5);
-		
-		
+		logoutButton = (Button) findViewById(R.id.btn_logout);
+		logoutButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				AppData.clearData();
+				Intent logoutIntent = new Intent(UserInfoActivity.this, LoginActivity.class);
+				startActivity(logoutIntent);
+				UserInfoActivity.this.finish();
+			}
+		});
 		nicknameTextView.setText(AppData.getNickname());
 		genderTextView.setText(AppData.getSex());
 		signatureTextView.setText(AppData.getSignature());

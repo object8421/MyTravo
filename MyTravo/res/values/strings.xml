@@ -63,11 +63,18 @@
         <item>按距离</item>
     </string-array>
     <string-array name="drawermenu">
-        <item>热门游记</item>
+        <item>首页</item>
         <item>热门攻略</item>
+        <item>搜索</item>
         <item>我的收藏</item>
         <item>我的游记</item>
         <item>设置</item>
+    </string-array>
+    
+    <string-array name="travel_type">
+        <item>热门游记</item>
+        <item>朋友圈</item>
+        <item>我的附近</item>
     </string-array>
 
     <string name="use_sina">新浪微博账号登陆</string>
@@ -102,5 +109,7 @@
     <string name="title_activity_travel_detail">TravelDetailActivity</string>
     <string name="title_activity_other_user_info">OtherUserInfoActivity</string>
     <string name="title_activity_edit_avatar">EditAvatarActivity</string>
+    <string name="title_activity_search">SearchActivity</string>
+    <string name="title_activity_followers">FollowersActivity</string>
 
 </resources>

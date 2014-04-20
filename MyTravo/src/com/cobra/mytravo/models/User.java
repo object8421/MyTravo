@@ -1,6 +1,7 @@
 package com.cobra.mytravo.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import android.database.Cursor;
 
@@ -192,5 +193,38 @@ public class User extends BaseType implements Serializable{
 		public void setRsp_code(int rsp_code) {
 			this.rsp_code = rsp_code;
 		}
+	}
+	public static class UserLoginRequestData{
+		private int rsp_code;
+		private User user;
+		public int getRsp_code() {
+			return rsp_code;
+		}
+		public void setRsp_code(int rsp_code) {
+			this.rsp_code = rsp_code;
+		}
+		public User getUser() {
+			return user;
+		}
+		public void setUser(User user) {
+			this.user = user;
+		}
+	}
+	public static class UserFollowersRequestData{
+		private int rsp_code;
+		private ArrayList<User> users;
+		public int getRsp_code() {
+			return rsp_code;
+		}
+		public void setRsp_code(int rsp_code) {
+			this.rsp_code = rsp_code;
+		}
+		public ArrayList<User> getUsers() {
+			return users;
+		}
+		public void setUsers(ArrayList<User> users) {
+			this.users = users;
+		}
+		
 	}
 }

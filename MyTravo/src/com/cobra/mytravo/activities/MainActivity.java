@@ -42,6 +42,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 /**
  * 
@@ -69,6 +70,7 @@ public class MainActivity extends FragmentActivity {
 	private String settingTag = "setting";
 	//store current position
 	private int current;
+	private String searchType;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -78,7 +80,7 @@ public class MainActivity extends FragmentActivity {
 		mPullToRefreshAttacher = PullToRefreshAttacher.get(this);
 		listItems = getResources().getStringArray(R.array.drawermenu);
 		actionBar = getActionBar();
-        ActionBarUtils.ShowActionBarLogo(this, actionBar);
+        //ActionBarUtils.ShowActionBarLogo(this, actionBar);
         rootView = ComposeBtnUtil.createLayout(this);
         composeButton = (Button) ComposeBtnUtil.addComposeBtn(rootView, this);
         composeButton.setOnClickListener(new OnClickListener() {
@@ -203,7 +205,8 @@ public class MainActivity extends FragmentActivity {
 	 */
 	public void setSelectedItem(int position){
 		current = position;
-		actionBar.setTitle(listItems[current]);
+		if(position != 2 && position != 5)
+			actionBar.setTitle(listItems[current]);
 		mDrawerLayout.closeDrawer(GravityCompat.START);
 		mPullToRefreshAttacher.setRefreshing(false);
 		BaseFragment mContentFragment;
@@ -215,18 +218,26 @@ public class MainActivity extends FragmentActivity {
 //			mContentFragment = shotsFragment;
 //			break;
 		case 0:
-			mContentFragment = (BaseFragment) fragmentManager.findFragmentByTag(hotTravelTag);
-			if(mContentFragment == null){
-				mContentFragment = new HotTravelFragment();
-				fragmentManager.beginTransaction().
-				replace(R.id.content_frame, mContentFragment, hotTravelTag).commit();
-			}
-			else{
-				fragmentManager.beginTransaction().attach(mContentFragment).commit();
-			}
+			setSpinner();
+			setCategory("default");
+//			mContentFragment = (BaseFragment) fragmentManager.findFragmentByTag(hotTravelTag);
+//			if(mContentFragment == null){
+//				mContentFragment = new HotTravelFragment();
+//				fragmentManager.beginTransaction().
+//				replace(R.id.content_frame, mContentFragment, hotTravelTag).commit();
+//			}
+//			else{
+//				fragmentManager.beginTransaction().attach(mContentFragment).commit();
+//			}
 			
 			break;
 		case 2:
+			removeSpinner();
+			Intent searcIntent = new Intent(this, SearchActivity.class);
+			startActivity(searcIntent);
+			break;
+		case 3:
+			removeSpinner();
 			mContentFragment = (BaseFragment) fragmentManager.findFragmentByTag(favoriteTag);
 			if(mContentFragment == null){
 				mContentFragment = new FavoriteFragment();
@@ -238,7 +249,8 @@ public class MainActivity extends FragmentActivity {
 			}
 			
 			break;
-		case 3:
+		case 4:
+			removeSpinner();
 			mContentFragment = (BaseFragment) fragmentManager.findFragmentByTag(personalTag);
 			if(mContentFragment == null){
 				mContentFragment = new PersonalFragment();
@@ -249,17 +261,17 @@ public class MainActivity extends FragmentActivity {
 				fragmentManager.beginTransaction().attach(mContentFragment).commit();
 			}
 			break;
-		default:
-			mContentFragment = (BaseFragment) fragmentManager.findFragmentByTag(personalTag);
-			if(mContentFragment == null){
-				mContentFragment = new PersonalFragment();
-				fragmentManager.beginTransaction().
-				replace(R.id.content_frame, mContentFragment, personalTag).commit();
-			}
-			else{
-				fragmentManager.beginTransaction().attach(mContentFragment).commit();
-			}
-			break;
+//		default:
+//			mContentFragment = (BaseFragment) fragmentManager.findFragmentByTag(personalTag);
+//			if(mContentFragment == null){
+//				mContentFragment = new PersonalFragment();
+//				fragmentManager.beginTransaction().
+//				replace(R.id.content_frame, mContentFragment, personalTag).commit();
+//			}
+//			else{
+//				fragmentManager.beginTransaction().attach(mContentFragment).commit();
+//			}
+//			break;
 		}
 		 
 		 
@@ -267,4 +279,55 @@ public class MainActivity extends FragmentActivity {
 	public Button getComposeButton(){
 		return this.composeButton;
 	}
+	public void setSpinner(){
+		SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(this,
+                R.array.travel_type,
+                android.R.layout.simple_spinner_dropdown_item);
+		ActionBar actionBar = this.getActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        class OnNavigationListener implements ActionBar.OnNavigationListener{
+
+            @Override
+            public boolean onNavigationItemSelected(int itemPosition,
+                    long itemId) {
+                // TODO Auto-generated method stub
+                switch (itemPosition) {
+				case 0:
+					setCategory("default");
+					
+					break;
+				case 1:
+					setCategory("read_times");
+				case 2:
+					setCategory("vote_qty");
+				default:
+					setCategory("default");
+					break;
+				}
+                return false;
+            }
+            
+        }
+        actionBar.setListNavigationCallbacks(mSpinnerAdapter, new OnNavigationListener() );
+	}
+	public void removeSpinner(){
+		ActionBar actionBar = this.getActionBar();
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setNavigationMode(ActionBar.DISPLAY_SHOW_TITLE);
+	}
+	 public void setCategory(String searchType) {
+	        
+	        if (this.searchType == searchType) {
+	            return;
+	        }
+	        mPullToRefreshAttacher.setRefreshing(false);
+	        this.searchType = searchType;
+	        
+	       
+	        BaseFragment mContentFragment;
+	        mContentFragment = HotTravelFragment.newInstance(searchType);
+			FragmentManager fragmentManager = getFragmentManager();
+	        fragmentManager.beginTransaction().replace(R.id.content_frame, mContentFragment).commit();
+	    }
 }

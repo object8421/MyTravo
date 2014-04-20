@@ -50,7 +50,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class LoginActivity extends Activity {
-
+	private String TAG = "loginactivity";
 	public static final String APP_ID = "100520856";
 	
 	private RequestQueue mRequestQueue;
@@ -83,6 +83,9 @@ public class LoginActivity extends Activity {
 				AppData.setIsLogin(true);
 				AppData.setIdToken(user.getToken());
 				AppData.setSignature(user.getSignature());
+				AppData.setEmail(user.getEmail());
+				AppData.setPassword(password.getText().toString());
+				AppData.setFacePath(user.getFace_path());
 				Intent intent1 = new Intent(LoginActivity.this, MainActivity.class);
 				startActivity(intent1);
 				LoginActivity.this.finish();

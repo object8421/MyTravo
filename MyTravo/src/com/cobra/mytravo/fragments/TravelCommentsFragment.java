@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cobra.mytravo.R;
+import com.cobra.mytravo.activities.MainActivity;
 import com.cobra.mytravo.activities.OtherUserInfoActivity;
 import com.cobra.mytravo.activities.TravelDetailActivity;
 import com.cobra.mytravo.adapters.CardsAnimationAdapter;
@@ -63,9 +64,13 @@ public class TravelCommentsFragment extends V4BaseFragment implements PullToRefr
 				// TODO Auto-generated method stub
 				User user = mAdapter.getItem(position - mListView.getHeaderViewsCount()).getCommenter();
 				if(user != null){
-					Intent intent = new Intent(getActivity(), OtherUserInfoActivity.class);
-					intent.putExtra("user", user);
-					getActivity().startActivity(intent);
+					if(user.getId() != AppData.getUserId()){
+						Intent intent = new Intent(getActivity(), OtherUserInfoActivity.class);
+						intent.putExtra("user", user);
+						getActivity().startActivity(intent);
+					}
+						
+					
 				}
 				
 			}

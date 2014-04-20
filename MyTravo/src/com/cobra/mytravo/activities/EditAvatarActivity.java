@@ -66,7 +66,7 @@ public class EditAvatarActivity extends Activity implements OnMenuItemClickListe
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_edit_avatar);
-		avatarImageView = (ImageView) findViewById(R.id.imageView1);
+		avatarImageView = (ImageView) findViewById(R.id.avatar);
 		avatarImageView.setOnClickListener(new OnClickListener() {
 			
 			@Override

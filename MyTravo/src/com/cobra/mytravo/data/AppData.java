@@ -215,11 +215,26 @@ public class AppData extends Application {
     	editor.putString("location", name);
     	editor.commit();
     }
+    public static void setPassword(String password){
+    	editor.putString("password", password);
+    	editor.commit();
+    }
+    public static String getPassword(){
+    	return sharedPreferences.getString("password", "");
+    }
+    public static void setFacePath(String facePath){
+    	editor.putString("face_path", facePath);
+    	editor.commit();
+    }
+    public static String getFacePath(){
+    	return sharedPreferences.getString("face_path", "");
+    }
     /*
      * clear data
      */
     public static void clearData(){
     	editor.clear();
+    	editor.commit();
     }
     
 }

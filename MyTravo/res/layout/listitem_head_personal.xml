@@ -36,8 +36,7 @@
             android:shadowRadius="1"
             android:text="TextView"
             android:textColor="@android:color/white"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/tv_gender"
@@ -58,6 +57,8 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/tv_nickname"
             android:layout_below="@id/tv_gender"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:shadowColor="@android:color/black"
             android:shadowDx="2"
             android:shadowDy="2"
@@ -67,21 +68,10 @@
             android:textSize="14sp"
             android:textStyle="italic" />
 
-        <Button
-            android:id="@+id/btn_focus"
-            android:layout_width="80dp"
-            android:layout_height="35dp"
-            android:layout_alignLeft="@+id/avatar"
-            android:layout_below="@+id/avatar"
-            android:background="@drawable/bg_listitem_shot_blue"
-            android:text="关注"
-            android:textColor="@android:color/white"
-            android:textSize="14sp" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/tv_signature"
+            android:layout_alignParentLeft="true"
             android:layout_below="@+id/tv_signature"
             android:layout_marginTop="20dp" >
 
@@ -120,6 +110,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_followings"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -154,6 +145,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_followers"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
