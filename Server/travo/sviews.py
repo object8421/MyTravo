@@ -502,7 +502,13 @@ class AddNewNoteView(View):
         #note_photo = request.FILES.get('note_photo', None)
         note['content'] = request.POST.get('note_description','暂无描述')
         location ={}
-        location['address'] = request.POST.get('note_location','')
+        #location['address'] = request.POST.get('note_location','')
+        state = request.POST.get('note_state','')
+        locality = request.POST.get('note_locality','')
+        sublocality = request.POST.get('note_sub_locality','')
+        route = request.POST.get('note_route','')
+        street_number = request.POST.get('note_street_numbet','')
+        location['address'] = state + locality + sublocality + route + street_number
         print request.POST.get('latitude',0.0)
         print request.POST.get('longitude',0.0)
         location['latitude'] = float(request.POST.get('latitude',0.0))

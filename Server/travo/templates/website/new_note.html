@@ -46,6 +46,11 @@
                             <div class="col-sm-6">
 
                               <input class="form-control" name="note_location" id="geocomplete" type="text" placeholder="输入足迹地址" required/>
+                              <input name="note_state" type="hidden" data-geo="administrative_area_level_1"/>
+                              <input name="note_locality" type="hidden" data-geo="locality"/>
+                              <input name="note_sub_locality" type="hidden" data-geo="sublocality"/>
+                              <input name="note_route" type="hidden" data-geo="route"/>
+                              <input name="note_street_number" type="hidden" data-geo="street_number"/>
                               <input name="latitude" type="hidden"  data-geo="lat"/>
                               <input name="longitude" type="hidden"  data-geo="lng"/>
 
