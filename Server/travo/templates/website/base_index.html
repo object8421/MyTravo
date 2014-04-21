@@ -282,6 +282,37 @@
               </div><!-- /.modal -->
 
 
+
+<!-- 提醒搜索失败模态框 -->
+<div class="modal fade" id="SearchFailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                      <h4 class="modal-title" id="myModalLabel" style="color: #104e8b;">注意</h4>
+                     </div>
+                     <div class="modal-body">
+                      
+                        <h6 class="modal-title" id="myModalLabel" style="color: #104e8b;">请先输入关键字再搜索喔！</h5>
+                          
+                          
+                          </div>
+                          <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">确认</button>
+                    
+                   </div>
+                        </form>
+                      
+
+                    </div>
+                   
+                  </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+              </div><!-- /.modal -->
+
+
+
+
         {% endblock %}
     </div>
 
@@ -416,7 +447,7 @@ $(document).ready(function(){
     }
      
     else
-      alert("关键字不能为空");
+      $('#SearchFailModal').modal('show');
   }
     function searchtravel(){
     
@@ -428,7 +459,7 @@ $(document).ready(function(){
     }
      
     else
-      alert("关键字不能为空");
+      $('#SearchFailModal').modal('show');
   }
   /*
 // 判断用户输入是否为空 

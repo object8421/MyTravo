@@ -27,7 +27,7 @@
             {% else %}
             <img src="http://travo-user-avatar.oss-cn-hangzhou.aliyuncs.com/{{travel.user.face_path}}"  class="img-rounded" style="width:50px; height:50px; ">
             <a href="{%url 'others' travel.user.id %}">{{travel.user.nickname}}</a>
-            <h3 style="color:#1874cd;">{{travel.title}}</h3><!-- h1这里放的应该是个游记title -->
+            <h3 style="color:#1874cd;">{{travel.description}}</h3><!-- h1这里放的应该是个游记描述 -->
             <p>{{travel.create_time | date:"Y-m-d"}}</p>
             <h4><small>{{travel.description}}</small></h4>
             {% endifequal %}
@@ -61,13 +61,9 @@
               
                 <div class="alert " style= "background-color:#eeeeee;">
                 <p>{{note.create_time | date:"Y-m-d"}}</p>
-                
-                <p >
-                
-                <span class="label label-success">{{note.location.address}}</span>
-               
+                <p>                         
+                <span class="label label-info col-md-12" style="width:320px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{note.location.address}}</span>
                 </p>
-               
                 <h3 >{{note.content}}</h3>
                 </div>
               
@@ -91,7 +87,7 @@
 
 <!-- Here comes the divider -->
 
-<hr class="featurette-divider">
+<hr class="featurette-divider" style="border-color:#bce8f1;">
 <!-- divider ends -->
 
 
