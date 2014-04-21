@@ -282,7 +282,7 @@ def get_user_info(token, friend_id):
 			return result
 
 ######    get user    ######
-def get_user(token):
+def user_info(token):
 	user = get_user(token)
 	result = {RSP_CODE : RC_SUCESS}
 	result['user'] = user
@@ -375,7 +375,6 @@ def _followed_id(user):
 	return ids 
 
 def get_follow_state(self_token, follower_token):
-
 	'''获取self_token是否关注了Follower'''
 	user = get_user(follower_token)
 	res = follow_list(self_token)['users']

@@ -188,7 +188,7 @@ def _search_default(first_idx, max_qty, user):
 	for t in order_T:
 		if len(result_T) >= first_idx + max_qty:	#get enough
 			break
-		result_T |= set(Travel.objects.filter(destination__contains=t.destination).exclude(user=user, id__in=exclude_id))
+		result_T |= set(Travel.objects.filter(destination__contains=t.destination).exclude(user=user).exclude(id__in=exclude_id))
 	
 	return list(result_T)[first_idx : max_qty]
 
@@ -223,7 +223,6 @@ def _search_vote_qty(first_idx, max_qty, user):
 		return list(Travel.objects.order_by('vote_qty').reverse()[first_idx: max_qty])
 	else:
 		return list(Travel.objects.order_by('vote_qty').exclude(user=user).reverse()[first_idx: max_qty])
-
 
 def clear(tls):
 	travels = {} 
@@ -393,6 +392,10 @@ def get_comments(travel_id):
 def friend_travels(token, friend_id):
 	user = userservice.get_user(token)
 	friend = userservice.get_user_by_id(friend_id)
+	result = {RSP_CODE : RC_SUCESS}
+	result['travels'] = list(Travel.objects.filter(user=friend, is_public=True, is_deleted=False))
+	return result
+	'''
 	try:
 		f = Follow.objects.filter(active=user, passive=friend).latest('time')
 		if f.action != '1':
@@ -400,9 +403,7 @@ def friend_travels(token, friend_id):
 	except ObjectDoesNotExist:
 		return {RSP_CODE : RC_PERMISSION_DENIED}
 	else:
-		result = {RSP_CODE : RC_SUCESS}
-		result['travels'] = list(Travel.objects.filter(user=friend, is_public=True, is_deleted=False))
-		return result
+	'''
 
 ####################### search travel ########################################
 def search_travel(key_word):
