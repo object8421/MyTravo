@@ -11,7 +11,7 @@ class ScenerySpotSpiderSpider(CrawlSpider):
     name = 'scenery_spot_spider'
     allowed_domains = ['qunar.com']
     start_urls = ['http://travel.qunar.com/place/sitemap/china']
-
+    data_count = 0
     rules = (
         #Rule(SgmlLinkExtractor(allow=r'travel\.qunar\.com/place/province'), callback='parse_item', follow=True),
         Rule(SgmlLinkExtractor(allow=r'travel\.qunar\.com/place/poi/[a-z]+-\d{6}$'), callback='parse_item', follow=True),
@@ -68,6 +68,8 @@ class ScenerySpotSpiderSpider(CrawlSpider):
             i['transportation_info'] = "暂无"
         print i['transportation_info']
         i['last_update_time'] = utils.get_current_time()
+        self.data_count += 1
+        print "抓取第：%d 条数据。"%self.data_count
         return i
 
     def __init__(self):

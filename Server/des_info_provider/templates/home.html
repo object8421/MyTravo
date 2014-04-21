@@ -1,7 +1,12 @@
 {% extends "base_index.html" %}
 {% block title %}攻略信息{% endblock %}
 {% block content %}
-{%for des in des_list %}
-	{{des.country_name}}
+-----------------国家--------------
+{%for country in country_list %}
+	<a href="{%url 'des_detail' "country" country.id %}"><h1>{{country.country_name}}</h1></a>
+{% endfor %}
+-----------------省份--------------
+{% for province in province_list%}
+	<a href="{%url 'des_detail' "province" province.id %}"><h2>{{province.province_name}}</h2></a>
 {% endfor %}
 {% endblock %}

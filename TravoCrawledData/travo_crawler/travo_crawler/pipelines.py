@@ -3,8 +3,10 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 import MySQLdb
+import datetime
 class TravoCrawlerPipeline(object):
 	data_count = 0
+
 	def __init__(self):
 		pass
 
@@ -20,11 +22,18 @@ class TravoCrawlerPipeline(object):
 		for sql in sql_list:
 			self.cursor.execute(sql)
 		print '数据库连接正常'
+		self.start_time = datetime.datetime.now()
+		print "开始时间：%s"%datetime.datetime.now()
+
 
 	def close_spider(self,spider):
 		self.conn.close()
+		self.end_time = datetime.datetime.now()
+		delt_time_min = (self.start_time - self.end_time).seconds//60
+		delt_time_sec = (self.start_time - self.end_time).seconds%60
 		print '抓取完毕,共抓取了 %d 条数据。'%self.data_count
-
+		print "结束时间：%s"%datetime.datetime.now()
+		print '共计用时：%s 分 %s 秒。'%(delt_time_min,delt_time_sec)
 	def process_item(self, item, spider):
 		if item['item_type'] == 'country':
 			print '检测到数据类型为country，准备处理'
@@ -52,6 +61,7 @@ class TravoCrawlerPipeline(object):
 				item['image_path'],item['image_url'],item['last_update_time']))
 		self.conn.commit()
 		print '%s (国家)相关数据插入成功！'%(item['name'])
+		self.data_count += 1
 		return item
 
 	def process_province_data(self,item,spider):

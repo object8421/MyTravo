@@ -12,7 +12,7 @@ class CountrySpiderSpider(CrawlSpider):
     name = 'country_spider'
     allowed_domains = ['qunar.com']
     start_urls = ['http://travel.qunar.com/place/']
-
+    data_count = 0
     rules = (
         Rule(SgmlLinkExtractor(allow=r'travel\.qunar\.com/place/country/[a-z]+-\d{6}$'), callback='parse_item', follow=True),
     )
@@ -44,5 +44,6 @@ class CountrySpiderSpider(CrawlSpider):
         print i['detail_description']
         i['last_update_time'] = utils.get_current_time()
         print i['last_update_time']
-
+        self.data_count += 1
+        print "共抓取了：%d 条数据。"%self.data_count
         return i

@@ -58,6 +58,8 @@ class ProvinceSpiderSpider(CrawlSpider):
         print '详细信息获取完毕。'
         i['last_update_time'] = utils.get_current_time()
         print i['last_update_time']
+        self.data_count += 1
+        print "共抓取了：%d 条数据。"%self.data_count
         #=============================old version========================================
         #抓取省份的概述
         # print '开始获取省份概述'

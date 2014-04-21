@@ -1,0 +1,8 @@
+{% extends "base_index.html" %}
+{% block title %}{{city.city_name}}{% endblock %}
+{% block content %}
+			<h2>{{city.city_name}}</h2>
+			<h4>{{city.brief_information}}</h4>
+			---------------------------------------详情------------------------------------------
+			<h5>{{city.detail_information}}</h5>
+{% endblock %}
