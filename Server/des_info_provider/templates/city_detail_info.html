@@ -1,0 +1,11 @@
+{% extends "base_index.html" %}
+{% block title %}{{city.city_name}}{% endblock %}
+{% block content %}
+<h2>{{city.city_name}}</h2>
+{% for url in image_url_list %}
+	<img src= {{url}} alt="..." class="img-rounded" style="width:250; height:250px; margin=0;">
+{% endfor %}
+<h4>{{city.brief_information}}</h4>
+---------------------------------------详情------------------------------------------
+<h5>{{city.detail_information}}</h5>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base_index.html" %}
+{% block title %}攻略信息{% endblock %}
+{% block content %}
+---------------------------------国家------------------------------------
+	{% if country_list %}
+		{% for country in country_list%}
+			<h2>{{country.country_name}}</h2>
+			<h4>{{country.brief_information}}</h4>
+
+		{% endfor %}
+	{% endif %}
+---------------------------------省份------------------------------------
+	{% if province_list %}
+		{% for province in province_list%}
+			<h2>{{province.province_name}}</h2>
+			<h4>{{province.brief_information}}</h4>
+		{% endfor %}
+	{% endif %}
+---------------------------------城市------------------------------------
+	{% if city_list %}
+		{% for city in city_list%}
+			<h2>{{city.city_name}}</h2>
+			<h4>{{city.brief_information}}</h4>
+		{% endfor %}
+	{% endif %}
+---------------------------------景点------------------------------------
+	{% if spot_list %}
+		{% for spot in spot_list%}
+			<h2>{{spot.spot_name}}</h2>
+			<h4>{{spot.brief_information}}</h4>
+		{% endfor %}
+	{% endif %}
+{% for des in des_list %}
+	{{des.country_name}}
+{% endfor %}
+{% endblock %}

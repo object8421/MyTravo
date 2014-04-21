@@ -10,7 +10,7 @@ from lxml import etree
 class CitySpiderSpider(CrawlSpider):
     name = 'city_spider'
     allowed_domains = ['qunar.com']
-    allowed_domains = ['qunar.com']
+
     start_urls = ['http://travel.qunar.com/place/sitemap/china']
     data_count = 0
 
@@ -56,5 +56,5 @@ class CitySpiderSpider(CrawlSpider):
         print i['last_update_time']
         print response.url
         self.data_count += 1
-        print "抓取第：%d 条数据。"%self.data_count
+        print "共抓取了：%d 条数据。"%self.data_count
         return i
