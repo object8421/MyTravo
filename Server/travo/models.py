@@ -205,28 +205,36 @@ class Location(models.Model):
 		managed = False
 		db_table = 'location'
 
-class Achievement(models.Model):
-	id = models.IntegerField(primary_key=True)
-	name = models.CharField(max_length=20)
-	scenic_point_qty = models.IntegerField()
+class TravelVote(models.Model):
+	travel = models.ForeignKey(Travel)
+	voter = models.ForeignKey(User, db_column='voter')
+	time = models.DateTimeField(auto_now_add=True)
 	class Meta:
 		managed = False
-		db_table = 'achievement'
+		db_table = 'travel_vote'
 
-class AchievementScenicPoint(models.Model):
-	achievement = models.ForeignKey(Achievement)
-	scenic_point = models.ForeignKey('ScenicPoint')
-	class Meta:
-		managed = False
-		db_table = 'achievement_scenic_point'
+class TravelComment(models.Model):
+	travel = models.ForeignKey(Travel)
+	time = models.DateTimeField()
+	commenter = models.ForeignKey('User', db_column='commenter')
+	content = models.CharField(max_length=200, null=False)
 
-class Address(models.Model):
-	id = models.IntegerField(primary_key=True)
-	address = models.CharField(max_length=20)
-	district = models.ForeignKey('District')
+	def dict(self):
+		d = model_to_dict(self)
+		d.pop('id')
+		return d
+
+	def update(self):
+		return update_model(self)
+
+	@classmethod
+	def from_dict(cls, d):
+		return dict_to_model(cls, d)
+
 	class Meta:
 		managed = False
-		db_table = 'address'
+		db_table = 'travel_comment'
+		unique_together=('travel', 'time')
 
 class City(models.Model):
 	id = models.IntegerField(primary_key=True)
@@ -236,19 +244,7 @@ class City(models.Model):
 	class Meta:
 		managed = False
 		db_table = 'city'
-
-class CompleteAddress(models.Model):
-	id = models.IntegerField(primary_key=True)
-	province = models.CharField(max_length=3, blank=True)
-	city = models.CharField(max_length=15, blank=True)
-	district = models.CharField(max_length=15, blank=True)
-	address = models.CharField(max_length=20)
-	area_code = models.CharField(max_length=4, blank=True)
-	zip = models.CharField(max_length=6, blank=True)
-	class Meta:
-		managed = False
-		db_table = 'complete_address'
-
+		
 class District(models.Model):
 	id = models.IntegerField(primary_key=True)
 	name = models.CharField(max_length=15)
@@ -258,13 +254,54 @@ class District(models.Model):
 		managed = False
 		db_table = 'district'
 
-class ErrorLog(models.Model):
-	time = models.DateTimeField(primary_key=True)
-	position = models.CharField(max_length=45)
-	message = models.CharField(max_length=45)
+class Province(models.Model):
+	id = models.IntegerField(primary_key=True)
+	name = models.CharField(unique=True, max_length=3)
 	class Meta:
 		managed = False
-		db_table = 'error_log'
+		db_table = 'province'
+
+class Address(models.Model):
+	id = models.IntegerField(primary_key=True)
+	address = models.CharField(max_length=20)
+	district = models.ForeignKey('District')
+	class Meta:
+		managed = False
+		db_table = 'address'
+
+class UserInfo(models.Model):
+	user = models.ForeignKey(User, primary_key=True)
+	phone = models.CharField(max_length=12, null=True)
+	mobile = models.CharField(max_length=11, null=True)
+	qq = models.CharField(max_length=12, null=True)
+	sina_blog = models.CharField(max_length=25, null=True)
+	name = models.CharField(max_length=4, null=True)
+	age = models.IntegerField(blank=True, null=True)
+	sex = models.CharField(max_length=1, null=True)
+	address = models.ForeignKey(Address, db_column='address', null=True, related_name='+')
+	address2 = models.ForeignKey(Address, db_column='address2', null=True, related_name='+')
+	native_place = models.ForeignKey(Province, db_column='native_place', null=True)
+	degree = models.CharField(max_length=6, null=True)
+	job = models.CharField(max_length=15, null=True)
+	lm_time = models.DateTimeField()
+
+	def dict(self):
+		return model_to_dict(self)
+
+	def update(self):
+		return update_model(self)
+
+	@classmethod
+	def from_dict(cls, d):
+		return dict_to_model(cls, d)
+
+	@classmethod
+	def user_lm_time(cls, user):
+		return lm_time(cls, user)
+
+	class Meta:
+		managed = False
+		db_table = 'user_info'
 
 class FavoriteTravel(models.Model):
 	user = models.ForeignKey('User')
@@ -303,6 +340,51 @@ class LoginRecord(models.Model):
 		db_table = 'login_record'
 		unique_together=('user', 'time')
 
+class TravelReadLog(models.Model):
+	travel = models.ForeignKey(Travel)
+	reader = models.ForeignKey('User', db_column='reader')
+	time = models.DateTimeField(auto_now_add=True)
+	class Meta:
+		managed = False
+		db_table = 'travel_read_log'
+
+
+'''
+class Achievement(models.Model):
+	id = models.IntegerField(primary_key=True)
+	name = models.CharField(max_length=20)
+	scenic_point_qty = models.IntegerField()
+	class Meta:
+		managed = False
+		db_table = 'achievement'
+
+class AchievementScenicPoint(models.Model):
+	achievement = models.ForeignKey(Achievement)
+	scenic_point = models.ForeignKey('ScenicPoint')
+	class Meta:
+		managed = False
+		db_table = 'achievement_scenic_point'
+
+class CompleteAddress(models.Model):
+	id = models.IntegerField(primary_key=True)
+	province = models.CharField(max_length=3, blank=True)
+	city = models.CharField(max_length=15, blank=True)
+	district = models.CharField(max_length=15, blank=True)
+	address = models.CharField(max_length=20)
+	area_code = models.CharField(max_length=4, blank=True)
+	zip = models.CharField(max_length=6, blank=True)
+	class Meta:
+		managed = False
+		db_table = 'complete_address'
+
+class ErrorLog(models.Model):
+	time = models.DateTimeField(primary_key=True)
+	position = models.CharField(max_length=45)
+	message = models.CharField(max_length=45)
+	class Meta:
+		managed = False
+		db_table = 'error_log'
+
 class NoteComment(models.Model):
 	note = models.ForeignKey(Note)
 	time = models.DateTimeField()
@@ -319,13 +401,6 @@ class NoteVote(models.Model):
 	class Meta:
 		managed = False
 		db_table = 'note_vote'
-
-class Province(models.Model):
-	id = models.IntegerField(primary_key=True)
-	name = models.CharField(unique=True, max_length=3)
-	class Meta:
-		managed = False
-		db_table = 'province'
 
 class ScenicArea(models.Model):
 	id = models.IntegerField(primary_key=True)
@@ -359,29 +434,6 @@ class ScenicPointInfo(models.Model):
 		managed = False
 		db_table = 'scenic_point_info'
 
-class TravelComment(models.Model):
-	travel = models.ForeignKey(Travel)
-	time = models.DateTimeField()
-	commenter = models.ForeignKey('User', db_column='commenter')
-	content = models.CharField(max_length=200, null=False)
-
-	def dict(self):
-		d = model_to_dict(self)
-		d.pop('id')
-		return d
-
-	def update(self):
-		return update_model(self)
-
-	@classmethod
-	def from_dict(cls, d):
-		return dict_to_model(cls, d)
-
-	class Meta:
-		managed = False
-		db_table = 'travel_comment'
-		unique_together=('travel', 'time')
-
 class TravelPlan(models.Model):
 	user = models.ForeignKey('User')
 	publish_time = models.DateTimeField()
@@ -405,22 +457,6 @@ class TravelPlan(models.Model):
 		managed = False
 		db_table = 'travel_plan'
 
-class TravelReadLog(models.Model):
-	travel = models.ForeignKey(Travel)
-	reader = models.ForeignKey('User', db_column='reader')
-	time = models.DateTimeField(auto_now_add=True)
-	class Meta:
-		managed = False
-		db_table = 'travel_read_log'
-
-class TravelVote(models.Model):
-	travel = models.ForeignKey(Travel)
-	voter = models.ForeignKey(User, db_column='voter')
-	time = models.DateTimeField(auto_now_add=True)
-	class Meta:
-		managed = False
-		db_table = 'travel_vote'
-
 class UserAchievement(models.Model):
 	user = models.ForeignKey(User)
 	achievement = models.ForeignKey(Achievement)
@@ -428,40 +464,6 @@ class UserAchievement(models.Model):
 	class Meta:
 		managed = False
 		db_table = 'user_achievement'
-
-class UserInfo(models.Model):
-	user = models.ForeignKey(User, primary_key=True)
-	phone = models.CharField(max_length=12, null=True)
-	mobile = models.CharField(max_length=11, null=True)
-	qq = models.CharField(max_length=12, null=True)
-	sina_blog = models.CharField(max_length=25, null=True)
-	name = models.CharField(max_length=4, null=True)
-	age = models.IntegerField(blank=True, null=True)
-	sex = models.CharField(max_length=1, null=True)
-	address = models.ForeignKey(Address, db_column='address', null=True, related_name='+')
-	address2 = models.ForeignKey(Address, db_column='address2', null=True, related_name='+')
-	native_place = models.ForeignKey(Province, db_column='native_place', null=True)
-	degree = models.CharField(max_length=6, null=True)
-	job = models.CharField(max_length=15, null=True)
-	lm_time = models.DateTimeField()
-
-	def dict(self):
-		return model_to_dict(self)
-
-	def update(self):
-		return update_model(self)
-
-	@classmethod
-	def from_dict(cls, d):
-		return dict_to_model(cls, d)
-
-	@classmethod
-	def user_lm_time(cls, user):
-		return lm_time(cls, user)
-
-	class Meta:
-		managed = False
-		db_table = 'user_info'
 
 class UserScenicPoint(models.Model):
 	user = models.ForeignKey(User)
@@ -482,3 +484,4 @@ class Trans(models.Model):
     class Meta:
         managed = False
         db_table = 'trans'
+'''
