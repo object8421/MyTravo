@@ -4,7 +4,6 @@ from django.contrib import admin
 #import django.views
 
 from des_info_provider import views
-
 urlpatterns = patterns('',
     url(r'^$', views.HomeView.as_view(), name='des_home'),
     url(r'^search/(?P<keyword>\w+)/$',views.SearchView.as_view(), name = 'des_search'),

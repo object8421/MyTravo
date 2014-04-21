@@ -55,17 +55,34 @@ class DesDetailView(View):
 		print des_type
 		if des_type == 'country':
 			country = get_object_or_404(DesCountry,pk=des_id)
-			return render(request,'country_detail_info.html',{"country":country})
+			image_url_list = country.image_url.split(';')
+			image_url_list.remove(image_url_list[-1])
+
+			return render(request,'country_detail_info.html',{"country":country,
+				"image_url_list":image_url_list})
+
 		if des_type == 'province':
 			province = get_object_or_404(DesProvince,pk=des_id)
-			return render(request,'province_detail_info.html',{"province":province})
+			image_url_list = province.image_url.split(';')
+			image_url_list.remove(image_url_list[-1])
+			return render(request,'province_detail_info.html',{"province":province,
+				"image_url_list":image_url_list})
+
 		if des_type == 'city':
 			city = get_object_or_404(DesCity,pk=des_id)
-			return render(request,'city_detail_info.html',{"city":city})
+			image_url_list = city.image_url.split(';')
+			
+			return render(request,'city_detail_info.html',{"city":city,
+				"image_url_list":image_url_list})
+
 		if des_type == 'scenery_spot':
 			scenery_spot = get_object_or_404(DesScenerySpot,pk=des_id)
-			return render(request,'spot_detail_info.html',{"spot":scenery_spot})
+			image_url_list = scenery_spot.image_path.split(';')
+			return render(request,'spot_detail_info.html',{"spot":scenery_spot,
+				"image_url_list":image_url_list})
 		return render(request,'des_not_exist.html')
+
+
 
 		
 

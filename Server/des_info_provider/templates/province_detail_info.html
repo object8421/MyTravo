@@ -1,8 +1,14 @@
 {% extends "base_index.html" %}
 {% block title %}{{province.province_name}}{% endblock %}
 {% block content %}
+
 			<h2>{{province.province_name}}</h2>
+{% for url in image_url_list %}
+	<img src= {{url}} alt="..." class="img-rounded" style="width:250; height:250px; margin=0;">
+{% endfor %}
+
 			<h4>{{province.brief_information}}</h4>
 			---------------------------------------详情------------------------------------------
 			<h5>{{province.detail_information}}</h5>
+
 {% endblock %}
