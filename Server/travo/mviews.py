@@ -69,10 +69,12 @@ class BaseView(View):
 			print('======caught exception======')
 			print(traceback.format_exc())
 			return {RSP_CODE : RC_WRONG_ARG}
+		'''
 		except Exception, e:
 			print('======caught exception======')
 			print(traceback.format_exc())
 			return {RSP_CODE : RC_SERVER_ERROR}
+		'''
 
 	def do(self):
 		pass
