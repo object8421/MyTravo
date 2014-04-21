@@ -410,8 +410,8 @@ def search_travel(key_word):
 	travel_list = Travel.objects.filter(Q(title__contains=key_word)|Q(destination__contains=key_word))
 	if travel_list:
 		result = {RSP_CODE:RC_SUCESS}
-		result['travel_list'] =  travel_list
+		result['travel_list'] = list(travel_list)
 	else:
 		result = {RSP_CODE:RC_FUCK_SELF}
-		result['travel_list'] =  travel_list
+		result['travel_list'] = list(travel_list)
 	return result

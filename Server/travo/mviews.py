@@ -354,7 +354,7 @@ class UserAppender():
 			d_travels.append(travel)
 		return d_travels 
 
-class SearchTravelView(BaseView,UserAppender):
+class SearchTravelView(BaseView, UserAppender):
 	def get(self, request):
 		self._request = request
 		return JsonResponse(self.handle())
@@ -362,7 +362,7 @@ class SearchTravelView(BaseView,UserAppender):
 	def do(self):
 		travels = travelservice.search(
 				self.get_arg('token'),
-				self.get_arg('order'),
+				self.get_arg('order', 'default'),
 				self.get_arg('first_idx', 1),
 				self.get_arg('max_qty', 20)
 				)
@@ -457,6 +457,16 @@ class FriendTravelsView(BaseView):
 		return travelservice.friend_travels(
 				self.get_token(),
 				self._user_id
+				)
+
+class SearchTravelByKeyView(BaseView):
+	def get(self, request):
+		self._request = request
+		return JsonResponse(self.handle())
+
+	def do(self):
+		return travelservice.search_travel(
+				self.get_required_arg('key')
 				)
 
 #############################################
