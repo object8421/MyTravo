@@ -241,4 +241,21 @@ public class Travel extends BaseType implements Serializable{
 		}
 		
 	}
+	public static class SearchRequestData{
+		private int rsp_code;
+		private ArrayList<Travel> travel_list;
+		public int getRsp_code() {
+			return rsp_code;
+		}
+		public void setRsp_code(int rsp_code) {
+			this.rsp_code = rsp_code;
+		}
+		public ArrayList<Travel> getTravel_list() {
+			return travel_list;
+		}
+		public void setTravel_list(ArrayList<Travel> travel_list) {
+			this.travel_list = travel_list;
+		}
+		
+	}
 }
