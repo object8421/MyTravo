@@ -221,6 +221,10 @@
             android:name="com.cobra.mytravo.activities.FollowersActivity"
             android:label="@string/title_activity_followers" >
         </activity>
+        <activity
+            android:name="com.cobra.mytravo.activities.SettingsActivity"
+            android:label="@string/title_activity_settings" >
+        </activity>
     </application>
 
 </manifest>

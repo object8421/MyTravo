@@ -25,20 +25,20 @@ public final class R {
 		public static final int ptr_progressbar_indeterminate_holo8 = 0x7f020079;
 	}
 	public static final class id {
-		public static final int ptr_content = 0x7f060005;
-		public static final int ptr_progress = 0x7f060008;
-		public static final int ptr_text = 0x7f060007;
-		public static final int ptr_text_opaque_bg = 0x7f060006;
+		public static final int ptr_content = 0x7f070005;
+		public static final int ptr_progress = 0x7f070008;
+		public static final int ptr_text = 0x7f070007;
+		public static final int ptr_text_opaque_bg = 0x7f070006;
 	}
 	public static final class layout {
-		public static final int default_header = 0x7f03001a;
+		public static final int default_header = 0x7f03001b;
 	}
 	public static final class string {
-		public static final int pull_to_refresh_pull_label = 0x7f07001a;
-		public static final int pull_to_refresh_refreshing_label = 0x7f07001c;
-		public static final int pull_to_refresh_release_label = 0x7f07001b;
+		public static final int pull_to_refresh_pull_label = 0x7f08001a;
+		public static final int pull_to_refresh_refreshing_label = 0x7f08001c;
+		public static final int pull_to_refresh_release_label = 0x7f08001b;
 	}
 	public static final class style {
-		public static final int Widget_PullToRefresh_ProgressBar_Horizontal_Center = 0x7f090000;
+		public static final int Widget_PullToRefresh_ProgressBar_Horizontal_Center = 0x7f0a0000;
 	}
 }

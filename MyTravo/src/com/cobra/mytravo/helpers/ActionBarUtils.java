@@ -7,16 +7,17 @@ import com.cobra.mytravo.R;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.text.style.SuperscriptSpan;
 
 public class ActionBarUtils {
 	public static void ShowActionBarLogo(Context context, ActionBar actionBar){
 		actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
-		actionBar.setSplitBackgroundDrawable(context.getResources().
-				getDrawable(R.color.black));
+        setActionbarColor(actionBar,context);
 	}
 	public static void InitialDarkActionBar(Context context, ActionBar actionBar){
 		actionBar.setDisplayHomeAsUpEnabled(true);
@@ -25,7 +26,7 @@ public class ActionBarUtils {
 				getDrawable(R.color.black));
 		//getActionBar().setDisplayShowHomeEnabled(false);
 		actionBar.setDisplayShowHomeEnabled(false);
-		
+		setActionbarColor(actionBar,context);
 	}
 	public static void InitialDarkActionBar(Context context, ActionBar actionBar,String title){
 		InitialDarkActionBar(context, actionBar);
@@ -37,12 +38,11 @@ public class ActionBarUtils {
 		actionBar.setTitle(title);
 		actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
-        actionBar.setSplitBackgroundDrawable(context.getResources().
-				getDrawable(R.color.black));
+        
 //        actionBar.setSplitBackgroundDrawable(context.getResources().
 //				getDrawable(R.color.transparant_black));
 		actionBar.setDisplayShowHomeEnabled(false);
-		
+		setActionbarColor(actionBar,context);
 
 	}
 	public static boolean hasSmartBar() { 
@@ -62,5 +62,32 @@ public class ActionBarUtils {
 		 } 
 		 return false; 
 		 } 
-
+	private static void setActionbarColor(ActionBar actionBar, Context context){
+		 SharedPreferences mySharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+			String themeValueString = mySharedPreferences.getString("theme_preference", "0");
+			if(themeValueString.equals("0")){
+				actionBar.setBackgroundDrawable(context.getResources().
+							getDrawable(R.color.black));
+				 actionBar.setSplitBackgroundDrawable(context.getResources().
+							getDrawable(R.color.black));
+			}
+			else if(themeValueString.equals("1")){
+				actionBar.setBackgroundDrawable(context.getResources().
+						getDrawable(R.color.meizublue));
+				actionBar.setSplitBackgroundDrawable(context.getResources().
+						getDrawable(R.color.meizublue));
+			}
+			else if(themeValueString.equals("2")){
+				actionBar.setBackgroundDrawable(context.getResources().
+						getDrawable(R.color.firebrick4));
+				actionBar.setSplitBackgroundDrawable(context.getResources().
+						getDrawable(R.color.firebrick4));
+			}
+			else{
+				actionBar.setBackgroundDrawable(context.getResources().
+						getDrawable(R.color.BewitchedTree));
+				actionBar.setSplitBackgroundDrawable(context.getResources().
+						getDrawable(R.color.BewitchedTree));
+			}
+	}
 }

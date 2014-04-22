@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <PreferenceCategory android:title="视觉效果">
+        <CheckBoxPreference  
+            android:key="animation_preference"  
+            android:summary="开启可能会影响稳定性"  
+            android:title="列表特效"
+            android:defaultValue="true" />
+        <ListPreference  
+            android:dialogTitle="选择主题"  
+            android:entries="@array/theme_list"  
+            android:entryValues="@array/theme_list_values"  
+            android:key="theme_preference"  
+            android:summary="设置应用主题效果"  
+            android:title="选择主题"
+            android:defaultValue="0" />  
+    </PreferenceCategory >
+    
+    	
+	<PreferenceCategory android:title="其他">
+	    <PreferenceScreen android:title="意见反馈">
+    	
+    	</PreferenceScreen>
+    	<PreferenceScreen android:title="关于">
+    	
+    	</PreferenceScreen>
+	</PreferenceCategory>
+</PreferenceScreen>

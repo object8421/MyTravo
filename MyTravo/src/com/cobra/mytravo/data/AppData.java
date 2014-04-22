@@ -36,7 +36,7 @@ public class AppData extends Application {
 
    
     private static Context sContext;
-    public static final String HOST_IP = "http://172.16.12.26:8080/mobile/";
+    public static final String HOST_IP = "http://172.16.12.26:80/mobile/";
     //public static final String HOST_IP = "http://112.124.70.221:8080/mobile/";
     private static SharedPreferences sharedPreferences; 
     private static Editor editor;
