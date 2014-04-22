@@ -32,11 +32,15 @@ import json
 #===================user view=====================================
 class HomeView(View):
     def get(self, request):
-        country_list = DesCountry.objects.all()[:5]
+        country_list = DesCountry.objects.all()[:20]
+        hottest_country_list = DesCountry.objects.all()[:5]
         province_list = DesProvince.objects.all()
-
+        hottest_province_list = DesProvince.objects.all()[:6]
 
         return render(request,'home.html',{"country_list":country_list,
+        	"hottest_country_list":hottest_country_list,
+        	"hottest_province_list":hottest_province_list,
+
         	"province_list":province_list})
 
 class SearchView(View):
