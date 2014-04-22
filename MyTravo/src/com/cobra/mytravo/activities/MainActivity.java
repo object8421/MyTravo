@@ -75,12 +75,12 @@ public class MainActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+		actionBar = getActionBar();
+        ActionBarUtils.ShowActionBarLogo(this, actionBar);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mPullToRefreshAttacher = PullToRefreshAttacher.get(this);
 		listItems = getResources().getStringArray(R.array.drawermenu);
-		actionBar = getActionBar();
-        //ActionBarUtils.ShowActionBarLogo(this, actionBar);
+		
         rootView = ComposeBtnUtil.createLayout(this);
         composeButton = (Button) ComposeBtnUtil.addComposeBtn(rootView, this);
         composeButton.setOnClickListener(new OnClickListener() {
@@ -204,9 +204,12 @@ public class MainActivity extends FragmentActivity {
 	 * @param position
 	 */
 	public void setSelectedItem(int position){
+		if(position != 0){
+			searchType = "";
+		}
 		current = position;
 		if(position != 2 && position != 5)
-			actionBar.setTitle(listItems[current]);
+			getActionBar().setTitle(listItems[current]);
 		mDrawerLayout.closeDrawer(GravityCompat.START);
 		mPullToRefreshAttacher.setRefreshing(false);
 		BaseFragment mContentFragment;
@@ -219,7 +222,7 @@ public class MainActivity extends FragmentActivity {
 //			break;
 		case 0:
 			setSpinner();
-			setCategory("default");
+			setCategory(searchType);
 //			mContentFragment = (BaseFragment) fragmentManager.findFragmentByTag(hotTravelTag);
 //			if(mContentFragment == null){
 //				mContentFragment = new HotTravelFragment();
@@ -241,12 +244,10 @@ public class MainActivity extends FragmentActivity {
 			mContentFragment = (BaseFragment) fragmentManager.findFragmentByTag(favoriteTag);
 			if(mContentFragment == null){
 				mContentFragment = new FavoriteFragment();
-				fragmentManager.beginTransaction().
-				replace(R.id.content_frame, mContentFragment, favoriteTag).commit();
+				
 			}
-			else{
-				fragmentManager.beginTransaction().attach(mContentFragment).commit();
-			}
+			fragmentManager.beginTransaction().
+			replace(R.id.content_frame, mContentFragment, favoriteTag).commit();
 			
 			break;
 		case 4:
@@ -254,24 +255,15 @@ public class MainActivity extends FragmentActivity {
 			mContentFragment = (BaseFragment) fragmentManager.findFragmentByTag(personalTag);
 			if(mContentFragment == null){
 				mContentFragment = new PersonalFragment();
-				fragmentManager.beginTransaction().
-				replace(R.id.content_frame, mContentFragment, personalTag).commit();
+				
 			}
-			else{
-				fragmentManager.beginTransaction().attach(mContentFragment).commit();
-			}
+			fragmentManager.beginTransaction().
+			replace(R.id.content_frame, mContentFragment, personalTag).commit();
 			break;
-//		default:
-//			mContentFragment = (BaseFragment) fragmentManager.findFragmentByTag(personalTag);
-//			if(mContentFragment == null){
-//				mContentFragment = new PersonalFragment();
-//				fragmentManager.beginTransaction().
-//				replace(R.id.content_frame, mContentFragment, personalTag).commit();
-//			}
-//			else{
-//				fragmentManager.beginTransaction().attach(mContentFragment).commit();
-//			}
-//			break;
+		case 5:
+			Intent preferenceIntent = new Intent(this, SettingsActivity.class);
+			startActivity(preferenceIntent);
+
 		}
 		 
 		 
@@ -285,6 +277,7 @@ public class MainActivity extends FragmentActivity {
                 android.R.layout.simple_spinner_dropdown_item);
 		ActionBar actionBar = this.getActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         class OnNavigationListener implements ActionBar.OnNavigationListener{
 
@@ -299,8 +292,10 @@ public class MainActivity extends FragmentActivity {
 					break;
 				case 1:
 					setCategory("read_times");
+					break;
 				case 2:
 					setCategory("vote_qty");
+					break;
 				default:
 					setCategory("default");
 					break;
@@ -314,6 +309,7 @@ public class MainActivity extends FragmentActivity {
 	public void removeSpinner(){
 		ActionBar actionBar = this.getActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setNavigationMode(ActionBar.DISPLAY_SHOW_TITLE);
 	}
 	 public void setCategory(String searchType) {
@@ -330,4 +326,11 @@ public class MainActivity extends FragmentActivity {
 			FragmentManager fragmentManager = getFragmentManager();
 	        fragmentManager.beginTransaction().replace(R.id.content_frame, mContentFragment).commit();
 	    }
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		
+	}
+	 
 }

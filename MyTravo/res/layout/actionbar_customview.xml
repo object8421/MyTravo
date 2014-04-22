@@ -25,7 +25,7 @@
         android:background="@android:color/black"
         app:pstsIndicatorHeight="3dp"
        
-        app:pstsIndicatorColor="#26b5df"
+        app:pstsIndicatorColor="#2EB5E6"
          />
 
 </RelativeLayout>

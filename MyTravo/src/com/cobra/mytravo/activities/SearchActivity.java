@@ -71,22 +71,26 @@ public class SearchActivity extends Activity implements OnQueryTextListener{
 	@Override
 	public boolean onQueryTextSubmit(String keyword) {
 		// TODO Auto-generated method stub
-		if(keyword != null && !keyword.equals(""))
+		if(keyword != null && !keyword.equals("")){
+			this.keyword = keyword;
 			search();
+		}
+			
 		return true;
 	}
 	private void search(){
+		Log.i(TAG,keyword);
 		mListView.setVisibility(View.INVISIBLE);
 		mProgressBar.setVisibility(View.VISIBLE);
-		RequestManager.addRequest(new GsonRequest<Travel.TravelsRequestData>(String.format(AppData.HOST_IP+"travel/search?order=%1$s&first_idx=%2$d&max_qty=%3$d",
-        		"default",1,10), Travel.TravelsRequestData.class, null,
-                new Response.Listener<Travel.TravelsRequestData>() {
+		RequestManager.addRequest(new GsonRequest<Travel.SearchRequestData>(AppData.HOST_IP+"travel/search_by_key?key="+keyword, Travel.SearchRequestData.class, null,
+                new Response.Listener<Travel.SearchRequestData>() {
                     @Override
-                    public void onResponse(final Travel.TravelsRequestData requestData) {
+                    public void onResponse(final Travel.SearchRequestData requestData) {
                         	    
                             	
                             	int rsp_code = requestData.getRsp_code();
-                                travels = requestData.getTravels();
+                            	Log.i(TAG,String.valueOf(rsp_code));
+                                travels = requestData.getTravel_list();
                                 
                                 Log.i(TAG,travels.toString());
                                 mAdapter = new HotTravelAdapter(SearchActivity.this, mListView, travels);

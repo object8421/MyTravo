@@ -43,7 +43,7 @@ import java.util.Locale;
 
 import com.astuetz.pagerslidingtabstrip.R;
 
-public class PagerSlidingTabStrip extends HorizontalScrollView {
+@SuppressLint("NewApi") public class PagerSlidingTabStrip extends HorizontalScrollView {
 
 	public interface IconTabProvider {
 		public int getPageIconResId(int position);

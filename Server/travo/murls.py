@@ -31,7 +31,6 @@ urlpatterns = patterns('',
 		url(r'^travel/(\d+)/comments$', mviews.GetCommentsView.as_view(), name='get_comments'),
 		url(r'^friend/(\d+)/travels$', mviews.FriendTravelsView.as_view(), name='friend_travel'),
 		url(r'^travel/search_by_key$', mviews.SearchTravelByKeyView.as_view(), name='search_travel_by_key'),
-
 		url(r'^note/upload$', mviews.UploadNoteView.as_view(), name='upload_note'),
 		url(r'^note/sync$', mviews.SyncNoteView.as_view(), name='sync_note'),
 		url(r'^note/(\d+)/image$', mviews.ImageView.as_view(), name='get_image'),

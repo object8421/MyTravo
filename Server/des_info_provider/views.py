@@ -86,7 +86,9 @@ class DesDetailView(View):
 				"image_url_list":image_url_list})
 		return render(request,'des_not_exist.html')
 
-
+class GetDesPushView(View):
+	def get(self,request,des_name):
+		pass
 
 		
 
