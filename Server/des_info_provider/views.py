@@ -35,7 +35,7 @@ class HomeView(View):
         country_list = DesCountry.objects.all()[:20]
         hottest_country_list = DesCountry.objects.all()[:5]
         province_list = DesProvince.objects.all()
-        hottest_province_list = DesProvince.objects.all()[:6]
+        hottest_province_list = DesProvince.objects.all()[:12]
 
         return render(request,'home.html',{"country_list":country_list,
         	"hottest_country_list":hottest_country_list,
