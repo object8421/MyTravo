@@ -27,6 +27,7 @@ class DesCity(models.Model):
     brief_information = models.TextField(blank=True)
     detail_information = models.TextField(blank=True)
     last_update_time = models.CharField(max_length=60, blank=True)
+    cover_url = models.CharField(max_length=100,blank=True)
     #======================以下为不可用信息======================================
     background_description = models.TextField(blank=True)
     history_introduction = models.TextField(blank=True)
@@ -36,8 +37,10 @@ class DesCity(models.Model):
     visa_info = models.TextField(blank=True)
     attention = models.TextField(blank=True)
     travel_advice = models.TextField(blank=True)
+    
     class Meta:
         db_table = 'des_city'
+
 
 class DesCountry(models.Model):
     """包含了国家的相关信息，注释同上"""
@@ -49,6 +52,7 @@ class DesCountry(models.Model):
     image_path = models.TextField(blank=True)
     last_update_time = models.TextField(blank=True)
     image_url = models.TextField(blank=True)
+    cover_url = models.CharField(max_length=100,blank=True)
     #======================以下为不可用信息======================================
     background_description = models.TextField(blank=True)
     history_introduction = models.TextField(blank=True)
@@ -72,6 +76,7 @@ class DesProvince(models.Model):
     brief_information = models.TextField(blank=True)
     detail_information = models.TextField(blank=True)
     last_update_time = models.CharField(max_length=60, blank=True)
+    cover_url = models.CharField(max_length=100,blank=True)
     #======================以下为不可用信息======================================
     background_description = models.TextField(blank=True)
     history_introduction = models.TextField(blank=True)
@@ -81,7 +86,7 @@ class DesProvince(models.Model):
     visa_info = models.TextField(blank=True)
     attention = models.TextField(blank=True)
     travel_advice = models.TextField(blank=True)
-    
+    cover_url = models.CharField(max_length=100,blank=True)
     class Meta:
 
         db_table = 'des_province'
@@ -94,6 +99,7 @@ class DesScenerySpot(models.Model):
     related_province = models.CharField(max_length=45, blank=True)
     brief_information = models.TextField(blank=True)
     image_url = models.TextField(blank=True)
+    cover_url = models.CharField(max_length=100,blank=True)
     ticket = models.TextField(blank=True)
     image_path = models.TextField(blank=True)
     last_update_time = models.CharField(max_length=45, blank=True)
