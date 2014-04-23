@@ -61,21 +61,24 @@ class DesDetailView(View):
 			country = get_object_or_404(DesCountry,pk=des_id)
 			image_url_list = country.image_url.split(';')
 			image_url_list.remove(image_url_list[-1])
-
+			related_province = DesProvince.objects.filter(related_country = country.country_name)
 			return render(request,'country_detail_info.html',{"country":country,
+				"related_province":related_province,
 				"image_url_list":image_url_list})
 
 		if des_type == 'province':
 			province = get_object_or_404(DesProvince,pk=des_id)
+			related_city = DesCity.objects.filter(related_province = province.province_name)
 			image_url_list = province.image_url.split(';')
 			image_url_list.remove(image_url_list[-1])
 			return render(request,'province_detail_info.html',{"province":province,
+				"related_city":related_city,
 				"image_url_list":image_url_list})
 
 		if des_type == 'city':
 			city = get_object_or_404(DesCity,pk=des_id)
 			image_url_list = city.image_url.split(';')
-			
+			related_spot = DesScenerySpot.objects.filter(related_city = city.city_name)
 			return render(request,'city_detail_info.html',{"city":city,
 				"image_url_list":image_url_list})
 
@@ -83,6 +86,7 @@ class DesDetailView(View):
 			scenery_spot = get_object_or_404(DesScenerySpot,pk=des_id)
 			image_url_list = scenery_spot.image_path.split(';')
 			return render(request,'spot_detail_info.html',{"spot":scenery_spot,
+				"related_spot":related_spot,
 				"image_url_list":image_url_list})
 		return render(request,'des_not_exist.html')
 
