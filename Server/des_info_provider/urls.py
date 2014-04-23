@@ -8,4 +8,5 @@ urlpatterns = patterns('',
     url(r'^search/(?P<keyword>\w+)/$',views.SearchView.as_view(), name = 'des_search'),
     url(r'^(?P<des_type>\w+)/(?P<des_id>\d+)',views.DesDetailView.as_view(),name = 'des_detail'),
     url(r'^get_des_push_info/(?P<des_name>\w+)',views.GetDesPushView.as_view(),name = 'get_des_push_info'),
+
 )

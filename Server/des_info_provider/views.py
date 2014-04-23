@@ -111,3 +111,7 @@ class GetRelatedDesView(View):
     def get(self,request):
         pass
 
+
+
+
+
