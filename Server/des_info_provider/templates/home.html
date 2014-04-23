@@ -16,7 +16,7 @@
 <div class="container">
 	<div class="col-md-2 col-md-offset-1">
 		<div class="row" style="padding-top:50px;">
-			<div class="panel panel-info">
+			<div class="panel panel-danger">
  			 <!-- Default panel contents -->
  				<div class="panel-heading">国外目的地</div>
  				<div class="panel-body" style="padding-left:0; padding-right:0; padding-bottom:0; padding-top:10px;">
@@ -24,7 +24,7 @@
     						{%for country in country_list %}
 							<div class="col-md-6" style="padding-left:5px;padding-right:5px;">
 								
-								<button type="button" class="btn btn-info btn-block btn-xs" style="margin-bottom:10px;" onclick="javascript:window.location.href='{%url 'des_detail' "country" country.id %}' ">
+								<button type="button" class="btn btn-danger btn-block btn-xs" style="margin-bottom:10px;" onclick="javascript:window.location.href='{%url 'des_detail' "country" country.id %}' ">
 										{{country.country_name}}</button>
 								</div>
 							
@@ -36,7 +36,7 @@
 			</div>
 		</div><!-- end row1 -->
 		<div class="row">
-			<div class="panel panel-info">
+			<div class="panel panel-danger">
  			 <!-- Default panel contents -->
  				<div class="panel-heading">国内目的地</div>
  				<div class="panel-body" style="padding-left:0; padding-right:0; padding-bottom:0; padding-top:10px;">
@@ -44,7 +44,7 @@
     						{% for province in province_list%}
     						<div class="col-md-6" style="padding-left:5px;padding-right:5px;">
 							
-								<button type="button" class="btn btn-info btn-block btn-xs" style="margin-bottom:10px;" onclick="javascript:window.location.href='{%url 'des_detail' "province" province.id %}' ">
+								<button type="button" class="btn btn-danger btn-block btn-xs" style="margin-bottom:10px;" onclick="javascript:window.location.href='{%url 'des_detail' "province" province.id %}' ">
 									{{province.province_name}}</button>
 							</div>
 							{% endfor %}
