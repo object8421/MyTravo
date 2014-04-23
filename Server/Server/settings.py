@@ -1,3 +1,4 @@
+#-*- coding: utf-8 -*-
 """
 Django settings for Server project.
 
@@ -126,3 +127,7 @@ EMAIL_USE_TLS = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+
+#jpush的相关参数
+APPKEY = '986aa2521dcb7f92092a8848'
+MASTER_SECRET = 'b6ddbc1f0933845e4fa50c9b'
