@@ -80,6 +80,7 @@ class DesDetailView(View):
 			image_url_list = city.image_url.split(';')
 			related_spot = DesScenerySpot.objects.filter(related_city = city.city_name)
 			return render(request,'city_detail_info.html',{"city":city,
+				"related_spot":related_spot,
 				"image_url_list":image_url_list})
 
 		if des_type == 'scenery_spot':
