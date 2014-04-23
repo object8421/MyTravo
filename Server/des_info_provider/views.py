@@ -17,7 +17,7 @@ import logging
 import string
 from django.conf import settings
 from datetime import datetime
-
+from jpush import JPushClient
 from models import DesCountry,DesProvince,DesCity,DesScenerySpot
 
 
@@ -88,7 +88,18 @@ class DesDetailView(View):
 
 class GetDesPushView(View):
 	def get(self,request,des_name):
-		pass
+		city = DesCity.objects.filter(Q(city_name__contains=des_name))
+		if city:
+			des_city = city[0]
+			appkey = '986aa2521dcb7f92092a8848'
+			master_secret = 'b6ddbc1f0933845e4fa50c9b'
+			jpush_client = JPushClient(master_secret)
+			welcome_message = "欢迎您来到:" + des_city.city_name
+			des_url = "http://travo.com.cn/destination/" + des_city.city_name + '/' + des_city.id
+			jpush_client.send_notification_by_appkey(app_key, sendno, 'des',
+                                         welcome_message,
+                                         des_url, 'android')
+
 
 		
 
