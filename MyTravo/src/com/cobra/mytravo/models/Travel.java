@@ -27,7 +27,7 @@ public class Travel extends BaseType implements Serializable{
 	private String create_time;
 	private String cover_url;
 	private String description;
-	private double average_spend;
+	private String average_spend;
 	private int view_qty;
 	private int comment_qty;
 	private int vote_qty;
@@ -158,10 +158,10 @@ public class Travel extends BaseType implements Serializable{
 	public void setCover_url(String cover_url) {
 		this.cover_url = cover_url;
 	}
-	public double getAverage_spend() {
+	public String getAverage_spend() {
 		return average_spend;
 	}
-	public void setAverage_spend(double average_spend) {
+	public void setAverage_spend(String average_spend) {
 		this.average_spend = average_spend;
 	}
 	public int getView_qty() {

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -30,7 +31,7 @@ public class DrawOnMap
 	public DrawOnMap(Activity activity, GoogleMap map)
 	{
 		this.activity = activity;
-		map.setInfoWindowAdapter(new MyInfoWindowAdapter());
+//		map.setInfoWindowAdapter(new MyInfoWindowAdapter());
 		map.setOnInfoWindowClickListener(null);
 		this.map = map;
 	}
@@ -57,6 +58,8 @@ public class DrawOnMap
 	{
 		PolylineOptions options = new PolylineOptions().add(latLngs);
 		Polyline polyline = map.addPolyline(options);
+		polyline.setColor(Color.YELLOW);
+		polyline.setWidth(7);
 		return polyline;
 	}
 	

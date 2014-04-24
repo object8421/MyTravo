@@ -2,14 +2,17 @@ package com.cobra.mytravo.fragments;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.cobra.mytravo.R;
+import com.cobra.mytravo.activities.LoginActivity;
 import com.cobra.mytravo.activities.MainActivity;
 import com.cobra.mytravo.activities.UserInfoActivity;
 import com.cobra.mytravo.data.AppData;
 import com.cobra.mytravo.data.RequestManager;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 
@@ -27,10 +31,23 @@ public class DrawerFragment extends BaseFragment{
 	private BitmapDrawable mDefaultAvatarBitmap ;
 	private String[] listItems;
 	private ImageLoader.ImageContainer imageRequest;
+	private Button logoutButton;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 		mainActivity = (MainActivity)getActivity();
 		View view = inflater.inflate(R.layout.fragment_drawer, null);
+		logoutButton = (Button) view.findViewById(R.id.btn_logout);
+		logoutButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				AppData.clearData();
+				Intent intentLogout = new Intent(getActivity(), LoginActivity.class);
+				startActivity(intentLogout);
+				getActivity().finish();
+			}
+		});
 		mDefaultAvatarBitmap = (BitmapDrawable) mainActivity
                 .getResources().getDrawable(R.drawable.default_avatar);
 		avatarImageView = (ImageView) view.findViewById(R.id.avatar_imgview);
@@ -46,8 +63,9 @@ public class DrawerFragment extends BaseFragment{
 		
 		listItems = getResources().getStringArray(R.array.drawermenu);
 		drawerListView = (ListView) view.findViewById(R.id.drawer_listview);
+		setTheme(drawerListView);
 		drawerListView.setItemChecked(0, true);
-		drawerListView.setAdapter(new ArrayAdapter<String>(mainActivity, R.layout.drawer_list_item,R.id.tv_title,listItems));
+		drawerListView.setAdapter(new ArrayAdapter<String>(mainActivity, R.layout.drawer_listitem,listItems));
 		drawerListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -63,5 +81,28 @@ public class DrawerFragment extends BaseFragment{
                 .getImageListener(avatarImageView, mDefaultAvatarBitmap, mDefaultAvatarBitmap));
 		return view;
 	}
-	
+	private void setTheme(View view){
+		SharedPreferences mySharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+		String themeValueString = mySharedPreferences.getString("theme_preference", "0");
+		if(themeValueString.equals("0")){
+			view.setBackgroundDrawable(getActivity().getResources().
+						getDrawable(R.color.black));
+			
+		}
+		else if(themeValueString.equals("1")){
+			view.setBackgroundDrawable(getActivity().getResources().
+					getDrawable(R.color.meizublue));
+			
+		}
+		else if(themeValueString.equals("2")){
+			view.setBackgroundDrawable(getActivity().getResources().
+					getDrawable(R.color.firebrick4));
+			
+		}
+		else{
+			view.setBackgroundDrawable(getActivity().getResources().
+					getDrawable(R.color.BewitchedTree));
+			
+		}
+	}
 }

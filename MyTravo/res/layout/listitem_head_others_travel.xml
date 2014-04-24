@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-     >
-       <RelativeLayout
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
         android:id="@+id/layout_option"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/me_listview_image_height" >
@@ -33,20 +33,6 @@
             android:textStyle="italic" />
 
         <TextView
-            android:id="@+id/tv_note_count_travel_detail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/tv_time_travel_detail"
-            android:layout_alignLeft="@+id/tv_title_travel_detail"
-            android:shadowColor="@android:color/black"
-            android:shadowDx="2"
-            android:shadowDy="2"
-            android:shadowRadius="1"
-            android:text="TextView"
-            android:textColor="@android:color/white" 
-            android:textSize="20sp"/>
-
-        <TextView
             android:id="@+id/tv_note_count_hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -54,21 +40,49 @@
             android:layout_alignBottom="@+id/tv_note_count_travel_detail"
             android:layout_toRightOf="@+id/tv_note_count_travel_detail"
             android:shadowColor="@android:color/black"
-            android:textColor="@android:color/white"
             android:shadowDx="2"
             android:shadowDy="2"
             android:shadowRadius="1"
             android:text="条足迹"
+            android:textColor="@android:color/white"
             android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tv_note_count_travel_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/tv_time_travel_detail"
+            android:layout_alignLeft="@+id/imageView1"
+            android:shadowColor="@android:color/black"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="1"
+            android:text="TextView"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="17dp"
+            android:background="@drawable/bg_listitem_shot"
+            android:scaleType="fitXY"
+            android:src="@drawable/default_avatar" />
 
         <TextView
             android:id="@+id/tv_title_travel_detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="18dp"
-            android:layout_marginTop="60dp"
+            android:layout_alignTop="@+id/imageView1"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/imageView1"
+            android:ellipsize="end"
+            android:lines="1"
+            android:maxLines="1"
             android:shadowColor="@android:color/black"
             android:shadowDx="2"
             android:shadowDy="2"
@@ -76,6 +90,22 @@
             android:text="标题"
             android:textColor="@android:color/white"
             android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/imageView1"
+            android:layout_alignLeft="@+id/tv_time_travel_detail"
+            android:shadowColor="@android:color/black"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="1"
+            android:text="Small Text"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:textStyle="italic" />
 
     </RelativeLayout>
 
@@ -95,16 +125,15 @@
             android:id="@+id/tv_description_travel_detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
             android:ellipsize="end"
-            android:lines="1"
-            android:maxLines="1"
+            android:lines="2"
+            android:maxLines="3"
             android:text="游记详细描述游记详细描述游记详细描述游记详细描述"
             android:textColor="@android:color/darker_gray"
             android:textStyle="italic" />
-
     </RelativeLayout>
 
 </RelativeLayout>

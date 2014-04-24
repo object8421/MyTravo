@@ -1,5 +1,6 @@
 package com.cobra.mytravo.activities;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import com.android.volley.Response;
@@ -82,35 +83,40 @@ public class SearchActivity extends Activity implements OnQueryTextListener{
 		Log.i(TAG,keyword);
 		mListView.setVisibility(View.INVISIBLE);
 		mProgressBar.setVisibility(View.VISIBLE);
-		RequestManager.addRequest(new GsonRequest<Travel.SearchRequestData>(AppData.HOST_IP+"travel/search_by_key?key="+keyword, Travel.SearchRequestData.class, null,
-                new Response.Listener<Travel.SearchRequestData>() {
-                    @Override
-                    public void onResponse(final Travel.SearchRequestData requestData) {
-                        	    
-                            	
-                            	int rsp_code = requestData.getRsp_code();
-                            	Log.i(TAG,String.valueOf(rsp_code));
-                                travels = requestData.getTravel_list();
-                                
-                                Log.i(TAG,travels.toString());
-                                mAdapter = new HotTravelAdapter(SearchActivity.this, mListView, travels);
-                                mListView.setAdapter(mAdapter);
-                                mAdapter.clearData();
-                                mAdapter.setData(travels);
-                                mListView.setVisibility(View.VISIBLE);
-                        		mProgressBar.setVisibility(View.INVISIBLE);
-                            
-                     
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                    	 Toast.makeText(SearchActivity.this, R.string.refresh_list_failed,
-                                 Toast.LENGTH_SHORT).show();
-                    	 mListView.setVisibility(View.INVISIBLE);
-                 		mProgressBar.setVisibility(View.INVISIBLE);
-                    }
-                }), this);
+		try {
+			RequestManager.addRequest(new GsonRequest<Travel.SearchRequestData>(AppData.HOST_IP+"travel/search_by_key?key="+java.net.URLEncoder.encode(keyword,"UTF-8"), Travel.SearchRequestData.class, null,
+			        new Response.Listener<Travel.SearchRequestData>() {
+			            @Override
+			            public void onResponse(final Travel.SearchRequestData requestData) {
+			                	    
+			                    	
+			                    	int rsp_code = requestData.getRsp_code();
+			                    	Log.i(TAG,String.valueOf(rsp_code));
+			                        travels = requestData.getTravel_list();
+			                        
+			                        Log.i(TAG,travels.toString());
+			                        mAdapter = new HotTravelAdapter(SearchActivity.this, mListView, travels);
+			                        mListView.setAdapter(mAdapter);
+			                        mAdapter.clearData();
+			                        mAdapter.setData(travels);
+			                        mListView.setVisibility(View.VISIBLE);
+			                		mProgressBar.setVisibility(View.INVISIBLE);
+			                    
+			             
+			            }
+			        }, new Response.ErrorListener() {
+			            @Override
+			            public void onErrorResponse(VolleyError volleyError) {
+			            	 Toast.makeText(SearchActivity.this, R.string.refresh_list_failed,
+			                         Toast.LENGTH_SHORT).show();
+			            	 mListView.setVisibility(View.INVISIBLE);
+			         		mProgressBar.setVisibility(View.INVISIBLE);
+			            }
+			        }), this);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override

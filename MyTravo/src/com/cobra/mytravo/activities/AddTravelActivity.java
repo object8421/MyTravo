@@ -443,7 +443,7 @@ public class AddTravelActivity extends Activity implements OnMenuItemClickListen
 			if(!isEdit){
 				travel = new Travel();
 				travel.setTitle(edtTitle.getText().toString());
-				travel.setAverage_spend(expense);
+				travel.setAverage_spend(String.valueOf(expense));
 				travel.setDestination(destination);
 				travel.setIs_public(1);
 				if(startString != null)
@@ -487,7 +487,7 @@ public class AddTravelActivity extends Activity implements OnMenuItemClickListen
 			else{
 				editTravel.setTitle(edtTitle.getText().toString());
 				
-				editTravel.setAverage_spend(expense);
+				editTravel.setAverage_spend(String.valueOf(expense));
 				editTravel.setDestination(destination);
 				if(startString != null)
 					editTravel.setBegin_date(startString);

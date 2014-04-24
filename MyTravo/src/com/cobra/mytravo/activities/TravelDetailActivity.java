@@ -103,8 +103,9 @@ public class TravelDetailActivity extends FragmentActivity{
 		mCustomView = LayoutInflater.from(this).inflate(R.layout.actionbar_customview, null);
 		title = (TextView) mCustomView.findViewById(R.id.tv_title);
 		title.setText("游记详情");
-		title.setTextSize((float)20.0);
+		title.setTextSize((float)18.0);
 		title.setTextColor(getResources().getColor(android.R.color.white));
+		
 		getActionBar().setCustomView(mCustomView);
 		mPullToRefreshAttacher = PullToRefreshAttacher.get(this);
 		tabs = (PagerSlidingTabStrip) mCustomView.findViewById(R.id.actionbar_tabs);
@@ -133,7 +134,7 @@ public class TravelDetailActivity extends FragmentActivity{
 		return true;
 	}
 	
-	@SuppressLint("NewApi") @Override
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
 		switch(item.getItemId()){
@@ -168,29 +169,42 @@ public class TravelDetailActivity extends FragmentActivity{
 				final EditText contentEditText = new EditText(this);
 				commentAlertDialog.setView(contentEditText);
 				commentAlertDialog.setPositiveButton("确定", new DialogInterface.OnClickListener() {  
-				       @SuppressLint("NewApi") public void onClick(DialogInterface dialog, int whichButton) {  
+				       public void onClick(DialogInterface dialog, int whichButton) {  
 				    	   comment = contentEditText.getText().toString();  
 				    	   uploadComment(comment);
 				    	   
 				             }  
 				           });  
 				commentAlertDialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {  
-				       @SuppressLint("NewApi") public void onClick(DialogInterface dialog, int whichButton) {  
+				       public void onClick(DialogInterface dialog, int whichButton) {  
 				    	   
 				           return;
 				         }  
-				      });  
-				commentAlertDialog.setOnDismissListener(new OnDismissListener(
-						) {
+				      });
+				
+				
+//				commentAlertDialog.setOnDismissListener(new OnDismissListener(
+//						) {
+//					
+//					 @Override
+//					public void onDismiss(DialogInterface dialog) {
+//						// TODO Auto-generated method stub
+//						blurView.setBackground(null);
+//				    	layout.setDrawingCacheEnabled(false);
+//					}
+//				});
+				AlertDialog alertDialog = commentAlertDialog.create();
+				alertDialog.setOnDismissListener(new OnDismissListener() {
 					
 					@SuppressLint("NewApi") @Override
 					public void onDismiss(DialogInterface dialog) {
 						// TODO Auto-generated method stub
 						blurView.setBackground(null);
+						
 				    	layout.setDrawingCacheEnabled(false);
 					}
 				});
-				commentAlertDialog.show();
+				alertDialog.show();
 			}else{
 				Toast.makeText(this, "您尚未登录，不能进行评论哦", Toast.LENGTH_SHORT).show();
 			}

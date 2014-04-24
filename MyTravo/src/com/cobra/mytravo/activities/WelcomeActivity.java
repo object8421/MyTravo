@@ -1,5 +1,7 @@
 package com.cobra.mytravo.activities;
 
+import cn.jpush.android.api.JPushInterface;
+
 import com.cobra.mytravo.R;
 import com.cobra.mytravo.data.AppData;
 import com.cobra.mytravo.data.MyHandlerMessage;
@@ -160,4 +162,13 @@ public class WelcomeActivity extends Activity
 			WelcomeActivity.this.finish();
 		}
 	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		JPushInterface.resumePush(getApplicationContext());
+		JPushInterface.setAliasAndTags(getApplicationContext(), AppData.getNickname(), null);
+	}
+	
 }
