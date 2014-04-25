@@ -72,6 +72,11 @@ public class PersonalFragment extends BaseFragment implements LoaderCallbacks<Cu
 		mDataHelper = new TravelsDataHelper(getActivity(), AppData.getUserId());
 		headerView = LayoutInflater.from(getActivity()).inflate(R.layout.listitem_head_personal, null);
 		avatar = (ImageView) headerView.findViewById(R.id.avatar);
+		if(AppData.getSex().equals("女"))
+			avatar.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_listitem_shot_red));
+		else {
+			avatar.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_listitem_shot_blue));
+		}
 		nickname = (TextView) headerView.findViewById(R.id.tv_nickname);
 		gender = (TextView) headerView.findViewById(R.id.tv_gender);
 		signature = (TextView) headerView.findViewById(R.id.tv_signature);
@@ -80,6 +85,8 @@ public class PersonalFragment extends BaseFragment implements LoaderCallbacks<Cu
 		followingCountTextView = (TextView) headerView.findViewById(R.id.tv_folower_count);
 		favoriteCountTextView = (TextView) headerView.findViewById(R.id.tv_favorite_count);
 		followingView = headerView.findViewById(R.id.ll_followings);
+		gender.setText(AppData.getSex());
+		signature.setText(AppData.getSignature());
 		followingView.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -131,10 +138,13 @@ public class PersonalFragment extends BaseFragment implements LoaderCallbacks<Cu
                                			favoriteCountTextView.setText(String.valueOf(user.getFavorite_travel_qty()));
                                			nickname.setText(user.getNickname());
                                			signature.setText(user.getSignature());
+                               			
                                			RequestManager.loadImage("http://travo-user-avatar.oss-cn-hangzhou.aliyuncs.com/"+user.getFace_path(), RequestManager
                                                .getImageListener(avatar, mDefaultImageDrawable, mDefaultImageDrawable));
                             	   AppData.setFacePath(user.getFace_path());
                             	   AppData.setIdToken(user.getToken());
+                            	   AppData.setSignature(user.getSignature());
+                            	   AppData.setNickname(user.getNickname());
                             	   }
                             	   
                                   

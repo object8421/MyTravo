@@ -40,24 +40,12 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/tv_gender"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/tv_nickname"
-            android:layout_below="@id/tv_nickname"
-            android:shadowColor="@android:color/black"
-            android:shadowDx="2"
-            android:shadowDy="2"
-            android:shadowRadius="1"
-            android:text="男"
-            android:textColor="@android:color/white" />
-
-        <TextView
             android:id="@+id/tv_signature"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/tv_nickname"
-            android:layout_below="@id/tv_gender"
+            android:layout_below="@id/tv_nickname"
+            android:layout_marginTop="10dp"
             android:shadowColor="@android:color/black"
             android:shadowDx="2"
             android:shadowDy="2"
@@ -73,6 +61,7 @@
             android:layout_height="35dp"
             android:layout_alignLeft="@+id/avatar"
             android:layout_below="@+id/avatar"
+            android:layout_marginTop="10dp"
             android:background="@drawable/bg_listitem_shot_blue"
             android:text="关注"
             android:textColor="@android:color/white"

@@ -1,5 +1,7 @@
 package com.cobra.mytravo.util;
 
+import com.cobra.mytravo.activities.MainActivity;
+
 import cn.jpush.android.api.JPushInterface;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -47,7 +49,9 @@ public class MyReceiver extends BroadcastReceiver
 
 			JPushInterface.reportNotificationOpened(context,
 					bundle.getString(JPushInterface.EXTRA_MSG_ID));
-			
+			Intent i = new Intent(context, MainActivity.class);  //自定义打开的界面
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(i);
 			
 		} else if (JPushInterface.ACTION_RICHPUSH_CALLBACK.equals(intent
 				.getAction()))

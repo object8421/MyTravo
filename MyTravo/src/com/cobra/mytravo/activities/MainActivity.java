@@ -265,7 +265,7 @@ public class MainActivity extends FragmentActivity {
 		case 5:
 			Intent preferenceIntent = new Intent(this, SettingsActivity.class);
 			startActivity(preferenceIntent);
-
+			overridePendingTransition(R.anim.anim_right_to_left_in, R.anim.anim_left_fade_out);
 		}
 		 
 		 

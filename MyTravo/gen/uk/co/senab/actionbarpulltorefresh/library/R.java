@@ -8,8 +8,8 @@ package uk.co.senab.actionbarpulltorefresh.library;
 
 public final class R {
 	public static final class anim {
-		public static final int fade_in = 0x7f040000;
-		public static final int fade_out = 0x7f040001;
+		public static final int fade_in = 0x7f040004;
+		public static final int fade_out = 0x7f040005;
 	}
 	public static final class drawable {
 		public static final int ptr_progress_horizontal_holo_center = 0x7f02006f;
@@ -31,7 +31,7 @@ public final class R {
 		public static final int ptr_text_opaque_bg = 0x7f070006;
 	}
 	public static final class layout {
-		public static final int default_header = 0x7f03001b;
+		public static final int default_header = 0x7f03001c;
 	}
 	public static final class string {
 		public static final int pull_to_refresh_pull_label = 0x7f08001a;

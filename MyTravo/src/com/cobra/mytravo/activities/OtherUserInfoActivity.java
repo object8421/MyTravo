@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 
+import com.android.volley.Request.Method;
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
@@ -17,7 +18,9 @@ import com.cobra.mytravo.data.AppData;
 import com.cobra.mytravo.data.GsonRequest;
 import com.cobra.mytravo.data.MyServerMessage;
 import com.cobra.mytravo.data.RequestManager;
+import com.cobra.mytravo.helpers.ActionBarUtils;
 import com.cobra.mytravo.internet.user.GetUserInfoService;
+import com.cobra.mytravo.models.Comment.CommentRequestData;
 import com.cobra.mytravo.models.Travel;
 import com.cobra.mytravo.models.User;
 import com.cobra.mytravo.models.UserInfo;
@@ -34,6 +37,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -49,7 +53,7 @@ public class OtherUserInfoActivity extends Activity implements PullToRefreshAtta
 	private OtherTravelAdapter mAdapter;
 	private View headerView;
 	private TextView nickname;
-	private TextView gender;
+
 	private TextView signature;
 	private Button focusButton;
 	private ImageView avatar;
@@ -62,14 +66,23 @@ public class OtherUserInfoActivity extends Activity implements PullToRefreshAtta
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_other_user_info);
+		ActionBarUtils.InitialActionBarWithBackAndTitle(this, getActionBar(), "用户主页");
 		user = (User) getIntent().getSerializableExtra("user");
 		mPullToRefreshAttacher = PullToRefreshAttacher.get(this);
 		headerView = LayoutInflater.from(this).inflate(R.layout.userinfo_header, null);
 		avatar = (ImageView) headerView.findViewById(R.id.avatar);
 		nickname = (TextView) headerView.findViewById(R.id.tv_nickname);
-		gender = (TextView) headerView.findViewById(R.id.tv_gender);
+		
 		signature = (TextView) headerView.findViewById(R.id.tv_signature);
 		focusButton = (Button) headerView.findViewById(R.id.btn_focus);
+		focusButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				focusUser();
+			}
+		});
 		travelCounTextView = (TextView) headerView.findViewById(R.id.tv_travel_count);
 		followingCountTextView = (TextView) headerView.findViewById(R.id.tv_folower_count);
 		favoriteCountTextView = (TextView) headerView.findViewById(R.id.tv_favorite_count);
@@ -124,7 +137,12 @@ public class OtherUserInfoActivity extends Activity implements PullToRefreshAtta
 						if(rsp_code == MyServerMessage.SUCCESS){
 							userInfo = requestData.getUser_info();
 							if(userInfo.getSex() != null){
-								gender.setText(userInfo.getSex());
+								
+								if(userInfo.getSex().equals("女"))
+									avatar.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_listitem_shot_red));
+								else {
+									avatar.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_listitem_shot_blue));
+								}
 							}
 						}
 					}
@@ -165,5 +183,37 @@ public class OtherUserInfoActivity extends Activity implements PullToRefreshAtta
 						mPullToRefreshAttacher.setRefreshComplete();
 					}
 				}), this);
+	}
+	private void focusUser(){
+		focusButton.setEnabled(false);
+		RequestManager.addRequest(new GsonRequest<CommentRequestData>(Method.PUT,AppData.HOST_IP + "user/" + user.getId() + "/follow?token=" + AppData.getIdToken(),
+				CommentRequestData.class, null, new Listener<CommentRequestData>() {
+
+					@Override
+					public void onResponse(CommentRequestData requestData) {
+						// TODO Auto-generated method stub
+						int rsp_code = requestData.getRsp_code();
+						Log.i(TAG, String.valueOf(rsp_code));
+						if(rsp_code != MyServerMessage.SUCCESS){
+							Toast.makeText(OtherUserInfoActivity.this, "已关注",
+									
+	                                Toast.LENGTH_SHORT).show();
+							
+						}
+						
+						focusButton.setEnabled(true);
+						focusButton.setText("取消关注");
+						focusButton.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_listitem_shot_red));
+					}
+				}, new Response.ErrorListener() {
+
+					@Override
+					public void onErrorResponse(VolleyError arg0) {
+						// TODO Auto-generated method stub
+						Toast.makeText(OtherUserInfoActivity.this, R.string.refresh_list_failed,
+                                Toast.LENGTH_SHORT).show();
+						focusButton.setEnabled(true);
+					}
+				},null), this);
 	}
 }

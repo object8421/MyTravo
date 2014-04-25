@@ -81,7 +81,6 @@
         <item>魔力红</item>
         <item>清新绿</item>
     </string-array>
-
     <string-array name="theme_list_values">
         <item>0</item>
         <item>1</item>
@@ -124,5 +123,6 @@
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_followers">FollowersActivity</string>
     <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_edit_signature">EditSignatureActivity</string>
 
 </resources>
