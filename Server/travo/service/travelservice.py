@@ -402,7 +402,7 @@ def comment(token, travel_id, content):
 	print sendno
 	jpush_client.send_notification_by_alias(related_user_name, APPKEY, sendno, 'travo',
 	                                         welcome_message,
-	                                         content, 'android')
+	                                         content, 'android',{'travel_id':travel_id})
 
 
 	return {RSP_CODE : RC_SUCESS}
