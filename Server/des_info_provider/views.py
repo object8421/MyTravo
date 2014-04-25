@@ -77,17 +77,21 @@ class DesDetailView(View):
 
 		if des_type == 'city':
 			city = get_object_or_404(DesCity,pk=des_id)
-			image_url_list = city.image_url.split(';')
-			related_spot = DesScenerySpot.objects.filter(related_city = city.city_name)
+			try:
+				image_url_list = city.image_url.split(';')
+				image_url_list.remove(image_url_list[-1])
+			except:
+				print "该景点无图。"
+			related_spot = DesScenerySpot.objects.filter(related_city = city.city_name).order_by('image_url').reverse()
 			return render(request,'city_detail_info.html',{"city":city,
 				"related_spot":related_spot,
 				"image_url_list":image_url_list})
 
 		if des_type == 'scenery_spot':
 			scenery_spot = get_object_or_404(DesScenerySpot,pk=des_id)
-			image_url_list = scenery_spot.image_path.split(';')
+			image_url_list = scenery_spot.image_url.split(';')
+			image_url_list.remove(image_url_list[-1])
 			return render(request,'spot_detail_info.html',{"spot":scenery_spot,
-				"related_spot":related_spot,
 				"image_url_list":image_url_list})
 		return render(request,'des_not_exist.html')
 

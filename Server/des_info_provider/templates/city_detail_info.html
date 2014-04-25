@@ -15,6 +15,9 @@
 	<div class="col-md-3">
 <div class="row " style="margin-top:50px;">
 	<div class="alert alert-danger">
+
+<!--		<button class="btn btn-danger btn-lg" style="clearfix;float:right;">喜欢</button>  -->
+		
 		<h2>{{city.city_name}}</h2>
 		<h4>{{city.brief_information}}</h4>
 	</div>
@@ -85,15 +88,45 @@
 		<div class="row" style="margin-top:0px;">
 			<div class="col-md-offset-1 col-md-10" style="margin-top:0;padding-top:0;">
 			{% for spot in related_spot %}
-			<div class="col-md-3" style="margin-bottom:10px;padding-left:4px;padding-right:4px;cursor:pointer;" onclick="javascript:window.location.href='{%url 'des_detail' "city" spot.id %}' ">
-				<div style="height:135px;background:url({{spot.cover_url}}) no-repeat center;background-size:cover;">
-					<div class="col-md-6" style="background:rgba(28, 28, 28, 0.9); color:#ffffff; margin-top:90px;">
+			<div class="col-md-3 ice_block" style="margin-bottom:10px;padding-left:4px;padding-right:4px;cursor:pointer;" data-toggle="popover"  data-trigger="hover" data-placement="left" data-delay="show:500;hide:100;">
+				<div id="info_in_popover" style="display:none" style="border-color: #ebccd1;">
+		
+				<div class="clearfix;" style="color: #a94442; background-color: #f2dede;"><h4>{{spot.spot_name}}</h4></div>
+    			
+				{% if spot.ticket %}
+				<div class="clearfix;" style="align:left;"><h6>票价：{{spot.ticket}}</h6></div>
+				{% endif %}
+				{% if spot.trasportation_info %}
+				<div class="clearfix;" style="align:left;"><h6>交通：{{spot.transportation_info}}</h6></div>
+				{% endif %}
+				{% if spot.proper_travel_time %}
+				<div class="clearfix;" style=" align:left;"><h6>适合时节：{{spot.proper_travel_time}}</h6></div>
+				{% endif %}
+				</div><!--end of popover -->
+
+				<!-- default img or cover img -->
+
+				{% if not spot.cover_url  %}
+				<div style="height:135px;background:url('/static/travo/image/spot_default.jpg') no-repeat center;background-color:#cccccc;background-size:cover;">
+					<!--<img src="/static/travo/image/spot_default.jpg">-->
+					<div class="col-md-12" style="background:rgba(28, 28, 28, 0.9); color:#ffffff; margin-top:90px;">
 						<h5>{{spot.spot_name}}
 						</h5></div>
 				</div>
+				{% else %}
+				<div style="height:135px;background:url({{spot.cover_url}}) no-repeat center;background-size:cover;">
+					<div class="col-md-12" style="background:rgba(28, 28, 28, 0.9); color:#ffffff; margin-top:90px;">
+						<h5>{{spot.spot_name}}
+						</h5></div>
+				</div>
+				
+				
+				{% endif %}
+			
 			</div>
 			{% endfor %}
-			</div>
+		</div>
+
 		</div><!-- end of row -->
 </div>
 
@@ -111,5 +144,27 @@
 
 
 
+
+{% endblock %}
+{% block myscript%}
+<script type="text/javascript">
+// $(document).ready(function() {
+//     $('.ice_block').hover(function() {
+//        $(this).popover('show');
+//         // $(this).find('.itemDescription').show();
+//        // alert("haha");
+//     }, function() {
+//         $(this).popover('hide');
+//     });
+// }); 
+$('.ice_block').popover({
+
+    'html':true,
+    'content':function(){
+        return $('#info_in_popover',this).html();
+    }
+});
+
+</script>
 
 {% endblock %}
