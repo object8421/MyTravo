@@ -481,6 +481,7 @@ class SearchTravelView(View):
         print keyword
         return render(request,'website/search_travel.html',{"travel_list":travel_list_result['travel_list'],
             })
+
 #======================note view======================================
 
 

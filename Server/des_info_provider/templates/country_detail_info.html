@@ -1,7 +1,9 @@
 {% extends "website/base_index.html" %}
 
+
 {% block title %}{{country.country_name}}{% endblock %}
 {% block content %}
+<!-- 
 <h2>{{country.country_name}}</h2>
 
 {% for url in image_url_list %}
@@ -10,6 +12,85 @@
 
 
 <h4>{{country.brief_information}}</h4>
----------------------------------------详情------------------------------------------
+详情
 <h5>{{country.detail_information}}</h5>
+ -->
+<div  class="container">
+	<div class="col-md-3">
+<div class="row " style="margin-top:50px;">
+	<div class="alert alert-danger">
+		<h2>{{country.country_name}}</h2>
+		<h4>{{country.brief_information}}</h4>
+	</div>
+</div><!-- end of row -->
+
+<div class="row ">
+	  <div class="panel panel-danger">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+          详情
+        </a>
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse">
+      <div class="panel-body">
+      	<h5>{{country.detail_information}}</h5>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="col-md-9" style="margin-top:50px;">
+<div class="row" >
+	<div class="col-md-offset-1 col-md-10">
+		<div id="carousel-example-generic" class="carousel slide" data-ride="carousel" style="height:400px;">
+  			<!-- Indicators -->
+			  <ol class="carousel-indicators">
+				{% for url in image_url_list %}
+				{% ifequal foorloop.counter0 0 %}
+			    <li data-target="#carousel-example-generic" data-slide-to="{{fooloop.counter0}}" class="active"></li>
+			    {% else %}
+				<li data-target="#carousel-example-generic" data-slide-to="{{fooloop.counter0}}"></li>
+				{% endifequal %}
+				{% endfor %}			
+ 			  </ol>
+
+			  <!-- Wrapper for slides -->
+ 			 <div class="carousel-inner" style="height:400px;">
+ 			 	{% for url in image_url_list %}
+ 			 	{% ifequal forloop.counter 1 %}
+  			  <div class="item active" style="height:400px;">
+   			   <img  src="{{url}}" alt="..." style="height:400px;">
+   			   
+   			  </div>
+   			   	{% else %}
+  			  <div class="item" style="height:400px;">
+   			   <img src="{{url}}" alt="..." style="height:400px;">
+
+   			  </div>
+   			   	{% endifequal %}
+
+  			  {% endfor %}
+  			</div>
+
+  			<!-- Controls -->
+ 			 <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+ 			   <span class="glyphicon glyphicon-chevron-left"></span>
+			  </a>
+  			<a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+ 			   <span class="glyphicon glyphicon-chevron-right"></span>
+ 			 </a>
+			</div><!-- end carousel -->
+	</div>
+</div><!-- end of row -->
+
+	
+</div>
+
+
+</div><!-- end of container -->
+
+
 {% endblock %}

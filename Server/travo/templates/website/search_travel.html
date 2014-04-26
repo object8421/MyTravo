@@ -25,7 +25,11 @@
 <div  class="col-md-4 column" >
 <div class="panel panel-default" style="width:350px;">
   <div class="panel-body">
+    {% if travel.cover_path %}
      <img src="http://travo-travel-cover.oss-cn-hangzhou.aliyuncs.com/{{travel.cover_path}}" alt="..." class="img-rounded" style="width:100%; height:250px; margin=0;">
+     {% else %}
+     <img src="/static/travo/image/travel_default.jpg" alt="..." class="img-rounded" style="width:100%; height:250px; margin=0;">
+     {% endif %}
     
   </div>
   <div class="panel-footer" align="left">

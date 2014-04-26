@@ -1,8 +1,15 @@
 {% extends "website/base_index.html" %}
 
 {% block title %}攻略信息{% endblock %}
+  {% block background %}
+  <div id="web_bg" style="position:absolute; width:100%; height:100%; z-index:-1"> 
+<img style="position:fixed;" src="../../../static/travo/image/welcome_bg17.jpg" height="100%" width="100%" /> 
+</div>
+ {% endblock %}
+
 {% block content %}
----------------------------------国家------------------------------------
+<!--
+国家
 	{% if country_list %}
 		{% for country in country_list%}
 			<h2>{{country.country_name}}</h2>
@@ -10,21 +17,21 @@
 
 		{% endfor %}
 	{% endif %}
----------------------------------省份------------------------------------
+省份
 	{% if province_list %}
 		{% for province in province_list%}
 			<h2>{{province.province_name}}</h2>
 			<h4>{{province.brief_information}}</h4>
 		{% endfor %}
 	{% endif %}
----------------------------------城市------------------------------------
+城市
 	{% if city_list %}
 		{% for city in city_list%}
 			<h2>{{city.city_name}}</h2>
 			<h4>{{city.brief_information}}</h4>
 		{% endfor %}
 	{% endif %}
----------------------------------景点------------------------------------
+景点
 	{% if spot_list %}
 		{% for spot in spot_list%}
 			<h2>{{spot.spot_name}}</h2>
@@ -34,4 +41,148 @@
 {% for des in des_list %}
 	{{des.country_name}}
 {% endfor %}
+-->
+<div class="container" style="background-color:#ffffff;">
+
+
+<div style="padding-bottom:20px;">
+  <!-- 游记条题目 -->
+
+
+<div class="col-md-12" style=" padding-left:5px;margin-bottom:30px; margin-top:20px;">
+<div class="col-md-offset-1 col-md-2" style="padding:0;">
+<button type="button"  class="btn btn-danger btn-lg btn-block" style="border-radius:2px;">搜索到的目的地   <span class="badge"> 10</span></button>  
+ 
+</div>
+</div>
+
+<div class="row">
+	<!-- country search result list -->
+			{% if country_list %}
+		
+			<div class="col-md-offset-1 col-md-10" style="margin-top:0;padding-top:0;">	
+				<div class="col-md-12" style="padding:0;">
+				<div class="alert alert-danger col-md-3" style="margin:0;margin-bottom:20px;"><h4>国家</h4></div>		
+			</div>
+			{% for country in country_list%}
+			<div class="col-md-3" style="margin-bottom:10px;padding-left:4px;padding-right:4px;cursor:pointer;" onclick="javascript:window.location.href='{%url 'des_detail' "country" country.id %}' ">
+				<div style="height:180px;background:url({{country.cover_url}}) no-repeat center;background-size:cover;">
+					<div class="col-md-6" style="background:rgba(28, 28, 28, 0.9); color:#ffffff; margin-top:120px;">
+						<h5>{{country.country_name}}
+						</h5></div>
+				</div>
+			</div>
+			{% endfor %}
+			</div>
+			{% endif %}
+	<!-- province search result list -->
+			{% if province_list %}
+			
+			<div class="col-md-offset-1 col-md-10" style="margin-top:0;padding-top:0;">	
+			<div class="col-md-12" style="padding:0;">
+				<div class="alert alert-danger col-md-3" style="margin:0;margin-bottom:20px;"><h4>省份</h4></div>		
+			</div>		
+			{% for province in province_list%}
+			<div class="col-md-3" style="margin-bottom:10px;padding-left:4px;padding-right:4px;cursor:pointer;" onclick="javascript:window.location.href='{%url 'des_detail' "province" province.id %}' ">
+				<div style="height:180px;background:url({{province.cover_url}}) no-repeat center;background-size:cover;">
+					<div class="col-md-6" style="background:rgba(28, 28, 28, 0.9); color:#ffffff; margin-top:120px;">
+						<h5>{{province.province_name}}
+						</h5></div>
+				</div>
+			</div>
+			{% endfor %}
+			</div>
+			{% endif %}
+	<!-- city search result list -->
+			{% if city_list %}
+
+			<div class="col-md-offset-1 col-md-10" style="margin-top:0;padding-top:0;">	
+			<div class="col-md-12" style="padding:0;">
+				<div class="alert alert-danger col-md-3" style="margin:0;margin-bottom:20px;"><h4>城市</h4></div>		
+			</div>	
+			{% for city in city_list%}
+			<div class="col-md-3" style="margin-bottom:10px;padding-left:4px;padding-right:4px;cursor:pointer;" onclick="javascript:window.location.href='{%url 'des_detail' "city" city.id %}' ">
+				<div style="height:180px;background:url({{city.cover_url}}) no-repeat center;background-size:cover;">
+					<div class="col-md-6" style="background:rgba(28, 28, 28, 0.9); color:#ffffff; margin-top:120px;">
+						<h5>{{city.city_name}}
+						</h5></div>
+				</div>
+			</div>
+			{% endfor %}
+			</div>
+			{% endif %}
+	<!-- spot search result list -->
+			{% if spot_list %}
+			
+			<div class="col-md-offset-1 col-md-10" style="margin-top:0;padding-top:0;">		
+			<div class="col-md-12" style="padding:0;">
+				<div class="alert alert-danger col-md-3" style="margin:0;margin-bottom:20px;"><h4>景点</h4></div>		
+			</div>
+						{% for spot in spot_list%}
+			<div class="col-md-3 ice_block" style="margin-bottom:10px;padding-left:4px;padding-right:4px;" data-toggle="popover"  data-trigger="hover" data-placement="bottom" data-delay="show:500;hide:100;">
+				<div id="info_in_popover" style="display:none" style="border-color: #ebccd1;">
+		
+				<div class="clearfix;" style="color: #a94442; background-color: #f2dede;"><h4>{{spot.spot_name}}</h4></div>
+    			
+				{% if spot.ticket %}
+				<div class="clearfix;" style="align:left;"><h6>票价：{{spot.ticket}}</h6></div>
+				{% endif %}
+				{% if spot.trasportation_info %}
+				<div class="clearfix;" style="align:left;"><h6>交通：{{spot.transportation_info}}</h6></div>
+				{% endif %}
+				{% if spot.proper_travel_time %}
+				<div class="clearfix;" style=" align:left;"><h6>适合时节：{{spot.proper_travel_time}}</h6></div>
+				{% endif %}
+				</div><!--end of popover -->
+
+				<!-- default img or cover img -->
+
+				{% if not spot.cover_url  %}
+				<div style="height:180px;background:url('/static/travo/image/spot_default.jpg') no-repeat center;background-color:#cccccc;background-size:cover;">
+					<!--<img src="/static/travo/image/spot_default.jpg">-->
+					<div class="col-md-12" style="background:rgba(28, 28, 28, 0.9); color:#ffffff; margin-top:120px;">
+						<h5>{{spot.spot_name}}
+						</h5></div>
+				</div>
+				{% else %}
+				<div style="height:180px;background:url({{spot.cover_url}}) no-repeat center;background-size:cover;">
+					<div class="col-md-12" style="background:rgba(28, 28, 28, 0.9); color:#ffffff; margin-top:120px;">
+						<h5>{{spot.spot_name}}
+						</h5></div>
+				</div>
+				
+				
+				{% endif %}
+			
+			</div>
+			{% endfor %}
+			</div>
+			{% endif %}
+
+</div><!-- end of row -->
+
+
+
+</div>
+
+
+
+</div><!-- end of container -->
+
+
+{% endblock %}
+
+{% block myscript%}
+<script type="text/javascript">
+
+$('.ice_block').popover({
+
+    'html':true,
+    'content':function(){
+        return $('#info_in_popover',this).html();
+    }
+});
+
+</script>
+
 {% endblock %}
