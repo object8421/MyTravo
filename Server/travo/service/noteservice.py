@@ -143,7 +143,7 @@ def get_image(note_id):
 	return result
 
 ######    get all in travel ######
-def get_all_in_travel(travel_id, token):
+def get_all_in_travel(travel_id, token=None):
 	try:
 		travel = Travel.objects.get(pk=travel_id)
 	except:

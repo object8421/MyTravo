@@ -85,9 +85,11 @@ def save_cover_snap(path, cover):
 	return _save_snap(settings.COVER_SNAP_PATH + path, cover)
 '''
 def save_image_snap(path, image):
+	image.open()
 	return _save_snap('travo-note-pic-snap', path, image)
 
 def save_cover_snap(path, cover):
+	cover.open()
 	return _save_snap('travo-travel-cover-snap', path, cover)
 
 def horz_image(image):
@@ -100,8 +102,7 @@ def min(a, b):
 	return b
 
 def _save_snap(bucket, path, image):
-	cpimage = copy.deepcopy(image)
-	im = Image.open(cpimage)
+	im = Image.open(image)
 	width, height = im.size
 	resized = False
 
@@ -133,12 +134,15 @@ def __save_image(bucket, path, image):
 		'_image' : image}).start()
 
 def save_cover(path, cover):
+	cover.open()
 	__save_image('travo-travel-cover', path, str(cover.read()))
 
 def save_image(path, image):
-    __save_image('travo-note-pic', path, str(image.read()))
+	image.open()
+	__save_image('travo-note-pic', path, str(image.read()))
 
 def save_face(path, face):
+	face.open()
 	__save_image('travo-user-avatar', path, str(face.read()))
 
 ######    other    ######
@@ -152,8 +156,9 @@ def filter_key(d, keys):
 
 def get_photo_time(photo):
 	'''return photo shoot time'''
-	cpimage = copy.deepcopy(photo)
-	im = Image.open(cpimage)
+	#cpimage = copy.deepcopy(photo)
+	photo.open()
+	im = Image.open(photo)
 
 	exif = im._getexif()
 	if exif is None:

@@ -116,7 +116,8 @@ USE_TZ = False
 ADMINS = (
 		('Boozer', 'mingyuan1240@gmail.com'),
 		('rew', '1135172071@qq.com'),
-		('Ethon', 'wlj0427@gmail.com')
+		('Ethon', 'wlj0427@gmail.com'),
+		('l!ar', 'qky1412@gmail.com')
 		)
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'cobra.travo@gmail.com'
