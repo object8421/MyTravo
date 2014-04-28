@@ -189,7 +189,7 @@ public class SyncService extends IntentService
 					@Override
 					public void onErrorResponse(VolleyError arg0)
 					{
-						Log.i("syncrequesterror", arg0.getMessage());
+						Log.i("syncrequesterror", "error");
 					}
 				});
 		queue.add(request);
