@@ -193,8 +193,6 @@ def change_self_avatar(user,image=None):
 	if image is not None: 
 		user.face_path = _build_face_path(image)
 		user.save()
-		print  '存储了头像外的其他信息，准备存储头像。。。'
-
 		utils.save_face(user.face_path, image)	
 		return 'upload avatar successful! '
 
@@ -259,10 +257,8 @@ def follow_list(token):
 		if not f.passive in unique_passive and not f.passive in neg_result and f.action == '1':
 			unique_passive.append(f.passive)
 			result['users'].append(f.passive.public_dict())
-			print 'add one '
 		elif not f.passive in unique_passive and not f.passive in neg_result and f.action == '0':
 			neg_result.append(f.passive)
-			print 'neg one'
 
 	result['length'] = len(result['users'])
 	return result

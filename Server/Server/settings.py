@@ -33,12 +33,12 @@ MEDIA_URL = '/media/'
 SECRET_KEY = '6(r+_%23s=ho7zoy$u#o@+p%$%ykayj%egdq9mb@7yirhv#)@e'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True 
+DEBUG = False 
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
-	#['*',]
+ALLOWED_HOSTS = ['*',]
+	#[]
 
 TOKEN_VALID_DAY = 30
 
@@ -94,8 +94,8 @@ DATABASES = {
         'NAME': 'travo',
 		'USER': 'travo',
 		'PASSWORD':'travo',
-		#'HOST' : 'localhost',
-        'HOST':'172.16.12.26',
+		'HOST' : 'localhost',
+        #'HOST':'172.16.12.26',
 		'PORT': '3306'
     }
 }

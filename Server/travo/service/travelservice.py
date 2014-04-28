@@ -381,8 +381,6 @@ def comment(token, travel_id, content):
 		travel = Travel.objects.get(pk=travel_id)
 		travel_name = travel.title
 		related_user_name = travel.user.nickname
-		print travel.title
-		print related_user_name
 	except ObjectDoesNotExist:
 		return {RSP_CODE : RC_NO_SUCH_TRAVEL}
 	else:
@@ -399,9 +397,7 @@ def comment(token, travel_id, content):
 	welcome_message = "您的游记"
 	#welcome_message += travel_name
 	welcome_message += "有一条新评论，点击查看"
-	print welcome_message
 	sendno = int(time.time())
-	print sendno
 	jpush_client.send_notification_by_alias(related_user_name, APPKEY, sendno, 'travo',
 	                                         welcome_message,
 	                                         content, 'android',{'travel_id':travel_id})

@@ -52,7 +52,6 @@ def _update(user, n, image=None):
 			try:
 				note.save()
 			except ValidationError, e:
-				print traceback.format_exc()
 				rsp[RSP_CODE] = RC_ILLEGAL_DATA
 	return rsp
 

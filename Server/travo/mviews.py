@@ -33,45 +33,22 @@ class BaseView(View):
 		self._data = None
 
 	def handle(self):
-		print
-		print('************request************')
-		from datetime import datetime
-		print datetime.now()
-		print('host:' + self._request.META['REMOTE_ADDR'])
-		print('arg:' + str(self._request.GET))
-
-		#print('body:' + self._request.body)
-		print('post:' + str(self._request.POST))
-		print('FILES:' + str(self._request.FILES))
-
 		try:
 			result = self.do()
-			print('==========response==========')
-			print result
 			return result
 		except IllegalDataError:
-			print('======caught exception======')
-			print(traceback.format_exc())
 			return {RSP_CODE : RC_ILLEGAL_DATA}
 		except MissingArgumentError:
-			print('======caught exception======')
-			print(traceback.format_exc())
 			return {RSP_CODE : RC_WRONG_ARG}
 		except TokenError, e:
-			print('======caught exception======')
-			print(traceback.format_exc())
 			rsp_code = {
 					'no_such_user' : RC_NO_SUCH_USER,
 					'token_overdate': RC_TOKEN_OVERDATE
 					}[e.args[0]]
 			return {RSP_CODE : rsp_code}
 		except KeyError:
-			print('======caught exception======')
-			print(traceback.format_exc())
 			return {RSP_CODE : RC_WRONG_ARG}
 		except Exception, e:
-			print('======caught exception======')
-			print(traceback.format_exc())
 			return {RSP_CODE : RC_SERVER_ERROR}
 
 	def do(self):
