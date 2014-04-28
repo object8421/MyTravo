@@ -170,7 +170,6 @@ class PersonalInfoSetView(View):
         response = HttpResponse()
         response['Content-Type']="text/javascript"
         ret = "1"
-       
         try:
             userservice.update_info(request.session['token'],attr_dict)
             result = userservice.change_self_avatar(user,request.FILES.get('face_path'))
@@ -350,7 +349,7 @@ class NewTravelView(View):
         travel['create_time'] = str(datetime.now())[0:19]
         travel['cover'] = 'cover'
         result = travelservice.upload(token,[travel,],request.FILES)
-        return HttpResponse('添加成功!')
+        return HttpResponseRedirect(reverse('me'))
 
 
 class EditTravelView(View):
@@ -427,7 +426,7 @@ class DetailTravelView(View):
         template = loader.get_template('website/detail_travel.html')
         travel = get_object_or_404(Travel,pk=travel_id)
         comments_result= travelservice.get_comments(travel_id)
-        notes_result = noteservice.get_all_in_travel(travel_id, None)
+        notes_result = noteservice.get_all_in_travel(travel_id)
         if notes_result[RSP_CODE] == RC_SUCESS and comments_result[RSP_CODE] == RC_SUCESS:
             note_list = notes_result['notes']
             comment_list = comments_result['comments']

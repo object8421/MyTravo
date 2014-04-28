@@ -4,7 +4,7 @@ from oss.oss_api import *
 from datetime import datetime
 from threading import Thread
 from django.conf import settings
-from PIL import Image
+import Image
 from ftplib import FTP
 
 ######    datetime    ######
