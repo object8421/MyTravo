@@ -83,7 +83,7 @@ public class AddTravelActivity extends Activity implements OnMenuItemClickListen
 	private String startString;
 	private String endString;
 	private String title;
-	private Double expense;
+	private String expense;
 	private Date begindate;
 	private Date enddate;
 	private String destination;
@@ -312,7 +312,8 @@ public class AddTravelActivity extends Activity implements OnMenuItemClickListen
 		try
 		{
 			if(edtExpense.getText() != null)
-				expense = Double.parseDouble(edtExpense.getText().toString());
+				expense = edtExpense.getText().toString();
+				//expense = Double.parseDouble(edtExpense.getText().toString());
 		}
 		catch(Exception e)
 		{

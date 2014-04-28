@@ -92,6 +92,7 @@
         <activity
             android:name="com.cobra.mytravo.activities.AddTravelActivity"
             android:label="@string/title_activity_add_travel"
+            android:parentActivityName="com.cobra.mytravo.activities.MainActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" >
         </activity>
@@ -111,9 +112,12 @@
         <activity
             android:name="com.cobra.mytravo.activities.PersonalTravelDetailActivity"
             android:label="@string/title_activity_personal_notes"
+            android:parentActivityName="com.cobra.mytravo.activities.MainActivity"
             android:screenOrientation="portrait"
             android:uiOptions="splitActionBarWhenNarrow" >
-
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.cobra.mytravo.activities.MainActivity" />
             <!-- android:theme="@style/Theme.TranslucentActionBar.ActionBar.Overlay" -->
         </activity>
         <activity
@@ -216,6 +220,7 @@
         <activity
             android:name="com.cobra.mytravo.activities.TravelDetailActivity"
             android:label="@string/title_activity_travel_detail"
+            android:parentActivityName="com.cobra.mytravo.activities.MainActivity"
             android:uiOptions="splitActionBarWhenNarrow"
             android:windowSoftInputMode="adjustPan" >
         </activity>
@@ -237,7 +242,8 @@
         </activity>
         <activity
             android:name="com.cobra.mytravo.activities.SettingsActivity"
-            android:label="@string/title_activity_settings" >
+            android:label="@string/title_activity_settings"
+            android:parentActivityName="com.cobra.mytravo.activities.MainActivity" >
         </activity>
         <activity
             android:name="cn.jpush.android.ui.PushActivity"
@@ -312,6 +318,18 @@
         <activity
             android:name="com.cobra.mytravo.activities.EditSignatureActivity"
             android:label="@string/title_activity_edit_signature" >
+        </activity>
+        <activity
+            android:name="com.cobra.mytravo.activities.PersonalTravelCommentActivity"
+            android:label="@string/title_activity_personal_travel_comment"
+            android:parentActivityName="com.cobra.mytravo.activities.PersonalTravelDetailActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.cobra.mytravo.activities.PersonalTravelDetailActivity" />
+        </activity>
+        <activity
+            android:name="com.cobra.mytravo.activities.MyFavoriteTravelActivity"
+            android:label="@string/title_activity_my_favorite_travel" >
         </activity>
     </application>
 

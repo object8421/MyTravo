@@ -1,6 +1,11 @@
 package com.cobra.mytravo.util;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.cobra.mytravo.activities.MainActivity;
+import com.cobra.mytravo.activities.PersonalTravelCommentActivity;
+import com.google.gson.JsonObject;
 
 import cn.jpush.android.api.JPushInterface;
 import android.content.BroadcastReceiver;
@@ -49,7 +54,23 @@ public class MyReceiver extends BroadcastReceiver
 
 			JPushInterface.reportNotificationOpened(context,
 					bundle.getString(JPushInterface.EXTRA_MSG_ID));
-			Intent i = new Intent(context, MainActivity.class);  //自定义打开的界面
+			String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
+			int travel_id = -1;
+			try {
+				JSONObject jsonObject = new JSONObject(extras);
+				if(jsonObject.has("travel_id")){
+					travel_id = jsonObject.getInt("travel_id");
+				}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			Intent i = new Intent(context, PersonalTravelCommentActivity.class);  //自定义打开的界面
+			if(travel_id != -1){
+				Log.i(TAG, String.valueOf(travel_id));
+				i.putExtra("travel_id", travel_id);
+			}
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(i);
 			

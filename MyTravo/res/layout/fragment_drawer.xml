@@ -37,6 +37,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:background="@drawable/bg_listitem_shot_red"
         android:text="退出登录"
         android:textColor="@android:color/white" />

@@ -156,19 +156,19 @@ public class MainActivity extends FragmentActivity {
         		Intent registerIntent = new Intent(MainActivity.this, RegisterActivity.class);
         		startActivity(registerIntent);
         		break;
-        	case R.id.add_note:
-        		//if last travel time is not null, enter the AddNoteActivity directly, 
-        		//otherwise we enter AddTravelActivity first to create a new travel.
-        		//L!ar 2014/2/2
-        		if(AppData.getTravelTime() != null){
-        			Intent noteIntent = new Intent(MainActivity.this, AddNoteActivity.class);
-        			startActivity(noteIntent);
-        		}
-        		else{
-        			Intent travelIntent = new Intent(MainActivity.this, AddTravelActivity.class);
-            		startActivity(travelIntent);
-        		}
-        		break;
+//        	case R.id.add_note:
+//        		//if last travel time is not null, enter the AddNoteActivity directly, 
+//        		//otherwise we enter AddTravelActivity first to create a new travel.
+//        		//L!ar 2014/2/2
+//        		if(AppData.getTravelTime() != null){
+//        			Intent noteIntent = new Intent(MainActivity.this, AddNoteActivity.class);
+//        			startActivity(noteIntent);
+//        		}
+//        		else{
+//        			Intent travelIntent = new Intent(MainActivity.this, AddTravelActivity.class);
+//            		startActivity(travelIntent);
+//        		}
+//        		break;
         	case R.id.add_travel:
         		Intent travelIntent = new Intent(MainActivity.this, AddTravelActivity.class);
         		startActivity(travelIntent);
@@ -241,18 +241,18 @@ public class MainActivity extends FragmentActivity {
 			Intent searcIntent = new Intent(this, SearchActivity.class);
 			startActivity(searcIntent);
 			break;
+//		case 3:
+//			removeSpinner();
+//			mContentFragment = (BaseFragment) fragmentManager.findFragmentByTag(favoriteTag);
+//			if(mContentFragment == null){
+//				mContentFragment = new FavoriteFragment();
+//				
+//			}
+//			fragmentManager.beginTransaction().
+//			replace(R.id.content_frame, mContentFragment, favoriteTag).commit();
+//			
+//			break;
 		case 3:
-			removeSpinner();
-			mContentFragment = (BaseFragment) fragmentManager.findFragmentByTag(favoriteTag);
-			if(mContentFragment == null){
-				mContentFragment = new FavoriteFragment();
-				
-			}
-			fragmentManager.beginTransaction().
-			replace(R.id.content_frame, mContentFragment, favoriteTag).commit();
-			
-			break;
-		case 4:
 			removeSpinner();
 			mContentFragment = (BaseFragment) fragmentManager.findFragmentByTag(personalTag);
 			if(mContentFragment == null){
@@ -262,7 +262,7 @@ public class MainActivity extends FragmentActivity {
 			fragmentManager.beginTransaction().
 			replace(R.id.content_frame, mContentFragment, personalTag).commit();
 			break;
-		case 5:
+		case 4:
 			Intent preferenceIntent = new Intent(this, SettingsActivity.class);
 			startActivity(preferenceIntent);
 			overridePendingTransition(R.anim.anim_right_to_left_in, R.anim.anim_left_fade_out);
