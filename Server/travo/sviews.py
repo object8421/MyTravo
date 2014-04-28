@@ -170,9 +170,7 @@ class PersonalInfoSetView(View):
         response = HttpResponse()
         response['Content-Type']="text/javascript"
         ret = "1"
-        for key in attr_dict.keys():
-            print key
-            print attr_dict[key]
+       
         try:
             userservice.update_info(request.session['token'],attr_dict)
             result = userservice.change_self_avatar(user,request.FILES.get('face_path'))
