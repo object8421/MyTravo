@@ -1,0 +1,37 @@
+{% extends "website/base_index.html" %}
+{% block title %}下载{% endblock %}
+
+{% block content %}
+
+
+<div class="half-transparent" style="margin-top:150px;">
+<div class="jumbotron">
+	<div class="container" style="margin-top:50px;background-color:#eeeeee">
+		<div class="col-md-5">
+		<div class="col-md-3" style="margin-top:30px;">
+		<img class="img-rounded "  src="../../static/travo/image/travo_logo.png" style="width:90px;height:90px;">
+		</div>
+		<div style="clearfix;float:left; margin-top:30px;" class="col-md-9" >
+		<h1>TraVo</h1>
+		</div>	
+		<div class="col-md-12" style="margin-top:30px;">		
+  		<h3>掌上游记，随时随地记录、分享你的旅途！</h3>
+		</div>
+ 		<div class="btn-group" style="margin-top:100px;">
+			<button class="button btn-success btn-lg" onclick="javascript:location.href='http://app-bucket.oss-cn-hangzhou.aliyuncs.com/travo.apk'">安卓客户端下载</button>
+			<button class="button btn-primary btn-lg">返回首页</button>
+		</div>
+		</div>
+		<div class="col-md-7">
+			<div class="col-md-3"><img class="img-rounded "  src="../../static/travo/image/client3.png" style="width:250px;height:500px;"></div>
+			<div class="col-md-3"><img class="img-rounded "  src="../../static/travo/image/client1.png" style="width:250px;height:500px;"></div>
+			<div class="col-md-3"><img class="img-rounded "  src="../../static/travo/image/client2.png" style="width:250px;height:500px;"></div>
+		</div>
+</div>
+</div>
+</div>
+
+
+{% endblock %}
+{% block myscript %}
+{% endblock %}

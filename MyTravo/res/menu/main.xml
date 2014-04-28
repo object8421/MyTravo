@@ -11,12 +11,12 @@
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="添加游记"/>
-    <item 
+    <!--  <item 
         android:id="@+id/add_note" 
         android:icon="@drawable/action_add" 
         android:orderInCategory="300" 
         android:title="记录足迹" 
-        android:showAsAction="always"></item>
+        android:showAsAction="always"></item>-->
     
     <item 
         android:id="@+id/logout"

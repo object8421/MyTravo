@@ -8,6 +8,7 @@ import com.android.volley.VolleyError;
 import com.cobra.mytravo.R;
 import com.cobra.mytravo.activities.FollowersActivity;
 import com.cobra.mytravo.activities.MainActivity;
+import com.cobra.mytravo.activities.MyFavoriteTravelActivity;
 import com.cobra.mytravo.activities.PersonalTravelDetailActivity;
 import com.cobra.mytravo.adapters.MeTravelAdapter;
 import com.cobra.mytravo.data.AppData;
@@ -61,7 +62,7 @@ public class PersonalFragment extends BaseFragment implements LoaderCallbacks<Cu
 	private TextView travelCounTextView;
 	private TextView followingCountTextView;
 	private TextView favoriteCountTextView;
-	private View followingView;
+	private View followingView,favoriteView;
 	private Drawable mDefaultImageDrawable = new ColorDrawable(Color.argb(255, 201, 201, 201));
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -72,6 +73,11 @@ public class PersonalFragment extends BaseFragment implements LoaderCallbacks<Cu
 		mDataHelper = new TravelsDataHelper(getActivity(), AppData.getUserId());
 		headerView = LayoutInflater.from(getActivity()).inflate(R.layout.listitem_head_personal, null);
 		avatar = (ImageView) headerView.findViewById(R.id.avatar);
+		if(AppData.getSex().equals("女"))
+			avatar.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_listitem_shot_red));
+		else {
+			avatar.setBackgroundDrawable(getResources().getDrawable(R.drawable.bg_listitem_shot_blue));
+		}
 		nickname = (TextView) headerView.findViewById(R.id.tv_nickname);
 		gender = (TextView) headerView.findViewById(R.id.tv_gender);
 		signature = (TextView) headerView.findViewById(R.id.tv_signature);
@@ -80,6 +86,8 @@ public class PersonalFragment extends BaseFragment implements LoaderCallbacks<Cu
 		followingCountTextView = (TextView) headerView.findViewById(R.id.tv_folower_count);
 		favoriteCountTextView = (TextView) headerView.findViewById(R.id.tv_favorite_count);
 		followingView = headerView.findViewById(R.id.ll_followings);
+		gender.setText(AppData.getSex());
+		signature.setText(AppData.getSignature());
 		followingView.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -89,7 +97,16 @@ public class PersonalFragment extends BaseFragment implements LoaderCallbacks<Cu
 				getActivity().startActivity(followersIntent);
 			}
 		});
-		
+		favoriteView = headerView.findViewById(R.id.ll_favorites);
+		favoriteView.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Intent favoriteIntent = new Intent(getActivity(),MyFavoriteTravelActivity.class);
+				getActivity().startActivity(favoriteIntent);
+			}
+		});
 		mListView.addHeaderView(headerView);
 		mAdapter = new MeTravelAdapter(getActivity(), mListView);
 		mListView.setAdapter(mAdapter);
@@ -131,10 +148,13 @@ public class PersonalFragment extends BaseFragment implements LoaderCallbacks<Cu
                                			favoriteCountTextView.setText(String.valueOf(user.getFavorite_travel_qty()));
                                			nickname.setText(user.getNickname());
                                			signature.setText(user.getSignature());
+                               			
                                			RequestManager.loadImage("http://travo-user-avatar.oss-cn-hangzhou.aliyuncs.com/"+user.getFace_path(), RequestManager
                                                .getImageListener(avatar, mDefaultImageDrawable, mDefaultImageDrawable));
                             	   AppData.setFacePath(user.getFace_path());
                             	   AppData.setIdToken(user.getToken());
+                            	   AppData.setSignature(user.getSignature());
+                            	   AppData.setNickname(user.getNickname());
                             	   }
                             	   
                                   

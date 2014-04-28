@@ -1,6 +1,6 @@
 
 {% extends "website/base_index.html" %}
-{% block title %}我的粉丝{% endblock %}
+{% block title %}搜索结果{% endblock %}
 
 {% block content %}
 
@@ -32,7 +32,11 @@
                         {% for user in user_list%}
                         <tr class="active">
                           <td style="width:60px;">
+                            {% if user.face_path %}
                             <img src="http://travo-user-avatar.oss-cn-hangzhou.aliyuncs.com/{{user.face_path}}" alt="otheruser" class="img-rounded" style="height:50px; margin=0;width:50px;border-radius:2px;">
+                            {% else %}
+                             <img src="../../static/travo/image/avatar_default.jpg" alt="otheruser" class="img-rounded" style="height:50px; margin=0;width:50px;border-radius:2px;">
+                            {% endif %}
                           </td>
                           <td>
                             <div class="col-md-12" style="padding-bottom:0;"><p><b><a href="{% url 'others' user.id %}" name="otheruser" >{{user.nickname}}</a></b>

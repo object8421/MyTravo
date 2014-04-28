@@ -12,7 +12,11 @@
         <table class="table" style="float:left;width:250px;margin-right:50px;">
           <tr>
             <td style="padding:0;">
+            {% if user.face_path %}
             <img src="http://travo-user-avatar.oss-cn-hangzhou.aliyuncs.com/{{user.face_path}}" class="img-rounded" style="width:100%; height:250px; margin:0;padding:0;border-radius:0;">
+            {% else %}
+            <img src="../../static/travo/image/avatar_default.jpg" class="img-rounded" style="width:100%; height:250px; margin:0;padding:0;border-radius:0;">
+            {% endif %}
              </td>
           </tr>
           <tr style="padding:0;">     
@@ -80,7 +84,7 @@
   <div  class="col-md-4 column" >
 
 <div class="panel panel-default" style="width:350px;">
-  <div class="panel-body">
+  <div class="panel-body" onclick="javascript:window.location.href='{%url 'detail_travel' travel.id %}' " style="cursor:pointer;">
      <img src="http://travo-travel-cover.oss-cn-hangzhou.aliyuncs.com/{{travel.cover_path}}" alt="..." class="img-rounded" style="width:100%; height:250px; margin=0;">
     
   </div>
@@ -128,7 +132,7 @@
 <hr class="featurette-divider">
 <div class="col-md-12" style=" padding-left:5px;margin-bottom:20px;">
 <div class="col-md-2" style="padding:0;">
-<button type="button" class="btn btn-info btn-lg btn-block" style="border-radius:2px;" onclick="javascript:window.location.href='{%url 'show_my_favorite_travel' user.id %}' ">我的收藏   <span class="badge"> {{user.favorite_travel_qty}}</span></button>  
+<button type="button" class="btn btn-info btn-lg btn-block" style="border-radius:2px;" onclick="javascript:window.location.href='{%url 'show_my_favorite_travel' user.id %}' ">喜欢的游记   <span class="badge"> {{user.favorite_travel_qty}}</span></button>  
 </div>
 </div>
 
@@ -140,7 +144,7 @@
   <div  class="col-md-4 column" >
 
 <div class="panel panel-default" style="width:350px;">
-  <div class="panel-body">
+  <div class="panel-body" onclick="javascript:window.location.href='{%url 'detail_travel' travel.id %}' " style="cursor:pointer;">
      <img src="http://travo-travel-cover.oss-cn-hangzhou.aliyuncs.com/{{travel.cover_path}}" alt="..." class="img-rounded" style="width:100%; height:250px; margin=0;">
     
   </div>
@@ -187,7 +191,7 @@
 <hr class="featurette-divider">
 <div class="col-md-12" style=" padding-left:5px;margin-bottom:20px;">
 <div class="col-md-2" style="padding:0;">
-<button type="button" class="btn btn-info btn-lg btn-block" style="border-radius:2px;" onclick="javascript:window.location.href='{%url 'show_my_favorite_travel' user.id %}' ">我收藏的旅游攻略   <span class="badge"> {{user.favorite_travel_qty}}</span></button>  
+<button type="button" class="btn btn-info btn-lg btn-block" style="border-radius:2px;" onclick="javascript:window.location.href='{%url 'show_my_favorite_travel' user.id %}' ">喜欢的目的地   <span class="badge"> {{user.favorite_travel_qty}}</span></button>  
 </div>
 </div>
 

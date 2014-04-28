@@ -7,6 +7,7 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cobra.mytravo.R;
+import com.cobra.mytravo.activities.OtherUserInfoActivity;
 import com.cobra.mytravo.activities.TravelDetailActivity;
 import com.cobra.mytravo.adapters.CardsAnimationAdapter;
 import com.cobra.mytravo.adapters.NotesAdapter;
@@ -20,6 +21,7 @@ import com.cobra.mytravo.models.Travel;
 import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
@@ -28,6 +30,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -59,12 +62,29 @@ public class TravelFragment extends V4BaseFragment implements PullToRefreshAttac
 		View view = inflater.inflate(R.layout.fragment_travel_detail, null);
 		travel = ((TravelDetailActivity)getActivity()).getTravel();
 		mPullToRefreshAttacher = ((TravelDetailActivity)getActivity()).getPullToRefreshAttacher();
-		headerView = LayoutInflater.from(getActivity()).inflate(R.layout.listitem_head_travel, null);
+		headerView = LayoutInflater.from(getActivity()).inflate(R.layout.listitem_head_others_travel, null);
+		avatar = (ImageView) headerView.findViewById(R.id.imageView1);
+		avatar.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(getActivity(), OtherUserInfoActivity.class);
+				intent.putExtra("user", travel.getUser());
+				getActivity().startActivity(intent);
+			}
+		});
+		mDefaultAvatarBitmap = (BitmapDrawable) getActivity()
+                .getResources().getDrawable(R.drawable.default_avatar);
+		RequestManager.loadImage("http://travo-user-avatar.oss-cn-hangzhou.aliyuncs.com/"+travel.getUser().getFace_path(), RequestManager
+                .getImageListener(avatar, mDefaultAvatarBitmap, mDefaultAvatarBitmap));
+		nickname = (TextView) headerView.findViewById(R.id.nickname);
 		cover = (ImageView) headerView.findViewById(R.id.img_travel_detail);
 		title = (TextView) headerView.findViewById(R.id.tv_title_travel_detail);
 		time = (TextView) headerView.findViewById(R.id.tv_time_travel_detail);
 		content = (TextView) headerView.findViewById(R.id.tv_description_travel_detail);
 		notesCount = (TextView) headerView.findViewById(R.id.tv_note_count_travel_detail);
+		nickname.setText("by " + travel.getUser().getNickname());
 		notesCount.setText("0");
 		title.setText(travel.getTitle());
 		content.setText(travel.getDescription());
@@ -88,7 +108,7 @@ public class TravelFragment extends V4BaseFragment implements PullToRefreshAttac
 		return view;
 	}
 	private void loadData(){
-		executeRequest((new GsonRequest<Note.NotesRequestData>(AppData.HOST_IP+"travel/"+travel.getId()+"/note",
+		executeRequest((new GsonRequest<Note.NotesRequestData>(AppData.HOST_IP+"travel/"+travel.getId()+"/note?token="+AppData.getIdToken(),
         		Note.NotesRequestData.class, null,
                 new Response.Listener<Note.NotesRequestData>() {
                     @Override

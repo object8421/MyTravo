@@ -15,6 +15,7 @@ import com.cobra.mytravo.data.AppData;
 import com.cobra.mytravo.data.GsonRequest;
 import com.cobra.mytravo.data.MyServerMessage;
 import com.cobra.mytravo.fragments.BaseUploadActivity;
+import com.cobra.mytravo.models.Comment.CommentRequestData;
 import com.cobra.mytravo.models.User.UserInfoResponse;
 
 import android.os.Bundle;
@@ -33,7 +34,8 @@ public class EditGenderActivity extends BaseUploadActivity {
 	private Map<String, String> map;
 	private RadioGroup radioGroup;
 	private RadioButton maleButton, femaleButton;
-	private String genderString, editGender;
+	private String genderString;
+	private String editGender="男";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -70,16 +72,16 @@ public class EditGenderActivity extends BaseUploadActivity {
 			
 			if(!editGender.equals(genderString) ){
 				map = new HashMap<String, String>();
-				map.put("nickname", editGender);
-				String url = AppData.HOST_IP + "user/update";
-				executeRequest(new GsonRequest<UserInfoResponse>(Method.PUT,url,
-						UserInfoResponse.class, null,
-						new Listener<UserInfoResponse>() {
+				map.put("sex", editGender);
+				String url = AppData.HOST_IP + "user/info/update?token="+ AppData.getIdToken();
+				executeRequest(new GsonRequest<CommentRequestData>(Method.PUT,url,
+						CommentRequestData.class, null,
+						new Listener<CommentRequestData>() {
 							Message msg = new Message();
 							@Override
-							public void onResponse(UserInfoResponse response) {
+							public void onResponse(CommentRequestData request) {
 								
-								int status = response.getRsp_code();
+								int status = request.getRsp_code();
 								switch(status)
 								{
 								case MyServerMessage.SUCCESS:

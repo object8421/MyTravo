@@ -14,7 +14,8 @@ urlpatterns = patterns('travo',
 		url(r'^me', sviews.MyInfoView.as_view(),name = 'me'),
 		url(r'^others/(?P<id>\d+)/',sviews.OtherInfoView.as_view(),name='others'),
 		url(r'^search_user/(?P<keyword>\w+)/',sviews.SearchUserView.as_view(),name='search_user'),
-		url(r'^search_travel/(?P<keyword>\w+)/',sviews.SearchTravelView.as_view(),name='search_user'),
+		url(r'^search_travel/(?P<keyword>\w+)/',sviews.SearchTravelView.as_view(),name='search_travel'),
+		
 		url(r'user/comment_travel',sviews.CommentTravelView.as_view(),name='comment_travel'),
 		url(r'user/favorite_travel',sviews.FavoriteTravelView.as_view(),name='comment_travel'),
 		url(r'user/change_follow',sviews.ChangeFollowView.as_view(),name='change_follow'),
@@ -37,6 +38,8 @@ urlpatterns = patterns('travo',
 			name = 'search_result'),
 		url(r'hot_travel',sviews.HotTravelView.as_view(),\
 			name = 'hot_travel'),
+		url(r'download',sviews.DownloadView.as_view(),\
+			name= 'download'),
 		#显示添加note的表单
 		
 		url(r'^new_note/(?P<travel_id>\d+)/',sviews.NewNoteView.as_view(),name = 'new_note'),	

@@ -1,14 +1,112 @@
-{% extends "base_index.html" %}
+{% extends "website/base_index.html" %}
+
 {% block title %}{{province.province_name}}{% endblock %}
 {% block content %}
+
+<!--
 
 			<h2>{{province.province_name}}</h2>
 {% for url in image_url_list %}
 	<img src= {{url}} alt="..." class="img-rounded" style="width:250; height:250px; margin=0;">
 {% endfor %}
 
+{% for city in related_city%}
+	<a href="{%url 'des_detail' "city" city.id %}"><h1>{{city.city_name}}</h1></a>
+{% endfor %}
+
 			<h4>{{province.brief_information}}</h4>
-			---------------------------------------详情------------------------------------------
+			详情
 			<h5>{{province.detail_information}}</h5>
+-->
+<div  class="container">
+	<div class="col-md-3">
+<div class="row " style="margin-top:50px;">
+	<div class="alert alert-danger">
+		<h2>{{province.province_name}}</h2>
+		<h4>{{province.brief_information}}</h4>
+	</div>
+</div><!-- end of row -->
+
+<div class="row ">
+	  <div class="panel panel-danger">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+          详情
+        </a>
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse">
+      <div class="panel-body">
+      	<h5>{{province.detail_information}}</h5>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="col-md-9" style="margin-top:50px;">
+<div class="row" >
+	<div class="col-md-offset-1 col-md-10">
+		<div id="carousel-example-generic" class="carousel slide" data-ride="carousel" style="height:400px;">
+  			<!-- Indicators -->
+			  <ol class="carousel-indicators">
+				{% for url in image_url_list %}
+				{% ifequal foorloop.counter0 0 %}
+			    <li data-target="#carousel-example-generic" data-slide-to="{{fooloop.counter0}}" class="active"></li>
+			    {% else %}
+				<li data-target="#carousel-example-generic" data-slide-to="{{fooloop.counter0}}"></li>
+				{% endifequal %}
+				{% endfor %}			
+ 			  </ol>
+
+			  <!-- Wrapper for slides -->
+ 			 <div class="carousel-inner" style="height:400px;">
+ 			 	{% for url in image_url_list %}
+ 			 	{% ifequal forloop.counter 1 %}
+  			  <div class="item active" style="height:400px;">
+   			   <img  src="{{url}}" alt="..." style="height:400px;">
+   			   
+   			  </div>
+   			   	{% else %}
+  			  <div class="item" style="height:400px;">
+   			   <img src="{{url}}" alt="..." style="height:400px;">
+
+   			  </div>
+   			   	{% endifequal %}
+
+  			  {% endfor %}
+  			</div>
+
+  			<!-- Controls -->
+ 			 <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+ 			   <span class="glyphicon glyphicon-chevron-left"></span>
+			  </a>
+  			<a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+ 			   <span class="glyphicon glyphicon-chevron-right"></span>
+ 			 </a>
+			</div><!-- end carousel -->
+	</div>
+</div><!-- end of row -->
+
+		<div class="row" style="margin-top:0px;">
+			<div class="col-md-offset-1 col-md-10" style="margin-top:0;padding-top:0;">
+			{% for city in related_city %}
+			<div class="col-md-3" style="margin-bottom:10px;padding-left:4px;padding-right:4px;cursor:pointer;" onclick="javascript:window.location.href='{%url 'des_detail' "city" city.id %}' ">
+				<div style="height:135px;background:url({{city.cover_url}}) no-repeat center;background-size:cover;">
+					<div class="col-md-6" style="background:rgba(28, 28, 28, 0.9); color:#ffffff; margin-top:90px;">
+						<h5>{{city.city_name}}
+						</h5></div>
+				</div>
+			</div>
+			{% endfor %}
+			</div>
+		</div><!-- end of row -->
+</div>
+
+
+</div><!-- end of container -->
+
+
 
 {% endblock %}

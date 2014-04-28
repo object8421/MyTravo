@@ -123,9 +123,10 @@ public class PersonalTravelDetailActivity extends Activity implements LoaderMana
 		Intent intent = getIntent();
 		if(intent != null){
 			travel = (Travel) intent.getSerializableExtra(TRAVEL_STRING);
+			mDataHelper = new NotesDataHelper(this, AppData.getUserId());
+			//noteCount = mDataHelper.getCountByTravel(travel.getCreate_time());
 		}
-		mDataHelper = new NotesDataHelper(this, AppData.getUserId());
-		noteCount = mDataHelper.getCountByTravel(travel.getCreate_time());
+		
 	}
 
 	@Override
@@ -197,6 +198,11 @@ public class PersonalTravelDetailActivity extends Activity implements LoaderMana
 				addNoteIntent.setClass(PersonalTravelDetailActivity.this, AddNoteActivity.class);
 				startActivity(addNoteIntent);
 			}
+			break;
+		case R.id.action_comment:
+			Intent commentIntent = new Intent(this,PersonalTravelCommentActivity.class);
+			commentIntent.putExtra("travel_id", travel.getId());
+			startActivity(commentIntent);
 			break;
 		case R.id.action_edit:
 			Intent intent = new Intent();

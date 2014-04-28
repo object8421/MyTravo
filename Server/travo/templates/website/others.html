@@ -12,7 +12,11 @@
         <table class="table" style="float:left;width:250px;margin-right:50px;">
           <tr>
             <td style="padding:0;">
+            {% if user.face_path %}
             <img src="../../static/travo/image/me_avatar0.jpg" alt="Responsive image" class="img-rounded img-responsive" style="width:100%; height:250px; margin:0;padding:0;border-radius:0;">
+            {% else %}
+           <img src="../../static/travo/image/avatar_default.jpg" alt="Responsive image" class="img-rounded img-responsive" style="width:100%; height:250px; margin:0;padding:0;border-radius:0;">
+            {% endif %}
              </td>
           </tr>
           <tr style="padding:0;">     
@@ -60,11 +64,6 @@
   </div>
 
 
-  <div style="float:right; margin-right:20px;">
-      <h6>我的足迹</h6>
-            <img alt="140x140" src="http://lorempixel.com/140/140/" class="img-rounded"style="width:250px;" />
-  </div>
- 
 
  </div><!-- row end -->
 
@@ -92,9 +91,12 @@
   <div  class="col-md-4 column" >
 
 <div class="panel panel-default" style="width:350px;">
-  <div class="panel-body">
+  <div class="panel-body"  onclick="javascript:window.location.href='{%url 'detail_travel' travel.id %}' " style="cursor:pointer;">
+    {% if travel.cover_path %}
      <img src="ftp://172.16.12.125/image/cover/{{travel.cover_path}}" alt="..." class="img-rounded" style="width:100%; height:250px; margin=0;">
-    
+    {% else %}
+     <img src="../../static/travo/image/travel_default.jpg" alt="..." class="img-rounded" style="width:100%; height:250px; margin=0;">
+    {% endif %}
   </div>
   <div class="panel-footer" align="left">
     <table class="table" style="width:300px;margin:0;padding:0;">
@@ -140,16 +142,74 @@
 <hr class="featurette-divider">
 <div class="col-md-12" style=" padding-left:5px;margin-bottom:20px;">
 <div class="col-md-2" style="padding:0;">
-<button type="button" class="btn btn-info btn-lg btn-block" style="border-radius:2px;">想去的地方   <span class="badge"> {{want_list_length | default:"0"}}</span></button>  
+<button type="button" class="btn btn-info btn-lg btn-block" style="border-radius:2px;">喜欢的游记   <span class="badge"> {{want_list_length | default:"0"}}</span></button>  
 </div>
 </div>
+
+
+<div class="row clearfix" align="center">
+
+<!-- 这里是第一篇游记，span1 -->
+{%for travel in favorite_travel_list %}
+  <div  class="col-md-4 column" >
+
+<div class="panel panel-default" style="width:350px;">
+  <div class="panel-body" onclick="javascript:window.location.href='{%url 'detail_travel' travel.id %}' " style="cursor:pointer;">
+     <img src="http://travo-travel-cover.oss-cn-hangzhou.aliyuncs.com/{{travel.cover_path}}" alt="..." class="img-rounded" style="width:100%; height:250px; margin=0;">
+    
+  </div>
+  <div class="panel-footer" align="left">
+    <table class="table" style="width:300px;margin:0;padding:0;">
+              <tr style="width:300px; padding:0; margin:0;" align="left">
+                <div style="float:left;">
+
+                <h5 class="pull-left"><a href="{%url 'detail_travel' travel.id %}">{{travel.title}}</a></h5>
+                
+              </div>
+              
+
+              <div class="btn-group " style="float:right; margin－top:0;" >
+                    <button type="button" class="btn btn-link btn-sm" >标签1</button>
+                    <button type="button" class="btn btn-link btn-sm" >标签2</button>
+                </div>
+
+              <div style="clear:both;">
+                <h6 > {{travel.description}} </h6>
+              </div>
+               
+                   
+              </tr>
+              <tr>
+              
+              <div style="clear:both; float:left;"><h6>{{travel.create_time | date:"Y-m-d"}}</h6>
+              </div>
+              <div style="float:right; padding-right:10px;"><h6>
+                <span class="glyphicon glyphicon-heart"></span> {{ travel.favorite_qty}}
+                <span class="glyphicon glyphicon-comment"></span> {{ travel.comment_qty}}</h6>
+              </div>
+
+              </tr>
+            
+             </table>
+</div>
+</div>
+</div><!--  这是三分之一的span (1)end-->
+{% endfor %}
+
+</div><!-- 收藏的游记条end-->
+
+
+
+
+
 
 <hr class="featurette-divider">
 <div class="col-md-12" style=" padding-left:5px;margin-bottom:20px;">
 <div class="col-md-2" style="padding:0;">
-<button type="button" class="btn btn-info btn-lg btn-block" style="border-radius:2px;">喜欢的游记   <span class="badge"> {{want_list_length | default:"0"}}</span></button>  
+<button type="button" class="btn btn-info btn-lg btn-block" style="border-radius:2px;">想去的地方   <span class="badge"> {{want_list_length | default:"0"}}</span></button>  
 </div>
 </div>
+
 
 
 

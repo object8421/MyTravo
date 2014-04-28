@@ -162,7 +162,7 @@ public class PersonalTravelEditActivity extends Activity
 			if ((editedTitle = titleEditText.getText().toString().trim()) != null)
 				editedTravel.setTitle(editedTitle);
 			if ((editedExpense = expensEditText.getText().toString().trim()) != null)
-				editedTravel.setAverage_spend(Double.parseDouble(editedExpense));
+				editedTravel.setAverage_spend(editedExpense);
 			if ((editedDescription = descriptionEditText.getText().toString().trim()) != null)
 				editedTravel.setDescription(editedDescription);
 			if ((editedStart = startButton.getText().toString().trim()) != null)

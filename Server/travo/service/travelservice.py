@@ -1,8 +1,9 @@
 #-*- coding: utf-8 -*-
 import uuid
 import utils
+import time
 import userservice
-
+from jpush import JPushClient
 from django.db.models import Q
 from travo.rc import *
 from travo.models import Travel,FavoriteTravel,TravelReadLog,TravelVote,TravelComment,Follow
@@ -255,6 +256,7 @@ def add_comment(u, relate_T):
 		else:
 			merge(relate_T, tc.travel, -COMMENT_SCORE)
 
+
 def add_vote(u, relate_T):
 	tvls = TravelVote.objects.filter(voter=u)
 	for tv in tvls:
@@ -372,8 +374,15 @@ def vote(token, travel_id):
 def comment(token, travel_id, content):
 	user = userservice.get_user(token)
 	tc = TravelComment()
+	#游记的拥有者
+	travel_name = ''
+	related_user_name = ''
 	try:
 		travel = Travel.objects.get(pk=travel_id)
+		travel_name = travel.title
+		related_user_name = travel.user.nickname
+		print travel.title
+		print related_user_name
 	except ObjectDoesNotExist:
 		return {RSP_CODE : RC_NO_SUCH_TRAVEL}
 	else:
@@ -383,6 +392,21 @@ def comment(token, travel_id, content):
 	tc.commenter = user
 	tc.content = content
 	tc.save()
+	APPKEY = '986aa2521dcb7f92092a8848'
+	MASTER_SECRET = 'b6ddbc1f0933845e4fa50c9b'
+	jpush_client = JPushClient(MASTER_SECRET)
+
+	welcome_message = "您的游记"
+	#welcome_message += travel_name
+	welcome_message += "有一条新评论，点击查看"
+	print welcome_message
+	sendno = int(time.time())
+	print sendno
+	jpush_client.send_notification_by_alias(related_user_name, APPKEY, sendno, 'travo',
+	                                         welcome_message,
+	                                         content, 'android',{'travel_id':travel_id})
+
+
 	return {RSP_CODE : RC_SUCESS}
 
 ######    get comments    ######

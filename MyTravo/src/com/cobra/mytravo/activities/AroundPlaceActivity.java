@@ -7,6 +7,7 @@ import org.json.JSONException;
 import com.cobra.mytravo.R;
 import com.cobra.mytravo.R.layout;
 import com.cobra.mytravo.R.menu;
+import com.cobra.mytravo.helpers.ActionBarUtils;
 import com.cobra.mytravo.models.MyLocation;
 import com.cobra.mytravo.util.AroundListAdapter;
 import com.cobra.mytravo.util.GpsService;
@@ -43,7 +44,7 @@ public class AroundPlaceActivity extends Activity
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_around_place);
-		
+		ActionBarUtils.InitialActionBarWithBackAndTitle(this, getActionBar(), "足迹地理位置");
 		near = true;
 		aroundList = (ListView)findViewById(R.id.around_list);
 		aroundList.setOnItemClickListener(new OnItemClickListener()

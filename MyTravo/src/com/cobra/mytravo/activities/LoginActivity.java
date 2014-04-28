@@ -81,6 +81,7 @@ public class LoginActivity extends Activity {
 				startService(syncService);
 				Toast.makeText(LoginActivity.this, "您已成功登陆", Toast.LENGTH_SHORT).show();
 				AppData.setIsLogin(true);
+				AppData.setNickname(user.getNickname());
 				AppData.setIdToken(user.getToken());
 				AppData.setSignature(user.getSignature());
 				AppData.setEmail(user.getEmail());

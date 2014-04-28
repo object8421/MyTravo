@@ -9,13 +9,18 @@
     <div class="row" >
       <div class="col-md-4 ">
         
-          
+          {% if travel.cover_path %}
            <img src="http://travo-travel-cover.oss-cn-hangzhou.aliyuncs.com/{{travel.cover_path}}" 
            alt="..." class="img" style="width:300px; height:300px; margin=0;">
                 <!-- ATTENTION: 这里该放的是游记封面！！！！！ -->
+                {% else %}
+                <img src="/static/travo/image/travel_default.jpg" 
+           alt="..." class="img" style="width:300px; height:300px; margin=0;">
+                {% endif %}
           
         
       </div>
+
       <div class="col-md-6 col-md-offset-1" >
         <div class="col-md-8" >
           <div >
@@ -25,15 +30,20 @@
             <h4><small>{{travel.description}}</small></h4>
             <li type="button"  class="btn btn-info btn-lg" onclick="javascript:location.href='{%url 'new_note' travel.id%}'">＋添加新足迹</li>
             {% else %}
+            {% if travel.user.face_path %}
             <img src="http://travo-user-avatar.oss-cn-hangzhou.aliyuncs.com/{{travel.user.face_path}}"  class="img-rounded" style="width:50px; height:50px; ">
+            {% else %}
+            <img src="/static/travo/image/avatar_default.jpg"  class="img-rounded" style="width:50px; height:50px; ">
+            {% endif %}
             <a href="{%url 'others' travel.user.id %}">{{travel.user.nickname}}</a>
             <h3 style="color:#1874cd;">{{travel.description}}</h3><!-- h1这里放的应该是个游记描述 -->
             <p>{{travel.create_time | date:"Y-m-d"}}</p>
-            <h4><small>{{travel.description}}</small></h4>
+<!--         <h4><small>{{travel.description}}</small></h4>   -->
             {% endifequal %}
           </div>
         </div>
       </div>
+
     </div>
   </div> 
   <div class="col-md-4 "  align="right">

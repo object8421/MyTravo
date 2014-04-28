@@ -16,6 +16,8 @@ import com.cobra.mytravo.R.layout;
 import com.cobra.mytravo.R.menu;
 import com.cobra.mytravo.data.AppData;
 import com.cobra.mytravo.data.MyServerMessage;
+import com.cobra.mytravo.data.RequestManager;
+import com.cobra.mytravo.helpers.ActionBarUtils;
 import com.cobra.mytravo.helpers.BitmapManager;
 import com.cobra.mytravo.helpers.MyImageUtil;
 import com.cobra.mytravo.helpers.PhotoUtils;
@@ -46,6 +48,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -66,12 +70,14 @@ public class UserInfoActivity extends Activity implements OnMenuItemClickListene
 	private static final int REQUEST_CODE_SIGNATURE = 4;
 	public  static final int REQUEST_CODE_CAMERA = 3;
 	public  static final int REQUEST_CODE_GALLERY = 2;
+	
 	private View nickname_layout, gender_layout, signature_layout, 
 	email_layout, password_layout, bind_layout;
 	private TextView nicknameTextView;
 	private TextView genderTextView;
 	private TextView signatureTextView;
 	private ImageView avatarImageView;
+	private Drawable mDefaultAvatarBitmap;
 	private ProgressDialog progressDialog;
 	private Button logoutButton;
 	private Intent editIntent;
@@ -125,7 +131,8 @@ public class UserInfoActivity extends Activity implements OnMenuItemClickListene
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user_info);
-		
+		mDefaultAvatarBitmap = (BitmapDrawable)getResources().getDrawable(R.drawable.default_avatar);
+		ActionBarUtils.InitialActionBarWithBackAndTitle(this, getActionBar(), "我的信息");
 		nicknameTextView = (TextView)findViewById(R.id.tv_nickname);
 		genderTextView = (TextView)findViewById(R.id.tv_gender);
 		signatureTextView = (TextView)findViewById(R.id.tv_signature);
@@ -136,22 +143,20 @@ public class UserInfoActivity extends Activity implements OnMenuItemClickListene
 		email_layout = findViewById(R.id.layout3);
 		password_layout = findViewById(R.id.layout4);
 		bind_layout = findViewById(R.id.layout5);
-		logoutButton = (Button) findViewById(R.id.btn_logout);
-		logoutButton.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				AppData.clearData();
-				Intent logoutIntent = new Intent(UserInfoActivity.this, LoginActivity.class);
-				startActivity(logoutIntent);
-				UserInfoActivity.this.finish();
-			}
-		});
+		
+		
 		nicknameTextView.setText(AppData.getNickname());
 		genderTextView.setText(AppData.getSex());
 		signatureTextView.setText(AppData.getSignature());
-		
+		signature_layout.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				Intent signatureIntent = new Intent(UserInfoActivity.this, EditSignatureActivity.class);
+				startActivityForResult(signatureIntent, REQUEST_CODE_SIGNATURE);
+			}
+		});
 		password_layout.setOnClickListener(new OnClickListener()
 		{
 			@Override
@@ -265,6 +270,17 @@ public class UserInfoActivity extends Activity implements OnMenuItemClickListene
                 popupMenu.setOnMenuItemClickListener(UserInfoActivity.this);
                 popupMenu.show();
 				
+			}
+		});
+		RequestManager.loadImage("http://travo-user-avatar.oss-cn-hangzhou.aliyuncs.com/"+AppData.getFacePath(), RequestManager
+                .getImageListener(avatarImageView, mDefaultAvatarBitmap, mDefaultAvatarBitmap));
+		gender_layout.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent genderIntent = new Intent(UserInfoActivity.this,EditGenderActivity.class);
+				startActivityForResult(genderIntent,REQUEST_CODE_GENDER);
 			}
 		});
 	}

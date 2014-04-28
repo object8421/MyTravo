@@ -330,6 +330,12 @@ class HotTravelView(View):
         basic_travel_path = settings.COVER_PATH
         return render(request,'website/hot_travel.html',{"travel_list":travel_results,
             })
+
+class DownloadView(View):
+    def get(self,request):
+        template = loader.get_template('website/download.html')
+        context = RequestContext(request)
+        return HttpResponse(template.render(context))
 #===================travel view=====================================
 
 class NewTravelView(View):
@@ -481,6 +487,7 @@ class SearchTravelView(View):
         print keyword
         return render(request,'website/search_travel.html',{"travel_list":travel_list_result['travel_list'],
             })
+
 #======================note view======================================
 
 

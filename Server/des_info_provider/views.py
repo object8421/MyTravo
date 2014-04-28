@@ -17,7 +17,7 @@ import logging
 import string
 from django.conf import settings
 from datetime import datetime
-
+from jpush import JPushClient
 from models import DesCountry,DesProvince,DesCity,DesScenerySpot
 
 
@@ -35,7 +35,7 @@ class HomeView(View):
         country_list = DesCountry.objects.all()[:20]
         hottest_country_list = DesCountry.objects.all()[:5]
         province_list = DesProvince.objects.all()
-        hottest_province_list = DesProvince.objects.all()[:6]
+        hottest_province_list = DesProvince.objects.all()[:12]
 
         return render(request,'home.html',{"country_list":country_list,
         	"hottest_country_list":hottest_country_list,
@@ -61,31 +61,53 @@ class DesDetailView(View):
 			country = get_object_or_404(DesCountry,pk=des_id)
 			image_url_list = country.image_url.split(';')
 			image_url_list.remove(image_url_list[-1])
-
+			related_province = DesProvince.objects.filter(related_country = country.country_name)
 			return render(request,'country_detail_info.html',{"country":country,
+				"related_province":related_province,
 				"image_url_list":image_url_list})
 
 		if des_type == 'province':
 			province = get_object_or_404(DesProvince,pk=des_id)
+			related_city = DesCity.objects.filter(related_province = province.province_name)
 			image_url_list = province.image_url.split(';')
 			image_url_list.remove(image_url_list[-1])
 			return render(request,'province_detail_info.html',{"province":province,
+				"related_city":related_city,
 				"image_url_list":image_url_list})
 
 		if des_type == 'city':
 			city = get_object_or_404(DesCity,pk=des_id)
-			image_url_list = city.image_url.split(';')
-			
+			try:
+				image_url_list = city.image_url.split(';')
+				image_url_list.remove(image_url_list[-1])
+			except:
+				print "该景点无图。"
+			related_spot = DesScenerySpot.objects.filter(related_city = city.city_name).order_by('image_url').reverse()
 			return render(request,'city_detail_info.html',{"city":city,
+				"related_spot":related_spot,
 				"image_url_list":image_url_list})
 
 		if des_type == 'scenery_spot':
 			scenery_spot = get_object_or_404(DesScenerySpot,pk=des_id)
-			image_url_list = scenery_spot.image_path.split(';')
+			image_url_list = scenery_spot.image_url.split(';')
+			image_url_list.remove(image_url_list[-1])
 			return render(request,'spot_detail_info.html',{"spot":scenery_spot,
 				"image_url_list":image_url_list})
 		return render(request,'des_not_exist.html')
 
+class GetDesPushView(View):
+	def get(self,request,des_name):
+		city = DesCity.objects.filter(Q(city_name__contains=des_name))
+		if city:
+			des_city = city[0]
+			appkey = '986aa2521dcb7f92092a8848'
+			master_secret = 'b6ddbc1f0933845e4fa50c9b'
+			jpush_client = JPushClient(master_secret)
+			welcome_message = "欢迎您来到:" + des_city.city_name
+			des_url = "http://travo.com.cn/destination/" + des_city.city_name + '/' + des_city.id
+			jpush_client.send_notification_by_appkey(app_key, sendno, 'des',
+                                         welcome_message,
+                                         des_url, 'android')
 
 
 		
@@ -93,4 +115,8 @@ class DesDetailView(View):
 class GetRelatedDesView(View):
     def get(self,request):
         pass
+
+
+
+
 

@@ -66,7 +66,7 @@
         <item>首   页</item>
         <item>热门攻略</item>
         <item>搜   索</item>
-        <item>我的收藏</item>
+        
         <item>个人主页</item>
         <item>设   置</item>
     </string-array>
@@ -81,7 +81,6 @@
         <item>魔力红</item>
         <item>清新绿</item>
     </string-array>
-
     <string-array name="theme_list_values">
         <item>0</item>
         <item>1</item>
@@ -124,5 +123,8 @@
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_followers">FollowersActivity</string>
     <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_edit_signature">EditSignatureActivity</string>
+    <string name="title_activity_personal_travel_comment">PersonalTravelCommentActivity</string>
+    <string name="title_activity_my_favorite_travel">MyFavoriteTravelActivity</string>
 
 </resources>

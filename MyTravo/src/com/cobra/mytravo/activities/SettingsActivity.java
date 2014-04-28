@@ -3,6 +3,7 @@ package com.cobra.mytravo.activities;
 import com.cobra.mytravo.R;
 import com.cobra.mytravo.R.layout;
 import com.cobra.mytravo.R.menu;
+import com.cobra.mytravo.helpers.ActionBarUtils;
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
@@ -16,7 +17,9 @@ public class SettingsActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		ActionBarUtils.InitialActionBarWithBackAndTitle(this, getActionBar(), "设置");
 		getFragmentManager().beginTransaction().replace(android.R.id.content, new PrefsFragement()).commit();
+	
 	}
 
 	 public static class PrefsFragement extends PreferenceFragment implements OnSharedPreferenceChangeListener{  
@@ -24,6 +27,7 @@ public class SettingsActivity extends Activity {
 	        public void onCreate(Bundle savedInstanceState) {  
 	            // TODO Auto-generated method stub  
 	            super.onCreate(savedInstanceState);  
+	            
 	            addPreferencesFromResource(R.xml.preference);  
 	        }
 

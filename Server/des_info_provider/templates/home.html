@@ -1,5 +1,6 @@
-{% extends "base_index.html" %}
-{% block title %}攻略信息{% endblock %}
+{% extends "website/base_index.html" %}
+
+{% block title %}目的地首页{% endblock %}
 {% block content %}
 
 <!--
@@ -12,16 +13,20 @@
 	<a href="{%url 'des_detail' "province" province.id %}"><h2>{{province.province_name}}</h2></a>
 {% endfor %}
 -->
-<div class="container">
+<div class="container" >
 	<div class="col-md-2 col-md-offset-1">
 		<div class="row" style="padding-top:50px;">
 			<div class="panel panel-danger">
  			 <!-- Default panel contents -->
  				<div class="panel-heading">国外目的地</div>
- 				<div class="panel-body" style="padding-left:0; padding-right:0; padding-bottom:0;">
+ 				<div class="panel-body" style="padding-left:0; padding-right:0; padding-bottom:0; padding-top:10px;">
     					<div style="padding:0;">
     						{%for country in country_list %}
-								<div class="col-md-6" style="padding-left:5px;padding-right:5px;"><a href="{%url 'des_detail' "country" country.id %}"><button type="button" class="btn btn-info btn-block btn-xs" style="margin-bottom:10px;">{{country.country_name}}</button></a></div>
+							<div class="col-md-6" style="padding-left:5px;padding-right:5px;">
+								
+								<button type="button" class="btn btn-danger btn-block btn-xs" style="margin-bottom:10px;" onclick="javascript:window.location.href='{%url 'des_detail' "country" country.id %}' ">
+										{{country.country_name}}</button>
+								</div>
 							
 							{% endfor %}
     					</div>
@@ -31,13 +36,17 @@
 			</div>
 		</div><!-- end row1 -->
 		<div class="row">
-			<div class="panel panel-info">
+			<div class="panel panel-danger">
  			 <!-- Default panel contents -->
  				<div class="panel-heading">国内目的地</div>
- 				<div class="panel-body">
-    					<div>
+ 				<div class="panel-body" style="padding-left:0; padding-right:0; padding-bottom:0; padding-top:10px;">
+    					<div style="padding:0;">
     						{% for province in province_list%}
-							<a href="{%url 'des_detail' "province" province.id %}"><span class="badge">{{province.province_name}}</span></a>
+    						<div class="col-md-6" style="padding-left:5px;padding-right:5px;">
+							
+								<button type="button" class="btn btn-danger btn-block btn-xs" style="margin-bottom:10px;" onclick="javascript:window.location.href='{%url 'des_detail' "province" province.id %}' ">
+									{{province.province_name}}</button>
+							</div>
 							{% endfor %}
     					</div>
   				</div>
@@ -47,7 +56,7 @@
 		</div><!-- end row2-->
 	</div><!-- end col4-->
 	<div class="col-md-9" align="center">
-		<div class="row" style="margin-top:50px;" >
+		<div class="row" style="margin-top:50px; margin-bottom:0;" >
 			
 			<div class="col-md-9 col-md-offset-1" >
 			<div id="carousel-example-generic" class="carousel slide" data-ride="carousel" style="height:400px;">
@@ -62,20 +71,22 @@
  			  </ol>
 
 			  <!-- Wrapper for slides -->
- 			 <div class="carousel-inner" style="height:400px;">
+ 			 <div class="carousel-inner" style="height:400px; cursor:pointer;">
  			 	{% for country in hottest_country_list %}
  			 	{% ifequal forloop.counter 1 %}
-  			  <div class="item active">
-   			   <img src="" alt="...">
-   			   <div class="carousel-caption">
-   			   	    {{country.country_name}}
+  			  <div class="item active" style="height:400px;" onclick="javascript:window.location.href='{%url 'des_detail' "country" country.id %}' ">
+   			   <img  src="{{country.cover_url}}" alt="..." style="height:400px;">
+   			  
+   			   <div class="carousel-caption" style="margin-bottom:25px;">
+   			   	<h1>{{country.country_name}}</h1>
    			   	</div>
+   			   
    			  </div>
    			   	{% else %}
-  			  <div class="item">
-   			   <img src="..." alt="...">
-   			   <div class="carousel-caption">
-   			   	    {{country.country_name}}
+  			  <div class="item" style="height:400px;" onclick="javascript:window.location.href='{%url 'des_detail' "country" country.id %}' ">
+   			   <img src="{{country.cover_url}}" alt="..." style="height:400px;">
+   			   <div class="carousel-caption" style="margin-bottom:25px;">
+   			   	   <h1> {{country.country_name}} </h1>
    			   	</div>
    			  </div>
    			   	{% endifequal %}
@@ -98,11 +109,15 @@
 		</div><!-- end row -->
 
 
-		<div class="row" style="margin-top:20px;">
-			<div class="col-md-offset-1 col-md-9">
-			{% for hottest_province in hottest_province_list %}
-			<div class="col-md-4" style="height:150px;background:url(http://travo-user-avatar.oss-cn-hangzhou.aliyuncs.com/7e5603615c864229.jpg) no-repeat center;background-size:cover;">
-				
+		<div class="row" style="margin-top:0px;">
+			<div class="col-md-offset-1 col-md-9" style="margin-top:0;padding-top:0;">
+			{% for province in hottest_province_list %}
+			<div class="col-md-3" style="margin-bottom:10px;padding-left:4px;padding-right:4px;cursor:pointer;" onclick="javascript:window.location.href='{%url 'des_detail' "province" province.id %}' ">
+				<div style="height:135px;background:url({{province.cover_url}}) no-repeat center;background-size:cover;">
+					<div class="col-md-5" style="background:rgba(28, 28, 28, 0.9); color:#ffffff; margin-top:90px;">
+						<h5>{{province.province_name}}
+						</h5></div>
+				</div>
 			</div>
 			{% endfor %}
 			</div>
