@@ -54,7 +54,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
               </button>
-              <a class="navbar-brand" href="#"><b>Travo</b></a>
+              <a class="navbar-brand" href="#"><b>TraVo</b></a>
             </div>
             <div class="navbar-collapse collapse">
               <ul class="nav navbar-nav">
@@ -64,7 +64,7 @@
                 {% if 'token' in request.session %}
                 <li><a href={%url 'me'%}>个人主页</a></li>
                 {% endif %}
-                <li><a href="#contact">客户端下载</a></li>
+                <li><a href={%url 'download'%}>客户端下载</a></li>
                 <li><a href="#contact">关于</a></li>
               </ul>
               <form class="navbar-form navbar-left navbar-search" role="search">

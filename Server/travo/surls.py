@@ -38,6 +38,8 @@ urlpatterns = patterns('travo',
 			name = 'search_result'),
 		url(r'hot_travel',sviews.HotTravelView.as_view(),\
 			name = 'hot_travel'),
+		url(r'download',sviews.DownloadView.as_view(),\
+			name= 'download'),
 		#显示添加note的表单
 		
 		url(r'^new_note/(?P<travel_id>\d+)/',sviews.NewNoteView.as_view(),name = 'new_note'),	
