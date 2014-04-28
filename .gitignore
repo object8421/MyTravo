@@ -159,5 +159,7 @@ pip-log.txt
 #Mr Developer
 .mr.developer.cfg
 
+#travo project settings
+/Server/Server/settings.py
 # Mac crap
 .DS_Store
