@@ -319,6 +319,7 @@ def get_favorit(token, first_idx=1, max_qty=20):
 	result = {RSP_CODE : RC_SUCESS}
 	result['travels'] = travels
 	return result
+
 ###add by L!ar for web get_favorite 'cause we don't need pagination by ourself, just use auto pagination from django provision
 def get_favorite_web(token):
 	user = userservice.get_user(token)
@@ -329,6 +330,7 @@ def get_favorite_web(token):
 	result = {RSP_CODE : RC_SUCESS}
 	result['travels'] = travels
 	return result
+
 ######    read    ######
 def read(token, travel_id):
 	user = userservice.get_user(token)

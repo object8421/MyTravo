@@ -69,12 +69,10 @@ class BaseView(View):
 			print('======caught exception======')
 			print(traceback.format_exc())
 			return {RSP_CODE : RC_WRONG_ARG}
-		'''
 		except Exception, e:
 			print('======caught exception======')
 			print(traceback.format_exc())
 			return {RSP_CODE : RC_SERVER_ERROR}
-		'''
 
 	def do(self):
 		pass
@@ -533,7 +531,10 @@ class GetNoteInTravelView(BaseView, LocationAppender):
 		return JsonResponse(self.handle())
 
 	def do(self):
-		result = noteservice.get_all_in_travel(self._travel_id)
+		result = noteservice.get_all_in_travel(
+				self._travel_id,
+				self.get_arg('token')
+				)
 		if result[RSP_CODE] == RC_SUCESS:
 			result['notes'] = self.append_location(result['notes'])
 		return result

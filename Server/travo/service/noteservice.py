@@ -4,7 +4,7 @@ import userservice
 import traceback
 
 from travo.rc import *
-from travo.models import Note, Location, Travel
+from travo.models import Note, Location, Travel, TravelReadLog
 from django.core.exceptions import ValidationError
 from datetime import datetime
 
@@ -144,7 +144,7 @@ def get_image(note_id):
 	return result
 
 ######    get all in travel ######
-def get_all_in_travel(travel_id):
+def get_all_in_travel(travel_id, token):
 	try:
 		travel = Travel.objects.get(pk=travel_id)
 	except:
@@ -152,7 +152,15 @@ def get_all_in_travel(travel_id):
 	else:
 		if not travel.is_public:
 			return {RSP_CODE : RC_PERMISSION_DENIED}
+
+		if token is not None: #some read this travel
+			user = userservice.get_user(token)
+			if travel.user != user:	#can not read self's travel
+				trl = TravelReadLog()
+				trl.reader = user
+				trl.travel_id = travel_id
+				trl.save()
+
 		result = {RSP_CODE : RC_SUCESS}
 		result['notes'] = list(Note.objects.filter(travel_id=travel_id, is_deleted=False))
 		return result
-
