@@ -331,6 +331,10 @@
             android:name="com.cobra.mytravo.activities.MyFavoriteTravelActivity"
             android:label="@string/title_activity_my_favorite_travel" >
         </activity>
+        <activity
+            android:name="com.cobra.mytravo.activities.OthersNotesDetailActivity"
+            android:label="@string/title_activity_others_notes_detail" >
+        </activity>
     </application>
 
 </manifest>

@@ -66,7 +66,6 @@
         <item>首   页</item>
         <item>热门攻略</item>
         <item>搜   索</item>
-        
         <item>个人主页</item>
         <item>设   置</item>
     </string-array>
@@ -126,5 +125,6 @@
     <string name="title_activity_edit_signature">EditSignatureActivity</string>
     <string name="title_activity_personal_travel_comment">PersonalTravelCommentActivity</string>
     <string name="title_activity_my_favorite_travel">MyFavoriteTravelActivity</string>
+    <string name="title_activity_others_notes_detail">OthersNotesDetailActivity</string>
 
 </resources>

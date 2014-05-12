@@ -123,13 +123,12 @@
 
         <TextView
             android:id="@+id/tv_description_travel_detail"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:ellipsize="end"
-            android:lines="2"
             android:maxLines="3"
             android:text="游记详细描述游记详细描述游记详细描述游记详细描述"
             android:textColor="@android:color/darker_gray"

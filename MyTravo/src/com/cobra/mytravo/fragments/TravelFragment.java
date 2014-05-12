@@ -8,6 +8,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cobra.mytravo.R;
 import com.cobra.mytravo.activities.OtherUserInfoActivity;
+import com.cobra.mytravo.activities.OthersNotesDetailActivity;
 import com.cobra.mytravo.activities.TravelDetailActivity;
 import com.cobra.mytravo.adapters.CardsAnimationAdapter;
 import com.cobra.mytravo.adapters.NotesAdapter;
@@ -32,6 +33,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -93,7 +96,19 @@ public class TravelFragment extends V4BaseFragment implements PullToRefreshAttac
 		mAdapter = new NotesAdapter(getActivity(), mListView, null);
 		mListView.addHeaderView(headerView);
 		mListView.setAdapter(mAdapter);
-		
+		mListView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+					long arg3) {
+				// TODO Auto-generated method stub
+				Note note = mAdapter.getItem(position - mListView.getHeaderViewsCount());
+				if(note != null){
+					Intent noteIntent = new Intent(getActivity(),OthersNotesDetailActivity.class);
+					getActivity().startActivity(noteIntent);
+				}
+			}
+		});
 	    mPullToRefreshAttacher.addRefreshableView(mListView, this);
 	    AnimationAdapter animationAdapter = new CardsAnimationAdapter(mAdapter);
         animationAdapter.setAbsListView(mListView);
