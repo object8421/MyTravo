@@ -335,6 +335,22 @@
             android:name="com.cobra.mytravo.activities.OthersNotesDetailActivity"
             android:label="@string/title_activity_others_notes_detail" >
         </activity>
+        <activity
+            android:name="com.cobra.mytravo.activities.CountryDetailActivity"
+            android:label="@string/title_activity_country_detail" >
+        </activity>
+        <activity
+            android:name="com.cobra.mytravo.activities.ProvinceDetailActivity"
+            android:label="@string/title_activity_province_detail" >
+        </activity>
+        <activity
+            android:name="com.cobra.mytravo.activities.CityDetailActivity"
+            android:label="@string/title_activity_city_detail" >
+        </activity>
+        <activity
+            android:name="com.cobra.mytravo.activities.SpotDetailActivity"
+            android:label="@string/title_activity_spot_detail" >
+        </activity>
     </application>
 
 </manifest>

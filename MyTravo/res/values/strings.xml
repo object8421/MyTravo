@@ -126,5 +126,9 @@
     <string name="title_activity_personal_travel_comment">PersonalTravelCommentActivity</string>
     <string name="title_activity_my_favorite_travel">MyFavoriteTravelActivity</string>
     <string name="title_activity_others_notes_detail">OthersNotesDetailActivity</string>
+    <string name="title_activity_country_detail">CountryDetailActivity</string>
+    <string name="title_activity_province_detail">ProvinceDetailActivity</string>
+    <string name="title_activity_city_detail">CityDetailActivity</string>
+    <string name="title_activity_spot_detail">SpotDetailActivity</string>
 
 </resources>

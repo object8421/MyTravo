@@ -40,4 +40,7 @@
 	<style name="SpinnerItem" parent="@android:style/Widget.Holo.TextView.SpinnerItem">
     	<item name="android:textAppearance">?android:attr/textAppearanceInverse</item>
 	</style>
+	<style name="TwoWayView">
+	<item name="android:orientation">horizontal</item>
+	</style>
 </resources>

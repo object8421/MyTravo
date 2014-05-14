@@ -5,6 +5,7 @@ import cn.jpush.android.api.JPushInterface;
 import com.cobra.mytravo.R;
 import com.cobra.mytravo.data.AppData;
 import com.cobra.mytravo.fragments.BaseFragment;
+import com.cobra.mytravo.fragments.DestinationFragment;
 import com.cobra.mytravo.fragments.DrawerFragment;
 import com.cobra.mytravo.fragments.FakeFragment;
 import com.cobra.mytravo.fragments.FavoriteFragment;
@@ -61,12 +62,12 @@ public class MainActivity extends FragmentActivity {
 	private String[] listItems;
 	private ShotsFragment shotsFragment;
 	private HotTravelFragment hottravelFragment;
-	private FakeFragment guideFragment, nearbyFakeFragment;
+	private DestinationFragment destinationFragment, nearbyFakeFragment;
 	private FavoriteFragment favoriteFragment;
 	private PersonalFragment personalFragment;
 	private SettingFragment settingFragment;
 	private String hotTravelTag = "hottravel";
-	private String fakeTag = "fake";
+	private String destinationTag = "destination";
 	private String favoriteTag = "favorite";
 	private String personalTag = "personal";
 	private String settingTag = "setting";
@@ -235,6 +236,15 @@ public class MainActivity extends FragmentActivity {
 //				fragmentManager.beginTransaction().attach(mContentFragment).commit();
 //			}
 			
+			break;
+		case 1:
+			removeSpinner();
+			mContentFragment = (BaseFragment) fragmentManager.findFragmentByTag(destinationTag);
+			if(mContentFragment == null){
+				mContentFragment = new DestinationFragment();
+			}
+			fragmentManager.beginTransaction().
+			replace(R.id.content_frame, mContentFragment, destinationTag).commit();
 			break;
 		case 2:
 			removeSpinner();
