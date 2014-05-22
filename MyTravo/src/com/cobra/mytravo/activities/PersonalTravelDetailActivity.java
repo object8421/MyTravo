@@ -1,5 +1,7 @@
 package com.cobra.mytravo.activities;
 
+import java.util.ArrayList;
+
 import com.cobra.mytravo.R;
 import com.cobra.mytravo.adapters.TravelDetailAdapter;
 import com.cobra.mytravo.data.AppData;
@@ -9,7 +11,10 @@ import com.cobra.mytravo.helpers.MyImageUtil;
 import com.cobra.mytravo.helpers.TimeUtils;
 import com.cobra.mytravo.models.Note;
 import com.cobra.mytravo.models.Travel;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
+import uk.co.senab.photoview.PhotoViewAttacher;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -21,6 +26,7 @@ import android.content.Loader;
 import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -47,7 +53,6 @@ public class PersonalTravelDetailActivity extends Activity implements LoaderMana
 	//show the number of notes
 	private int noteCount = 0;
 	private NotesDataHelper mDataHelper;
-	private SQLiteDatabase db;
 	private View headerView;
 	private ImageView travelImageView;
 	private TextView titleTextView;
@@ -56,11 +61,15 @@ public class PersonalTravelDetailActivity extends Activity implements LoaderMana
 	private TextView noteCountTextView;
 	private ListView mListView;
 	private AlertDialog.Builder comfirmDialog;
+	protected ImageLoader imageLoader = ImageLoader.getInstance();
+	private DisplayImageOptions options;
+	private ArrayList<Note> notes;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_personal_travel_detail);
 		ActionBarUtils.InitialActionBarWithBackAndTitle(this, getActionBar(), "游记详情");
+		
 		InitialData();
 		InitialView();
 		mAdapter = new TravelDetailAdapter(this, mListView);
@@ -75,9 +84,10 @@ public class PersonalTravelDetailActivity extends Activity implements LoaderMana
 				Note note = mAdapter.getItem(position - mListView.getHeaderViewsCount());
 				if(note != null){
 					Intent intent = new Intent();
-					intent.setClass(PersonalTravelDetailActivity.this, NoteDetailActivity.class);
+					intent.setClass(PersonalTravelDetailActivity.this, PersonalNotesActivity.class);
 					Bundle bundle = new Bundle();
 					bundle.putSerializable(NOTE_STRING, note);
+					bundle.putSerializable("notes", notes);
 					intent.putExtras(bundle);
 					startActivity(intent);
 				}
@@ -105,7 +115,9 @@ public class PersonalTravelDetailActivity extends Activity implements LoaderMana
 //			BitmapFactory.Options options = new BitmapFactory.Options();
 //	        options.inSampleSize = 2;
 //			travelImageView.setImageBitmap(BitmapFactory.decodeFile(AppData.TRAVO_PATH + "/" + travel.getCover_url() + ".jpg", options));
-			MyImageUtil.setBitmapResize(this, travelImageView, travel.getCover_url());
+			//MyImageUtil.setBitmapResize(this, travelImageView, travel.getCover_url());
+			imageLoader.displayImage("file:///"+travel.getCover_url(), travelImageView);
+			
 		}
 			
 		titleTextView.setText(travel.getTitle());
@@ -126,7 +138,15 @@ public class PersonalTravelDetailActivity extends Activity implements LoaderMana
 			mDataHelper = new NotesDataHelper(this, AppData.getUserId());
 			//noteCount = mDataHelper.getCountByTravel(travel.getCreate_time());
 		}
-		
+		options = new DisplayImageOptions.Builder()
+		.showImageOnLoading(R.drawable.me_default_image)
+		.showImageForEmptyUri(R.drawable.me_default_image)
+		.showImageOnFail(R.drawable.me_default_image)
+		.cacheInMemory(true)
+		.cacheOnDisk(true)
+		.considerExifParams(true)
+		.bitmapConfig(Bitmap.Config.RGB_565)
+		.build();
 	}
 
 	@Override
@@ -151,6 +171,10 @@ public class PersonalTravelDetailActivity extends Activity implements LoaderMana
 				noteCountTextView.setText("0");
 			}
 		}
+		
+		notes = new ArrayList<Note>();
+		for(int i = 0; i < mAdapter.getCount(); i++)
+			notes.add(mAdapter.getItem(i));
 	}
 
 	@Override

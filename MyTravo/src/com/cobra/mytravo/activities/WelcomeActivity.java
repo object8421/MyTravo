@@ -15,38 +15,23 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Animation.AnimationListener;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 public class WelcomeActivity extends Activity
 {
 	private ImageView mShowPicture;
+	private TextView mTextView;
 	private Animation mFadeIn;
+	private Animation mTextFadeIn;
 	private Animation mFadeInScale;
-
-	// private Handler handler = new Handler() {
-	//
-	// @Override
-	// public void handleMessage(Message msg) {
-	// super.handleMessage(msg);
-	// switch (msg.what) {
-	//
-	// case MyHandlerMessage.WELCOME_USER_EXIST:
-	// Intent intent = new Intent();
-	// intent.setClass(getApplicationContext(), MainActivity.class);
-	// startActivity(intent);
-	// WelcomeActivity.this.finish();
-	// break;
-	// case MyHandlerMessage.WELCOME_USER_NOT_EXIST:
-	//
-	// break;
-	// }
-	// }
-	// };
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -57,6 +42,7 @@ public class WelcomeActivity extends Activity
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_welcome);
 		mShowPicture = (ImageView) findViewById(R.id.guide_picture);
+		mTextView  = (TextView) findViewById(R.id.textView1);
 		init();
 	}
 
@@ -72,31 +58,15 @@ public class WelcomeActivity extends Activity
 	{
 		// Inflate the menu; this adds items to the action bar if it is present.
 
-		return true;
+		return false;
 	}
 
-	// private class enterThread extends Thread{
-	// @Override
-	// public void run(){
-	//
-	// try {
-	//
-	// Thread.sleep(3000);
-	//
-	// Message msg = new Message();
-	// msg.what = MyHandlerMessage.WELCOME_USER_EXIST;
-	// handler.sendMessage(msg);
-	// } catch (InterruptedException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	//
-	// }
-	// }
+	
 	private void initAnim()
 	{
 		mFadeIn = AnimationUtils.loadAnimation(this,
 				R.anim.guide_welcome_fade_in);
+		mTextFadeIn = AnimationUtils.loadAnimation(this, R.anim.welcome_text_fade_in);
 		mFadeInScale = AnimationUtils.loadAnimation(this,
 				R.anim.guide_welcome_fade_in_scale);
 
@@ -116,7 +86,32 @@ public class WelcomeActivity extends Activity
 
 			public void onAnimationEnd(Animation animation)
 			{
-				mShowPicture.startAnimation(mFadeInScale);
+				AnimationSet set = new AnimationSet(true);
+				mShowPicture.setAnimation(mFadeInScale);
+				mTextView.setAnimation(mTextFadeIn);
+				set.addAnimation(mFadeInScale);
+				set.addAnimation(mTextFadeIn);
+				set.start();
+			}
+		});
+		mTextFadeIn.setAnimationListener(new AnimationListener() {
+			
+			@Override
+			public void onAnimationStart(Animation animation) {
+				// TODO Auto-generated method stub
+				mTextView.setVisibility(View.VISIBLE);
+			}
+			
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				// TODO Auto-generated method stub
+				
 			}
 		});
 		mFadeInScale.setAnimationListener(new AnimationListener()
@@ -167,16 +162,14 @@ public class WelcomeActivity extends Activity
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		JPushInterface.onResume(this);
-		JPushInterface.resumePush(getApplicationContext());
-		JPushInterface.setAliasAndTags(getApplicationContext(), AppData.getNickname(), null);
+		
 	}
 
 	@Override
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-		JPushInterface.onPause(this);
+		
 	}
 	
 }

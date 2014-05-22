@@ -5,12 +5,19 @@ package com.cobra.mytravo.data;
 
 
 import com.cobra.mytravo.helpers.PhotoUtils;
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
+import android.annotation.TargetApi;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.Build;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.util.Log;
 
 /**
@@ -41,12 +48,16 @@ public class AppData extends Application {
     //public static final String HOST_IP = "http://112.124.70.221:8080/mobile/";
     private static SharedPreferences sharedPreferences; 
     private static Editor editor;
+    @TargetApi(Build.VERSION_CODES.GINGERBREAD)
+	@SuppressWarnings("unused")
     @Override
     public void onCreate() {
+    	
         super.onCreate();
         sContext = getApplicationContext();
         sharedPreferences = sContext.getSharedPreferences("share", MODE_PRIVATE);
         editor = sharedPreferences.edit();
+        initImageLoader(getApplicationContext());
     }
     
     public static Context getContext() {
@@ -237,5 +248,19 @@ public class AppData extends Application {
     	editor.clear();
     	editor.commit();
     }
-    
+    public static void initImageLoader(Context context) {
+		// This configuration tuning is custom. You can tune every option, you may tune some of them,
+		// or you can create default configuration by
+		//  ImageLoaderConfiguration.createDefault(this);
+		// method.
+		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
+				.threadPriority(Thread.NORM_PRIORITY - 2)
+				.denyCacheImageMultipleSizesInMemory()
+				.diskCacheFileNameGenerator(new Md5FileNameGenerator())
+				.tasksProcessingOrder(QueueProcessingType.LIFO)
+				.writeDebugLogs() // Remove for release app
+				.build();
+		// Initialize ImageLoader with configuration.
+		ImageLoader.getInstance().init(config);
+	}
 }

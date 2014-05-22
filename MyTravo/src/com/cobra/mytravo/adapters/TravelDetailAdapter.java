@@ -5,6 +5,7 @@ import com.cobra.mytravo.data.RequestManager;
 import com.cobra.mytravo.helpers.BitmapManager;
 import com.cobra.mytravo.helpers.TimeUtils;
 import com.cobra.mytravo.models.Note;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import android.app.Activity;
 import android.content.Context;
@@ -26,6 +27,7 @@ public class TravelDetailAdapter extends CursorAdapter{
 	private ListView mListView;
 	private BitmapManager bitmapManager;
 	private Drawable defaultImageDrawable;
+	protected ImageLoader imageLoader = ImageLoader.getInstance();
 	public TravelDetailAdapter(Context context, ListView listView) {
 		super(context, null, false);
 		mLayoutInflater = ((Activity) context).getLayoutInflater();
@@ -58,8 +60,8 @@ public class TravelDetailAdapter extends CursorAdapter{
 		holder.imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.me_default_image));
 		if(note.getImage_url()!= null){
 			holder.imageView.setVisibility(View.VISIBLE);
-			bitmapManager.fetchBitmapOnThread(note.getImage_url(), holder.imageView);
-			//RequestManager.getImageListener(holder.imageView, defaultImageDrawable, defaultImageDrawable);
+			//bitmapManager.fetchBitmapOnThread(note.getImage_url(), holder.imageView);
+			imageLoader.displayImage("file:///"+note.getImage_url(), holder.imageView);
 		}
 		else{
 			holder.imageView.setVisibility(View.GONE);

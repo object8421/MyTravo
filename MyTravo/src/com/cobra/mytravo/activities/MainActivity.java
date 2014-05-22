@@ -342,8 +342,15 @@ public class MainActivity extends FragmentActivity {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		
+		JPushInterface.onResume(this);
+		JPushInterface.resumePush(getApplicationContext());
+		JPushInterface.setAliasAndTags(getApplicationContext(), AppData.getNickname(), null);
 		
 	}
-	 
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		JPushInterface.onPause(this);
+	}
 }
