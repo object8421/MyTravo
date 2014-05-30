@@ -28,6 +28,7 @@ import com.cobra.mytravo.internet.GetMyTravelsPicture;
 import com.cobra.mytravo.internet.SearchTravelService;
 import com.cobra.mytravo.models.Travel;
 import com.cobra.mytravo.ui.LoadingFooter;
+import com.cobra.mytravo.util.ComposeBtnUtil;
 import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
 
 
@@ -60,7 +61,7 @@ public class HotTravelFragment extends BaseFragment implements PullToRefreshAtta
 	private PullToRefreshAttacher mPullToRefreshAttacher;
 	private LoadingFooter mLoadingFooter;
 	ArrayList<Travel> travels = new ArrayList<Travel>();
-	
+	private int index = 0;
 	public static HotTravelFragment newInstance(String searchType) {
         HotTravelFragment fragment = new HotTravelFragment();
         Bundle bundle = new Bundle();
@@ -98,6 +99,7 @@ public class HotTravelFragment extends BaseFragment implements PullToRefreshAtta
 					Intent intent = new Intent(mActivity, TravelDetailActivity.class);
 					intent.putExtra("travel", travel);
 					startActivity(intent);
+					mActivity.overridePendingTransition(R.anim.anim_bottom_to_top_in, android.R.anim.fade_out);
 				}
 			}
 		});
@@ -106,7 +108,19 @@ public class HotTravelFragment extends BaseFragment implements PullToRefreshAtta
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
 				// TODO Auto-generated method stub
-				
+				switch(scrollState){
+				case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+					index = view.getLastVisiblePosition();
+					break;
+				case OnScrollListener.SCROLL_STATE_IDLE:
+					int newIndex = view.getLastVisiblePosition();
+					if(newIndex > index){
+						ComposeBtnUtil.runOutAnimation(((MainActivity)getActivity()).getComposeButton());
+					}
+					else{
+						ComposeBtnUtil.runInAnimation(((MainActivity)getActivity()).getComposeButton());
+					}
+				}
 			}
 			
 			@Override

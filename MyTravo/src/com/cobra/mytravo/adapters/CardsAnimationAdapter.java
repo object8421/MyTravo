@@ -13,9 +13,9 @@ import com.nineoldandroids.animation.ObjectAnimator;
 
 public class CardsAnimationAdapter extends AnimationAdapter {
 
-    private float mTranslationY = 125;
+    private float mTranslationY = 150;
 
-    private float mRotationX = 8;
+    private float mRotationX = 10;
 
     private long mDuration;
 

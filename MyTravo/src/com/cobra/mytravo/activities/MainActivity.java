@@ -35,10 +35,14 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -53,6 +57,7 @@ import android.widget.Toast;
  * Activity manages the whole UI components, including fragments
  */
 public class MainActivity extends FragmentActivity {
+	private final static String TAG = "MainActivity";
 	private ViewGroup rootView;
 	private Button composeButton;
 	private DrawerLayout mDrawerLayout;
@@ -74,6 +79,7 @@ public class MainActivity extends FragmentActivity {
 	//store current position
 	private int current;
 	private String searchType;
+	private long exitTime = 0;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -93,10 +99,12 @@ public class MainActivity extends FragmentActivity {
 				if(AppData.getTravelTime() != null){
         			Intent noteIntent = new Intent(MainActivity.this, AddNoteActivity.class);
         			startActivity(noteIntent);
+        			MainActivity.this.overridePendingTransition(R.anim.anim_bottom_to_top_in, android.R.anim.fade_out);
         		}
         		else{
         			Intent travelIntent = new Intent(MainActivity.this, AddTravelActivity.class);
             		startActivity(travelIntent);
+            		MainActivity.this.overridePendingTransition(R.anim.anim_bottom_to_top_in, android.R.anim.fade_out);
         		}
 			}
 		});
@@ -124,7 +132,7 @@ public class MainActivity extends FragmentActivity {
         .replace(R.id.left_drawer, new DrawerFragment())  
         .commit();  
 		Toast.makeText(this, "user_id is:"+ AppData.getUserId(), Toast.LENGTH_SHORT).show();
-	}
+		}
 	@Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -218,24 +226,9 @@ public class MainActivity extends FragmentActivity {
 		BaseFragment mContentFragment;
 		FragmentManager fragmentManager = getFragmentManager();
 		switch (position) {
-//		case 0:
-//			if(shotsFragment == null)
-//				shotsFragment = new ShotsFragment();
-//			mContentFragment = shotsFragment;
-//			break;
 		case 0:
 			setSpinner();
-			setCategory(searchType);
-//			mContentFragment = (BaseFragment) fragmentManager.findFragmentByTag(hotTravelTag);
-//			if(mContentFragment == null){
-//				mContentFragment = new HotTravelFragment();
-//				fragmentManager.beginTransaction().
-//				replace(R.id.content_frame, mContentFragment, hotTravelTag).commit();
-//			}
-//			else{
-//				fragmentManager.beginTransaction().attach(mContentFragment).commit();
-//			}
-			
+			setCategory(searchType);		
 			break;
 		case 1:
 			removeSpinner();
@@ -247,21 +240,11 @@ public class MainActivity extends FragmentActivity {
 			replace(R.id.content_frame, mContentFragment, destinationTag).commit();
 			break;
 		case 2:
-			removeSpinner();
+			
 			Intent searcIntent = new Intent(this, SearchActivity.class);
 			startActivity(searcIntent);
 			break;
-//		case 3:
-//			removeSpinner();
-//			mContentFragment = (BaseFragment) fragmentManager.findFragmentByTag(favoriteTag);
-//			if(mContentFragment == null){
-//				mContentFragment = new FavoriteFragment();
-//				
-//			}
-//			fragmentManager.beginTransaction().
-//			replace(R.id.content_frame, mContentFragment, favoriteTag).commit();
-//			
-//			break;
+
 		case 3:
 			removeSpinner();
 			mContentFragment = (BaseFragment) fragmentManager.findFragmentByTag(personalTag);
@@ -273,6 +256,7 @@ public class MainActivity extends FragmentActivity {
 			replace(R.id.content_frame, mContentFragment, personalTag).commit();
 			break;
 		case 4:
+			
 			Intent preferenceIntent = new Intent(this, SettingsActivity.class);
 			startActivity(preferenceIntent);
 			overridePendingTransition(R.anim.anim_right_to_left_in, R.anim.anim_left_fade_out);
@@ -353,4 +337,21 @@ public class MainActivity extends FragmentActivity {
 		super.onPause();
 		JPushInterface.onPause(this);
 	}
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		
+		exit();
+	}
+	public void exit() {
+        if ((System.currentTimeMillis() - exitTime) > 2000) {
+            Toast.makeText(getApplicationContext(), "再按一次退出程序",
+                    Toast.LENGTH_SHORT).show();
+            exitTime = System.currentTimeMillis();
+        } else {
+            finish();
+            System.exit(0);
+        }
+    }
+	
 }

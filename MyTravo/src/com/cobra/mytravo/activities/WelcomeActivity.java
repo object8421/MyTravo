@@ -162,14 +162,14 @@ public class WelcomeActivity extends Activity
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-		
+		JPushInterface.onResume(this);
 	}
 
 	@Override
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-		
+		JPushInterface.onPause(this);
 	}
 	
 }

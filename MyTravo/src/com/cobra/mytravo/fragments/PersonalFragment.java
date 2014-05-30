@@ -64,6 +64,7 @@ public class PersonalFragment extends BaseFragment implements LoaderCallbacks<Cu
 	private TextView favoriteCountTextView;
 	private View followingView,favoriteView;
 	private Drawable mDefaultImageDrawable = new ColorDrawable(Color.argb(255, 201, 201, 201));
+	private int index = 0;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -128,6 +129,33 @@ public class PersonalFragment extends BaseFragment implements LoaderCallbacks<Cu
 				
 			}
 		});
+		mListView.setOnScrollListener(new OnScrollListener() {
+			
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				// TODO Auto-generated method stub
+				switch(scrollState){
+				case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+					index = view.getLastVisiblePosition();
+					break;
+				case OnScrollListener.SCROLL_STATE_IDLE:
+					int newIndex = view.getLastVisiblePosition();
+					if(newIndex > index){
+						ComposeBtnUtil.runOutAnimation(((MainActivity)getActivity()).getComposeButton());
+					}
+					else{
+						ComposeBtnUtil.runInAnimation(((MainActivity)getActivity()).getComposeButton());
+					}
+				}
+			}
+			
+			@Override
+			public void onScroll(AbsListView arg0, int arg1, int arg2, int arg3) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+
 		getUser();
 		return view;
 	}

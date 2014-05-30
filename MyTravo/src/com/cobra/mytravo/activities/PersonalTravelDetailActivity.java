@@ -88,6 +88,8 @@ public class PersonalTravelDetailActivity extends Activity implements LoaderMana
 					Bundle bundle = new Bundle();
 					bundle.putSerializable(NOTE_STRING, note);
 					bundle.putSerializable("notes", notes);
+					bundle.putInt("position", position - mListView.getHeaderViewsCount());
+					bundle.putString("type", "local");
 					intent.putExtras(bundle);
 					startActivity(intent);
 				}

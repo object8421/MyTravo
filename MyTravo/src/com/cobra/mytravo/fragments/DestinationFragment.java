@@ -10,6 +10,8 @@ import com.cobra.mytravo.R;
 import com.cobra.mytravo.activities.CountryDetailActivity;
 import com.cobra.mytravo.activities.MainActivity;
 import com.cobra.mytravo.adapters.DestinationAdapter;
+import com.cobra.mytravo.adapters.CountryAnimationAdapter;
+import com.cobra.mytravo.adapters.DomesticAnimationAdapter;
 import com.cobra.mytravo.adapters.ProvinceAdapter;
 import com.cobra.mytravo.data.AppData;
 import com.cobra.mytravo.data.GsonRequest;
@@ -31,6 +33,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
@@ -49,11 +52,18 @@ public class DestinationFragment extends BaseFragment implements PullToRefreshAt
 	private ArrayList<Province> provinces;
 	private PullToRefreshAttacher mPullToRefreshAttacher;
 	private BitmapDrawable mDefaultBitmap;
+	private ProgressBar progressBar;
+	private View view1, view2;
+	private CountryAnimationAdapter mCountryAnimationAdapter;
+	private DomesticAnimationAdapter mDomesticAnimationAdapter;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		View view  = inflater.inflate(R.layout.fragment_destination, null);
+		view1 = view.findViewById(R.id.ll_oversea);
+		view2 = view.findViewById(R.id.ll_domestic);
+		progressBar = (ProgressBar) view.findViewById(R.id.progressBar1);
 		mPager = (ViewPager) view.findViewById(R.id.viewpager);
 		mActivity = (MainActivity) getActivity();
 		mDefaultBitmap = (BitmapDrawable) mActivity
@@ -63,6 +73,9 @@ public class DestinationFragment extends BaseFragment implements PullToRefreshAt
 		overseaListView = (TwoWayView) view.findViewById(R.id.oversea_list);
 		overseaAdapter = new DestinationAdapter(mActivity, overseaListView, null);
 		overseaListView.setAdapter(overseaAdapter);
+		mCountryAnimationAdapter = new CountryAnimationAdapter(overseaAdapter);
+		mCountryAnimationAdapter.setAbsListView(overseaListView);
+		overseaListView.setAdapter(mCountryAnimationAdapter);
 		overseaListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -77,6 +90,9 @@ public class DestinationFragment extends BaseFragment implements PullToRefreshAt
 		domesticListView = (TwoWayView) view.findViewById(R.id.domestic_list);
 		domesticAdapter = new ProvinceAdapter(mActivity, domesticListView, null);
 		domesticListView.setAdapter(domesticAdapter);
+		mDomesticAnimationAdapter = new DomesticAnimationAdapter(domesticAdapter);
+		mDomesticAnimationAdapter.setAbsListView(domesticListView);
+		domesticListView.setAdapter(mDomesticAnimationAdapter);
 	    loadData();
 		return view;
 	}
@@ -108,6 +124,10 @@ public class DestinationFragment extends BaseFragment implements PullToRefreshAt
 						provinces = data.getProvinces();
 						domesticAdapter.clearData();
 						domesticAdapter.setData(provinces);
+						view1.setVisibility(View.VISIBLE);
+						view2.setVisibility(View.VISIBLE);
+						mPager.setVisibility(View.VISIBLE);
+						progressBar.setVisibility(View.INVISIBLE);
 					}
 		}, new ErrorListener() {
 

@@ -80,7 +80,7 @@
             android:label="@string/title_activity_register"
             android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme"
-            android:windowSoftInputMode="adjustPan" >
+            android:windowSoftInputMode="adjustResize" >
         </activity>
         <activity
             android:name="com.cobra.mytravo.activities.LoginActivity"
@@ -94,7 +94,7 @@
             android:label="@string/title_activity_add_travel"
             android:parentActivityName="com.cobra.mytravo.activities.MainActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" >
+            android:windowSoftInputMode="adjustResize" >
         </activity>
         <!--
               <activity

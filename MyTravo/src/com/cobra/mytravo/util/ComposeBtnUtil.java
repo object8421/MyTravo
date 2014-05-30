@@ -29,7 +29,7 @@ public class ComposeBtnUtil {
 	private static boolean isAnimating = false;
 	private static boolean isAlreadyIn = true;
 	private static boolean isAlreadyOut = false;
-	private static final int ANIMATION_DURATION = 400;
+	private static final int ANIMATION_DURATION = 300;
 	private ComposeBtnUtil(){
 		
 	}
@@ -69,8 +69,10 @@ public class ComposeBtnUtil {
 								TranslateAnimation.RELATIVE_TO_SELF,0.0f);
 			
 			translateAnimation.setDuration(ANIMATION_DURATION);
+			
 			AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
 			alphaAnimation.setDuration(ANIMATION_DURATION);
+			
 			set.addAnimation(alphaAnimation);
 			set.addAnimation(translateAnimation);
 			set.setDuration(ANIMATION_DURATION);
@@ -115,8 +117,10 @@ public class ComposeBtnUtil {
 							0.0f, TranslateAnimation.RELATIVE_TO_SELF, 0.0f, 
 							TranslateAnimation.RELATIVE_TO_SELF,1.0f);
 			translateAnimation.setDuration(ANIMATION_DURATION);
+			
 			AlphaAnimation alphaAnimation = new AlphaAnimation(1.0f, 0.0f);
 			alphaAnimation.setDuration(ANIMATION_DURATION);
+			
 			set.addAnimation(alphaAnimation);
 			set.addAnimation(translateAnimation);
 			set.setDuration(ANIMATION_DURATION);

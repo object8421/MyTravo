@@ -19,6 +19,7 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
          <item name="android:spinnerDropDownItemStyle">@style/DropDownItem</item>
         <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
+        <item name="@android:windowAnimationStyle">@style/myact</item>
     </style>
 	<style name="Widget.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@drawable/ab_solid_cobra_blue</item>
@@ -43,4 +44,16 @@
 	<style name="TwoWayView">
 	<item name="android:orientation">horizontal</item>
 	</style>
+	
+	<style name="myact">
+
+      <item name="@android:activityOpenEnterAnimation">@anim/anim_right_to_left_in</item>
+
+      <item name="@android:activityOpenExitAnimation">@anim/anim_left_fade_out</item>
+
+      <item name="@android:activityCloseEnterAnimation">@android:anim/fade_in</item>
+
+      <item name="@android:activityCloseExitAnimation">@android:anim/slide_out_right</item>
+
+  </style>
 </resources>

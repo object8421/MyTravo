@@ -7,8 +7,10 @@ import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshAttacher;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.cobra.mytravo.R;
+import com.cobra.mytravo.activities.MainActivity;
 import com.cobra.mytravo.activities.OtherUserInfoActivity;
 import com.cobra.mytravo.activities.OthersNotesDetailActivity;
+import com.cobra.mytravo.activities.PersonalNotesActivity;
 import com.cobra.mytravo.activities.TravelDetailActivity;
 import com.cobra.mytravo.adapters.CardsAnimationAdapter;
 import com.cobra.mytravo.adapters.NotesAdapter;
@@ -19,6 +21,7 @@ import com.cobra.mytravo.data.RequestManager;
 import com.cobra.mytravo.helpers.TimeUtils;
 import com.cobra.mytravo.models.Note;
 import com.cobra.mytravo.models.Travel;
+import com.cobra.mytravo.util.ComposeBtnUtil;
 import com.nhaarman.listviewanimations.swinginadapters.AnimationAdapter;
 
 import android.app.Fragment;
@@ -30,11 +33,14 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -58,6 +64,7 @@ public class TravelFragment extends V4BaseFragment implements PullToRefreshAttac
 	private NotesAdapter mAdapter;
 	private BitmapDrawable mDefaultAvatarBitmap;
 	private Drawable mDefaultImageDrawable = new ColorDrawable(Color.argb(255, 201, 201, 201));
+	private int index = 0;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -102,9 +109,12 @@ public class TravelFragment extends V4BaseFragment implements PullToRefreshAttac
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
 					long arg3) {
 				// TODO Auto-generated method stub
-				Note note = mAdapter.getItem(position - mListView.getHeaderViewsCount());
-				if(note != null){
-					Intent noteIntent = new Intent(getActivity(),OthersNotesDetailActivity.class);
+				//Note note = mAdapter.getItem(position - mListView.getHeaderViewsCount());
+				if(notes != null && notes.size() > 0){
+					Intent noteIntent = new Intent(getActivity(),PersonalNotesActivity.class);
+					noteIntent.putExtra("notes", notes);
+					noteIntent.putExtra("position", position - mListView.getHeaderViewsCount());
+					noteIntent.putExtra("type", "online");
 					getActivity().startActivity(noteIntent);
 				}
 			}
@@ -113,6 +123,7 @@ public class TravelFragment extends V4BaseFragment implements PullToRefreshAttac
 	    AnimationAdapter animationAdapter = new CardsAnimationAdapter(mAdapter);
         animationAdapter.setAbsListView(mListView);
         mListView.setAdapter(animationAdapter);
+        
         if(travel.getCover_path() != null && travel.getSnap_path() != null && travel.getCover_path().equals(travel.getSnap_path()))
         	RequestManager.loadImage("http://travo-travel-cover.oss-cn-hangzhou.aliyuncs.com/"+travel.getCover_path(), RequestManager
                 .getImageListener(cover, mDefaultImageDrawable, mDefaultImageDrawable));

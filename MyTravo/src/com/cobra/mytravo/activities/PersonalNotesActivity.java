@@ -32,6 +32,7 @@ import android.widget.TextView;
 
 public class PersonalNotesActivity extends Activity {
 	private final static String TAG = "PersonalNotesActivity";
+	private String type;
 	private NotesDataHelper mDataHelper;
 	private ViewPager mPager;
 	private int position;
@@ -46,6 +47,7 @@ public class PersonalNotesActivity extends Activity {
 		ActionBarUtils.InitialActionBarWithBackAndTitle(this, getActionBar(), "足迹详情");
 		//travel = (Travel) getIntent().getSerializableExtra("travel");
 		notes = (ArrayList<Note>) getIntent().getSerializableExtra("notes");
+		type = getIntent().getStringExtra("type");
 		mDataHelper = new NotesDataHelper(this, AppData.getUserId());
 		mPager = (ViewPager) findViewById(R.id.viewpager);
 		MyPagerAdapter myPagerAdapter = new MyPagerAdapter(notes);
@@ -97,7 +99,12 @@ public class PersonalNotesActivity extends Activity {
 			contentView.setText(notesList.get(position).getContent());
 			locationView.setText(notesList.get(position).getLocation().getAddress());
 			countView.setText(position+1+"/"+count);
-			imageLoader.displayImage("file:///"+url , photoView);
+			if(type.equals("local")){
+				imageLoader.displayImage("file:///"+url , photoView);
+			}
+			else{
+				imageLoader.displayImage("http://travo-note-pic.oss-cn-hangzhou.aliyuncs.com/"+notesList.get(position).getImage_path() , photoView);
+			}
 			 ((ViewPager) container).addView(layout, 0);
 			 return layout;
 		}
